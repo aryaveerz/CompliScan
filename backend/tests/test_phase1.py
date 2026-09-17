@@ -20,13 +20,6 @@ def create_test_image_bytes(format: str = "JPEG", size: tuple = (100, 100), colo
     return buf.getvalue()
 
 
-@pytest.fixture(autouse=True)
-def setup_test_database():
-    """Create fresh schema for test run synchronously."""
-    Base.metadata.drop_all(bind=sync_engine)
-    Base.metadata.create_all(bind=sync_engine)
-    yield
-    Base.metadata.drop_all(bind=sync_engine)
 
 
 @pytest.mark.asyncio

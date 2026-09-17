@@ -35,9 +35,19 @@ db_url = x_args.get("db_url") or settings.SYNC_DATABASE_URL or settings.DATABASE
 if db_url.startswith("sqlite+aiosqlite:"):
     db_url = db_url.replace("sqlite+aiosqlite:", "sqlite:")
 elif db_url.startswith("postgresql+asyncpg:"):
-    db_url = db_url.replace("postgresql+asyncpg:", "postgresql:")
+    db_url = db_url.replace("postgresql+asyncpg:", "postgresql+psycopg:")
+elif db_url.startswith("postgres+asyncpg:"):
+    db_url = db_url.replace("postgres+asyncpg:", "postgresql+psycopg:")
+elif db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+elif db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
 
-config.set_main_option("sqlalchemy.url", db_url)
+config.set_section_option(
+    config.config_ini_section,
+    "sqlalchemy.url",
+    db_url.replace("%", "%%"),
+)
 
 
 def run_migrations_offline() -> None:

@@ -7,7 +7,6 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  loginAsDemo: (role: UserRole) => Promise<void>;
   logout: () => void;
 }
 
@@ -43,12 +42,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(resp.user);
   };
 
-  const loginAsDemo = async (role: UserRole) => {
-    const email = role === 'INSPECTOR' ? 'inspector@compliscan.gov.in' : 'reviewer@compliscan.gov.in';
-    const password = 'Password123!';
-    await login(email, password);
-  };
-
   const logout = () => {
     localStorage.removeItem('compliscan_token');
     setToken(null);
@@ -56,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, loginAsDemo, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

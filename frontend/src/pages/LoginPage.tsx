@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, LogIn, UserCheck, ShieldAlert, Sparkles } from 'lucide-react';
+import { ShieldCheck, LogIn, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { UserRole } from '../types';
 
 export const LoginPage: React.FC = () => {
-  const { login, loginAsDemo } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -22,19 +21,6 @@ export const LoginPage: React.FC = () => {
       navigate('/inspections');
     } catch (err: any) {
       setError(err.message || 'Login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async (role: UserRole) => {
-    setError(null);
-    setLoading(true);
-    try {
-      await loginAsDemo(role);
-      navigate('/inspections');
-    } catch (err: any) {
-      setError(err.message || 'Demo login failed');
     } finally {
       setLoading(false);
     }
@@ -104,45 +90,6 @@ export const LoginPage: React.FC = () => {
             <LogIn className="w-4 h-4" />
             <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
           </button>
-        </form>
-
-        {/* Quick Demo Access */}
-        <div className="mt-8 pt-6 border-t border-slate-800">
-          <div className="flex items-center justify-center space-x-1 text-xs text-slate-400 mb-3 font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>1-Click Test Access</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('INSPECTOR')}
-              disabled={loading}
-              className="p-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 rounded-xl text-left transition-all group"
-            >
-              <div className="flex items-center space-x-1.5 text-xs font-bold text-emerald-400 group-hover:text-emerald-300">
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Inspector</span>
-              </div>
-              <p className="text-[11px] text-slate-400 mt-1 truncate">Rajesh Sharma</p>
-              <p className="text-[9px] text-slate-500 font-mono">Create & Upload</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('REVIEWER')}
-              disabled={loading}
-              className="p-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500/50 rounded-xl text-left transition-all group"
-            >
-              <div className="flex items-center space-x-1.5 text-xs font-bold text-indigo-400 group-hover:text-indigo-300">
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Reviewer</span>
-              </div>
-              <p className="text-[11px] text-slate-400 mt-1 truncate">Priya Patel</p>
-              <p className="text-[9px] text-slate-500 font-mono">Review & Audit</p>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

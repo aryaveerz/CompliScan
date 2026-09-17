@@ -9,11 +9,19 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from backend.app.core.config import settings
 
+# Prepare async connect_args (PgBouncer compatibility for Supabase transaction pooler)
+async_connect_args = {}
+if "postgresql" in settings.DATABASE_URL or "postgres" in settings.DATABASE_URL:
+    # Disable prepared statement caches when using PgBouncer transaction pooling (port 6543)
+    async_connect_args["statement_cache_size"] = 0
+    async_connect_args["prepared_statement_cache_size"] = 0
+
 # Async Engine (for FastAPI routes)
 async_engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     future=True,
+    connect_args=async_connect_args,
 )
 
 AsyncSessionLocal = async_sessionmaker(

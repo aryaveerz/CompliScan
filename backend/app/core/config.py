@@ -30,10 +30,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite+aiosqlite:///./compliscan.db"
     SYNC_DATABASE_URL: str = "sqlite:///./compliscan.db"
 
-    # Supabase (Optional for local dev, used in production)
+    # Supabase (Production Identity & Storage)
     SUPABASE_URL: str = ""
     SUPABASE_ANON_KEY: str = ""
     SUPABASE_SERVICE_ROLE_KEY: str = ""
+    SUPABASE_JWT_SECRET: str = ""
+    SUPABASE_AUTH_AUDIENCE: str = "authenticated"
     SUPABASE_STORAGE_BUCKET: str = "compliscan-evidence"
 
     # Local storage fallback

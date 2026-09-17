@@ -4,7 +4,7 @@ CompliScan LM — User Model.
 
 from datetime import datetime, timezone
 import uuid
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 from sqlalchemy import String, Boolean, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.db.base import Base
@@ -20,7 +20,7 @@ class User(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+    hashed_password: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[str] = mapped_column(String(50), default=UserRole.INSPECTOR.value, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

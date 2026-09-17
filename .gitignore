@@ -65,3 +65,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Local AI/agent tooling
+.agent/
