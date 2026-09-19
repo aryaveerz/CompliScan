@@ -122,7 +122,7 @@ export const DashboardPage: React.FC = () => {
             Operational & Compliance Intelligence
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Real-time Legal Metrology inspection throughput, statutory pass rates, and governance metrics.
+            Operational Legal Metrology inspection throughput, statutory pass rates, and governance metrics.
           </p>
         </div>
 

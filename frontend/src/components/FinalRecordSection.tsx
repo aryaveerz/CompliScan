@@ -146,12 +146,12 @@ export const FinalRecordSection: React.FC<FinalRecordSectionProps> = ({
         </div>
       </div>
 
-      {/* Evidence Cryptographic Hashes Snapshot */}
+      {/* Evidence SHA-256 Hashes Snapshot */}
       <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs space-y-2">
         <div className="flex items-center space-x-2">
           <Hash className="w-3.5 h-3.5 text-slate-700" />
           <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wide">
-            Source Evidence Cryptographic Digests (SHA-256)
+            Source Evidence SHA-256 Digests
           </h4>
         </div>
         <div className="space-y-1.5 pt-1">

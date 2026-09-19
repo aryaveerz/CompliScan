@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Send,
   Clock,
+  Info,
 } from 'lucide-react';
 import {
   VerificationState,
@@ -111,6 +112,15 @@ export const InspectorVerificationSection: React.FC<InspectorVerificationSection
               Docket: <strong>{inspection.status.replace(/_/g, ' ')}</strong>
             </span>
           </div>
+        </div>
+      </div>
+
+      {/* Visual Font-Size Screening Notice */}
+      <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 flex items-start space-x-2">
+        <Info className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
+        <div>
+          <span className="font-semibold text-slate-800">Visual Font-Size Screening Notice:</span>{' '}
+          Visual font-size screening uses OCR bounding-box height as an engineering proxy. It is not a physical millimetre measurement; field verification may be required for statutory certification.
         </div>
       </div>
 

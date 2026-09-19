@@ -30,6 +30,7 @@ import {
   FileQuestion,
   Scale,
   Camera,
+  Eye,
 } from 'lucide-react';
 import {
   InspectionCase,
@@ -41,6 +42,7 @@ import {
   BoundingBox,
   ImageQualityAssessment,
   OCRResult,
+  OCRToken,
   StructuredDeclarationResult,
   ApplicabilityItem,
   ComplianceEvaluationSummary,
@@ -401,6 +403,9 @@ export const InspectionWorkspacePage: React.FC = () => {
   const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
   const [isProcessingOCR, setIsProcessingOCR] = useState(false);
   const [showTokensList, setShowTokensList] = useState(false);
+  const [showOcrOverlay, setShowOcrOverlay] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [selectedOcrToken, setSelectedOcrToken] = useState<OCRToken | null>(null);
 
   // Semantic Declaration Extraction state (Gemini 2.5 Flash)
   const [structuredDeclarations, setStructuredDeclarations] = useState<StructuredDeclarationResult | null>(null);
@@ -1693,6 +1698,20 @@ export const InspectionWorkspacePage: React.FC = () => {
               <span className="text-[11px] font-mono text-slate-500 px-1">
                 {Math.round(zoomLevel * 100)}%
               </span>
+              <div className="h-4 w-px bg-slate-300 mx-1.5" />
+              <button
+                type="button"
+                onClick={() => setShowOcrOverlay(!showOcrOverlay)}
+                className={`px-2 py-1 rounded text-[11px] font-medium border flex items-center space-x-1 transition-colors cursor-pointer ${
+                  showOcrOverlay
+                    ? 'bg-cyan-900 text-cyan-200 border-cyan-700 font-semibold shadow-2xs'
+                    : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-slate-300'
+                }`}
+                title="Toggle display of raw OCR detected text bounding regions on evidence image"
+              >
+                <Eye className="w-3.5 h-3.5 shrink-0" />
+                <span>{showOcrOverlay ? 'Hide Text Regions' : 'Show Detected Text Regions'}</span>
+              </button>
             </div>
           </div>
 
@@ -1719,7 +1738,13 @@ export const InspectionWorkspacePage: React.FC = () => {
                 <img
                   src={api.getEvidenceDownloadUrl(activeAsset.id)}
                   alt={activeAsset.original_filename}
-                  className="max-h-[520px] max-w-full object-contain pointer-events-none rounded border border-slate-800 shadow-md"
+                  className="max-h-[520px] max-w-full object-contain pointer-events-none rounded border border-slate-800 shadow-md block"
+                  onLoad={(e) => {
+                    setImageDimensions({
+                      width: e.currentTarget.naturalWidth,
+                      height: e.currentTarget.naturalHeight,
+                    });
+                  }}
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
@@ -1771,6 +1796,85 @@ export const InspectionWorkspacePage: React.FC = () => {
                       );
                     })}
                 </svg>
+
+                {/* Vector Polygon Bounding Box Overlay for Raw OCR Tokens */}
+                {showOcrOverlay && ocrResult?.tokens && ocrResult.tokens.length > 0 && imageDimensions && (
+                  <svg
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    viewBox={`0 0 ${imageDimensions.width} ${imageDimensions.height}`}
+                    preserveAspectRatio="none"
+                  >
+                    {ocrResult.tokens.map((token, idx) => {
+                      if (!token.bounding_box || !token.bounding_box.points || token.bounding_box.points.length === 0) {
+                        return null;
+                      }
+
+                      const ptsString = token.bounding_box.points.map((pt) => `${pt[0]},${pt[1]}`).join(' ');
+                      const isSelected = selectedOcrToken?.token_index === token.token_index;
+
+                      return (
+                        <g key={token.token_index ?? idx} className="pointer-events-auto cursor-pointer">
+                          <polygon
+                            points={ptsString}
+                            fill={isSelected ? 'rgba(37, 99, 235, 0.25)' : 'rgba(56, 189, 248, 0.12)'}
+                            stroke={isSelected ? '#2563eb' : '#0284c7'}
+                            strokeWidth={isSelected ? imageDimensions.width * 0.003 : imageDimensions.width * 0.0015}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedOcrToken(isSelected ? null : token);
+                            }}
+                          >
+                            <title>{`Detected Text: "${token.text}" | OCR Confidence: ${(token.confidence * 100).toFixed(1)}% | Token #${token.token_index}`}</title>
+                          </polygon>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                )}
+
+                {/* Selected OCR Token Details Popover */}
+                {showOcrOverlay && selectedOcrToken && (
+                  <div className="absolute top-3 left-3 bg-slate-900/90 text-white p-2.5 rounded border border-slate-700 shadow-lg text-xs z-20 backdrop-blur-xs max-w-xs pointer-events-auto">
+                    <div className="flex items-center justify-between gap-3 mb-1">
+                      <span className="font-bold text-sky-400">OCR Token #{selectedOcrToken.token_index}</span>
+                      <button
+                        onClick={() => setSelectedOcrToken(null)}
+                        className="text-slate-400 hover:text-white text-xs px-1 cursor-pointer"
+                        title="Close popover"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div className="space-y-0.5 font-mono text-[11px]">
+                      <div>Detected Text: <span className="font-bold text-white">"{selectedOcrToken.text}"</span></div>
+                      <div>OCR Confidence: <span className="text-emerald-400">{(selectedOcrToken.confidence * 100).toFixed(1)}%</span></div>
+                      {selectedOcrToken.line_index !== undefined && <div>Line Index: {selectedOcrToken.line_index}</div>}
+                    </div>
+                  </div>
+                )}
+
+                {/* OCR Status/Fallback Banner Notifications */}
+                {showOcrOverlay && (
+                  <div className="absolute bottom-3 left-3 z-20 pointer-events-auto">
+                    {isProcessingOCR ? (
+                      <div className="bg-amber-950/90 border border-amber-600 text-amber-200 px-3 py-1.5 rounded text-xs shadow-md">
+                        OCR text detection in progress...
+                      </div>
+                    ) : ocrResult?.processing_blocked ? (
+                      <div className="bg-red-950/90 border border-red-600 text-red-200 px-3 py-1.5 rounded text-xs shadow-md">
+                        Text detection could not be completed for this evidence.
+                      </div>
+                    ) : !ocrResult ? (
+                      <div className="bg-slate-900/90 border border-slate-700 text-slate-300 px-3 py-1.5 rounded text-xs shadow-md">
+                        OCR results are not available yet.
+                      </div>
+                    ) : ocrResult.tokens.length === 0 ? (
+                      <div className="bg-slate-900/90 border border-slate-700 text-slate-300 px-3 py-1.5 rounded text-xs shadow-md">
+                        No detected text regions available.
+                      </div>
+                    ) : null}
+                  </div>
+                )}
               </div>
             ) : (
               /* Calm, Institutional Empty State (No AI illustrations) */
@@ -2727,10 +2831,10 @@ export const InspectionWorkspacePage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 font-sans">
-                    Formal Inspection Records & Cryptographic Audit Ledger
+                    Formal Inspection Records & Immutable Audit Ledger
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Chronological chain-of-custody records with legal event descriptions and cryptographic digests.
+                    Chronological chain-of-custody records with audit event descriptions and SHA-256 evidence digests.
                   </p>
                 </div>
                 <span className="text-xs text-emerald-700 font-semibold flex items-center space-x-1">

@@ -164,6 +164,28 @@ export const NewInspectionPage: React.FC = () => {
                 </p>
               </button>
             </div>
+
+            {/* Contextual Applicability Guidance */}
+            <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600">
+              {originStatus === 'IMPORTED' && (
+                <p className="flex items-center space-x-1.5 text-indigo-700 font-medium">
+                  <Info className="w-3.5 h-3.5 shrink-0" />
+                  <span>Country of Origin is applicable under the current MVP applicability logic. <span className="text-[11px] font-mono font-normal text-indigo-600/80">(Rule reference: 6(1)(da))</span></span>
+                </p>
+              )}
+              {originStatus === 'DOMESTIC' && (
+                <p className="flex items-center space-x-1.5 text-slate-600">
+                  <Info className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                  <span>Country of Origin is not applicable under current MVP applicability logic.</span>
+                </p>
+              )}
+              {originStatus === 'UNKNOWN' && (
+                <p className="flex items-center space-x-1.5 text-amber-700 font-medium">
+                  <HelpCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>Country of Origin applicability requires review.</span>
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Category + Reference URL */}
