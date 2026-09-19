@@ -295,11 +295,11 @@ class PDFReportService:
         story.append(t_comp)
         story.append(Spacer(1, 10))
 
-        # 7. Legal Metrology Officer Sign-Off & Audit Certification
+        # 7. Finalization & Record Integrity Status
         sign_off_data = [
             [
-                Paragraph("<b>OFFICIAL REGULATORY CERTIFICATION</b>", table_cell_bold),
-                Paragraph("<b>IMMUTABLE ARCHIVAL SEAL</b>", table_cell_bold),
+                Paragraph("<b>FINALIZATION & RECORD INTEGRITY</b>", table_cell_bold),
+                Paragraph("<b>FINALIZED RECORD STATUS</b>", table_cell_bold),
             ],
             [
                 Paragraph(
@@ -310,8 +310,8 @@ class PDFReportService:
                 ),
                 Paragraph(
                     f"<b>Finalized By User ID:</b> {final_record.finalized_by_id}<br/>"
-                    f"<b>Archival Record ID:</b> {final_record.id}<br/>"
-                    f"<b>Audit State:</b> FINALIZED & READ_ONLY",
+                    f"<b>Final Audit Record ID:</b> {final_record.id}<br/>"
+                    f"<b>Record State:</b> FINALIZED & READ_ONLY",
                     table_cell_style,
                 ),
             ],

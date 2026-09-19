@@ -241,6 +241,6 @@ Execute the complete end-to-end statutory compliance workflow:
    - Adjudicate findings (Confirm or Record Override with mandatory legal rationale).
    - Click **"Finalize Inspection"**.
 3. **Report Generation & Archival**:
-   - Download the official **PDF Report** and verify complete audit snapshot, evidence hashes, and official regulatory certification.
+   - Download the official **PDF Report** and verify complete audit snapshot, evidence hashes, and record integrity status.
    - Download the official **DOCX Report** and verify 1:1 structural parity.
    - View **Audit Trail / History** to verify all events (including `REPORT_DOWNLOADED`) are immutably logged.

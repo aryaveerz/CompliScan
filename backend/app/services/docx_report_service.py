@@ -359,7 +359,7 @@ class DOCXReportService:
 
         doc.add_paragraph().paragraph_format.space_after = Pt(6)
 
-        # ── 7. Section 4: Official Certification & Archival Seal ─────────────
+        # ── 7. Section 4: Finalization & Record Integrity Status ─────────────
         t_sign = doc.add_table(rows=2, cols=2)
         t_sign.alignment = WD_TABLE_ALIGNMENT.CENTER
         _set_table_borders(t_sign, "94A3B8", "4")
@@ -368,11 +368,11 @@ class DOCXReportService:
         _set_cell_background(t_sign.rows[1].cells[0], "F8FAFC")
         _set_cell_background(t_sign.rows[1].cells[1], "F8FAFC")
 
-        t_sign.rows[0].cells[0].text = "OFFICIAL REGULATORY CERTIFICATION"
+        t_sign.rows[0].cells[0].text = "FINALIZATION & RECORD INTEGRITY"
         t_sign.rows[0].cells[0].paragraphs[0].runs[0].font.bold = True
         t_sign.rows[0].cells[0].paragraphs[0].runs[0].font.size = Pt(8.5)
 
-        t_sign.rows[0].cells[1].text = "IMMUTABLE ARCHIVAL SEAL"
+        t_sign.rows[0].cells[1].text = "FINALIZED RECORD STATUS"
         t_sign.rows[0].cells[1].paragraphs[0].runs[0].font.bold = True
         t_sign.rows[0].cells[1].paragraphs[0].runs[0].font.size = Pt(8.5)
 
@@ -385,8 +385,8 @@ class DOCXReportService:
 
         t_sign.rows[1].cells[1].text = (
             f"Finalized By User ID: {final_record.finalized_by_id}\n"
-            f"Archival Record ID: {final_record.id}\n"
-            f"Audit State: FINALIZED & READ_ONLY"
+            f"Final Audit Record ID: {final_record.id}\n"
+            f"Record State: FINALIZED & READ_ONLY"
         )
         t_sign.rows[1].cells[1].paragraphs[0].runs[0].font.size = Pt(8)
 

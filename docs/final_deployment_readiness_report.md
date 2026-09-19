@@ -1,290 +1,204 @@
-# CompliScan LM — Final Deployment Readiness Audit
+# CompliScan LM — Final Deployment Readiness & Report Semantics Audit
 
 **Repository:** CompliScan LM (Legal Metrology Packaged Commodities Verification System)  
 **Audit Target:** End-to-End Configuration, Secrets, Reports & Operational Readiness  
 **Baseline Commit:** `401690f` (polish: finalize frontend precision and terminology)  
-**Date:** September 20, 2026  
+**Current Verification Branch:** `feature/deployment-readiness-audit`
+**Date:** September 20, 2026
 
 ---
 
-## 1. Baseline
+## 1. Baseline & Scope
 
-The audit was conducted strictly against the frozen MVP baseline:
 - **Baseline Git Commit:** `401690f`
-- **Previous Milestone:** `efcf9ac`
-- **Scope Verification:** No feature development, no schema alterations, no state machine changes, and no compliance rule redesign were performed. Only configuration, documentation, and dependency precision fixes were made.
+- **Previous MVP Milestone:** `efcf9ac`
+- **Scope Verification:** This task is strictly a verification and configuration readiness pass. No architectural redesign, no compliance rule modification, no database schema changes, and no state machine alterations were made. Main remains frozen at `401690f`.
 
 ---
 
-## 2. Runtime Architecture
+## 2. Runtime Architecture & Authority Model
 
-CompliScan LM operates as an asynchronous, queue-driven, two-tiered regulatory inspection workflow:
+CompliScan LM enforces a strict, hierarchical authority model:
 
 ```
-[ Frontend (React / Vite) ] ── (HTTP / REST + Bearer JWT) ──► [ Backend (FastAPI :8000) ]
-                                                                       │
-                                              ┌────────────────────────┴────────────────────────┐
-                                              ▼                                                 ▼
-                                     [ Supabase Auth (GoTrue) ]                     [ PostgreSQL / SQLite ]
-                                    (Token issuance & JWKS ES256)                   (Durable Analysis Jobs Queue)
-                                                                                                │
-                                                                                                ▼
-                                                                                   [ Worker (python -m worker.runner) ]
-                                                                                                │
-                                         ┌──────────────────────────────────────────────────────┴─────────────────────────────────┐
-                                         ▼                                                      ▼                                 ▼
-                         [ RapidOCR PP-OCRv4 (ONNX) ]                               [ Gemini 2.5 Flash API ]         [ Deterministic Rules Engine ]
-                          (Detection & Token Coordinates)                             (7 Statutory Domains)            (Statutory Findings Generation)
+[ AI / OCR (RapidOCR + Gemini) ]  ──► Suggests token bounding boxes & structured observations
+                │
+                ▼
+[ Deterministic Rules Engine ]    ──► Evaluates LMPC 2011 rules (PASS, POTENTIAL_NON_COMPLIANCE, etc.)
+                │
+                ▼
+[ Inspector Verification ]        ──► Human Inspector verifies token grounding on physical label
+                │
+                ▼
+[ Reviewer Adjudication ]         ──► Human Reviewing Officer records legal determinations / overrides
+                │
+                ▼
+[ FinalAuditRecord ]              ──► Immutable, frozen database snapshot at finalization
+                │
+                ▼
+[ System Reports (PDF / DOCX) ]   ──► Generates official inspection documents solely from FinalAuditRecord
 ```
 
-### Complete End-to-End Workflow:
-1. **Authentication:** User logs in via Supabase Auth GoTrue; FastAPI validates JWT via ES256 JWKS or configured secret.
-2. **Inspection Case Creation:** Inspector creates inspection docket (`DRAFT` state).
-3. **Evidence Ingestion:** Package label images uploaded; SHA-256 computed; saved to `LOCAL_STORAGE_DIR`; `IMAGE_QUALITY` job enqueued.
-4. **Image Quality Assessment:** Worker runs deterministic blur/brightness/contrast/resolution evaluation; if `USABLE`, auto-enqueues `PERCEPTION` job.
-5. **OCR Perception:** Worker runs PaddleOCR PP-OCRv4 (RapidOCR ONNX Runtime); produces immutable token stream with bounding boxes; auto-enqueues `EXTRACTION` job.
-6. **Gemini Semantic Extraction:** Worker calls Gemini 2.5 Flash via `google-genai` SDK with strict Pydantic structured output schema (`StructuredDeclarations`); validates token provenance.
-7. **Applicability Evaluation:** Determines mandatory rules based on product category, origin status, and declared commodity.
-8. **Deterministic Compliance Evaluation:** Evaluates statutory rules against extracted declarations without hallucination.
-9. **Inspector Verification:** Inspector inspects tokens against visual image overlay and signs off on verification checklist.
-10. **Submission:** Inspector transitions docket from `DRAFT` to `SUBMITTED_FOR_REVIEW`.
-11. **Reviewer Adjudication:** Reviewing Officer reviews findings, records confirmation or override with mandatory statutory rationale.
-12. **Finalization:** Atomically constructs the immutable `FinalAuditRecord` and freezes docket to `READ_ONLY`.
-13. **Regulatory Reporting:** On-demand generation of official **PDF** and editable **DOCX** reports derived solely from `FinalAuditRecord`.
-14. **Audit Trail & Dashboard:** Complete chronological ledger of all lifecycle and download events.
+> [!IMPORTANT]
+> **Authority Principle:** AI models and automated perception engines serve strictly as regulatory assistance. AI never certifies legality, and the software is not a statutory certification authority. Authoritative legal determinations are recorded exclusively by human Reviewing Officers and frozen into `FinalAuditRecord`.
 
 ---
 
-## 3. Required Environment Variables
+## 3. Authoritative Vocabulary & Semantics
 
-The following authoritative inventory contains all configuration variables used across the repository:
+### A. Automated System Finding Vocabulary
+Deterministic compliance evaluation uses strictly the 6-state `ComplianceResult` enum:
+- `PASS`: Declarations satisfy statutory rules based on evidence tokens.
+- `POTENTIAL_NON_COMPLIANCE`: Specific statutory requirements are unmet or violated.
+- `REQUIRES_REVIEW`: Ambiguous declarations or discretionary thresholds require human evaluation.
+- `NOT_APPLICABLE`: Rule does not apply to this commodity category / origin status.
+- `INCOMPLETE`: Required evidence views or data points are missing.
+- `PROCESSING_FAILED`: Upstream image decode, OCR, or extraction failure.
 
-| Variable | Used By | Required? | Secret? | Classification | Example Format | Purpose |
+### B. Human Reviewer Decision Vocabulary
+Individual requirement determinations use `ReviewerDeterminationType`:
+- `CONFIRMED`: Reviewer agrees with the automated system finding.
+- `OVERRIDDEN`: Reviewer records a formal legal override with mandatory statutory rationale.
+- `REVISION_REQUESTED`: Reviewer requests corrections from the Inspector.
+- `EVIDENCE_REQUESTED`: Reviewer requests additional visual package evidence.
+
+### C. Inspection-Level Final Decision Vocabulary
+Recorded in `FinalAuditRecord.final_decision` upon formal finalization:
+- `COMPLIANT`: Package label complies with applicable Legal Metrology rules.
+- `NON_COMPLIANCE_CONFIRMED`: Final determination of statutory non-compliance.
+- `INCONCLUSIVE`: Case could not reach a definitive compliance determination.
+
+---
+
+## 4. Report Semantics Verification
+
+Inspection reports were audited directly against `backend/app/services/pdf_report_service.py` and `backend/app/services/docx_report_service.py`.
+
+### A. Document Header & Title
+- **Subtitle:** `LEGAL METROLOGY (PACKAGED COMMODITIES) RULES, 2011`
+- **Main Title:** `OFFICIAL REGULATORY INSPECTION & COMPLIANCE REPORT`
+- **Terminology Rule:** Unsupported claims of "legal certification", "regulatory certificates", or "compliance certificates" are removed. The document is titled and structured as an authoritative finalized regulatory inspection report.
+
+### B. Ordered Report Sections
+Both the PDF and DOCX documents contain exactly four numbered sections following the context and decision headers:
+
+1. **Inspection Context Snapshot Table:**
+   - Inspection ID, Case Number, Product Name, Origin Status (`DOMESTIC` / `IMPORTED` / `UNKNOWN`), Rule-Set ID & Version (`LMPC-2011-MVP-RULES (v1.0)`), Evaluation Version (`v1.0`), Finalized Timestamp (UTC), Final Audit Record ID.
+2. **Master Final Legal Determination Banner:**
+   - Final Adjudicated Determination (`COMPLIANT` / `NON_COMPLIANCE_CONFIRMED` / `INCONCLUSIVE`), Adjudication Rationale.
+3. **Section 1 — Evidence Inventory & Cryptographic Integrity Hashes:**
+   - Evidence ID, Filename / View (`PRIMARY` / `DERIVED` / `SUPPLEMENTAL`), File Size (KB), SHA-256 Integrity Hash (Change Detection).
+4. **Section 2 — Mandatory Requirement Applicability:**
+   - Requirement Name, Applicability Status (`MANDATORY` / `EXEMPT`), Statutory Citation (e.g. Rule 6(1)(a)), Legal Basis / Rule Logic.
+5. **Section 3 — Compliance Evaluation vs Reviewer Adjudication:**
+   - Requirement Name, Automated System Finding (`PASS` / `POTENTIAL_NON_COMPLIANCE` / `REQUIRES_REVIEW` / `NOT_APPLICABLE`), Reviewer Action (`CONFIRMED` / `OVERRIDE`), Final Adjudicated Result, Reviewer Rationale / Override Reason.
+6. **Section 4 — Finalization & Record Integrity Status:**
+   - **Attestation Statement:** *"This report is generated from the immutable Legal Metrology FinalAuditRecord snapshot. All automated AI extractions and deterministic rules served strictly as regulatory assistance. The final legal determination herein represents the authoritative decision of the authorized Reviewer."*
+   - **Record Status Metadata:** Finalized By User ID, Final Audit Record ID, Record State: `FINALIZED & READ_ONLY`.
+
+### C. Cryptographic Hashes & Change Detection
+- **SHA-256 Language:** Described strictly as `"SHA-256 Integrity Hash (Change Detection)"` or `"SHA-256 Evidence Hash"`.
+- **Integrity Scope:** Hashes verify byte-level file integrity (detecting post-upload file tampering or corruption). They do not claim to prove physical or factual authenticity of the photographed commodity.
+
+### D. Digital Signature Status
+- **Signature Status:** **Generated PDF Report.**
+- **No PKI Signature:** The PDF is generated programmatically using ReportLab. It contains visual record integrity status and evidence SHA-256 hashes, but is **not** cryptographically signed with an X.509 digital certificate.
+
+### E. PDF vs DOCX Parity
+- **Common Source of Truth:** Both formats are generated directly from the immutable `FinalAuditRecord`.
+- **Parity:** 1:1 structural and data parity.
+- **DOCX Role:** An editable administrative export for departmental filings. Editing a downloaded DOCX does not alter the immutable database record.
+
+---
+
+## 5. Inspector / Reviewer Report Authorization
+
+Verified directly from FastAPI route implementations in `backend/app/api/v1/inspections.py` and `backend/app/api/v1/reviews.py`:
+
+| Role | PDF Download | DOCX Download | Access Scope |
+|---|---|---|---|
+| **Inspector** | Authorized | Authorized | Own finalized inspections only (`created_by_id == current_user.id`). Attempting to download another inspector's report returns **HTTP 403 Forbidden**. |
+| **Reviewer** | Authorized | Authorized | **All** finalized inspections across the organization. |
+| **Admin** | Authorized | Authorized | **All** finalized inspections across the organization. |
+
+### Pre-Finalization Access Invariant:
+- Attempting to download a report (PDF or DOCX) for an unfinalized inspection returns **HTTP 404 Not Found** (`NotFoundError: Final audit record for inspection {id} not found`). Reports cannot be generated in draft or review states.
+
+### Download Audit Logging:
+- Every report retrieval emits an immutable `AuditEventType.REPORT_DOWNLOADED` event with `actor_id`, `actor_role`, `inspection_id`, `format` (`pdf` or `docx`), `case_number`, and `final_record_id`.
+
+---
+
+## 6. Dependency Verification
+
+### `reportlab` & `python-docx`
+- **Code Usage:** `backend/app/services/pdf_report_service.py` imports `reportlab` (Platypus flowables, styles, tables) and `backend/app/services/docx_report_service.py` imports `docx` (`python-docx`).
+- **Audit Finding:** Prior to this audit, `reportlab` and `python-docx` were imported at runtime but omitted from `backend/requirements.txt`.
+- **Remediation:** Explicitly pinned in `backend/requirements.txt` as `reportlab>=4.1.0` and `python-docx>=1.1.0`. No other dependencies were added.
+
+---
+
+## 7. Required Environment Variables Inventory
+
+| Variable | Used By | Required? | Secret? | Classification | Example / Default | Purpose |
 |---|---|---|---|---|---|---|
-| `GEMINI_API_KEY` | Backend & Worker | **YES** | **YES** | REQUIRED SECRET | `AIzaSy...` | API key for Google Gemini 2.5 Flash semantic extraction. Server-side only. |
-| `GEMINI_MODEL` | Backend & Worker | NO (has default) | NO | OPTIONAL | `gemini-2.5-flash` | Name of the Gemini model used for structured extraction. |
-| `SUPABASE_URL` | Backend | **YES** | NO | REQUIRED NON-SECRET | `https://[REF].supabase.co` | Supabase project endpoint for Auth GoTrue REST API and JWKS endpoint. |
-| `SUPABASE_ANON_KEY` | Backend | **YES** | NO | REQUIRED NON-SECRET | `sb_publishable_...` | Supabase client anon/publishable key for user authentication. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Backend & Scripts | **YES** | **YES** | REQUIRED SECRET | `sb_secret_...` | Supabase secret key for admin user seeding and orphan cleanup. |
-| `SUPABASE_JWT_SECRET` | Backend | Conditional | **YES** | REQUIRED SECRET (if HS256) | `uuid-or-secret-string` | Secret key for Supabase Auth HS256 token verification. Not needed for ES256 JWKS. |
-| `SUPABASE_AUTH_AUDIENCE` | Backend | NO (has default) | NO | OPTIONAL | `authenticated` | Expected JWT `aud` claim (default: `"authenticated"`). |
-| `DATABASE_URL` | Backend & Worker | **YES** | **YES** | REQUIRED SECRET | `postgresql+asyncpg://...:6543/postgres?ssl=require` | Asynchronous database connection string (Transaction Pooler). |
-| `SYNC_DATABASE_URL` | Alembic Migrations | **YES** | **YES** | REQUIRED SECRET | `postgresql+psycopg://...:5432/postgres?sslmode=require` | Synchronous database connection string (Session Pooler). |
-| `SECRET_KEY` | Backend | **YES** in Prod | **YES** | REQUIRED SECRET | `random-hex-string` | Application internal encryption key. |
-| `ENVIRONMENT` | Backend | NO (has default) | NO | OPTIONAL | `production` / `development` | Operating environment name. |
-| `DEBUG` | Backend | NO (has default) | NO | DEVELOPMENT-ONLY | `False` | Debug mode toggle. |
-| `CORS_ORIGINS` | Backend | **YES** in Prod | NO | REQUIRED NON-SECRET | `["https://app.domain.gov.in"]` | Allowed CORS origins for cross-origin browser requests. |
-| `LOCAL_STORAGE_DIR` | Backend & Worker | NO (has default) | NO | OPTIONAL | `backend/uploads` | Persistent directory for single-node evidence asset storage. |
-| `WORKER_LEASE_SECONDS` | Worker | NO (has default) | NO | OPTIONAL | `60` | Job claim lease lock duration in seconds. |
-| `WORKER_POLL_INTERVAL_SECONDS` | Worker | NO (has default) | NO | OPTIONAL | `2.0` | Queue polling sleep interval when idle. |
-| `WORKER_MAX_JOB_ATTEMPTS` | Worker | NO (has default) | NO | OPTIONAL | `3` | Maximum automatic job retry attempts before failing. |
-| `SEED_INSPECTOR_PASSWORD` | Seed Script | NO | **YES** | DEVELOPMENT-ONLY | `Password@Insp1` | Password used by `seed_supabase_users.py` to provision inspector. |
-| `SEED_REVIEWER_PASSWORD` | Seed Script | NO | **YES** | DEVELOPMENT-ONLY | `Password@rev1` | Password used by `seed_supabase_users.py` to provision reviewer. |
+| `GEMINI_API_KEY` | Backend & Worker | **YES** | **YES** | REQUIRED SECRET | `AIzaSy...` | Server-side key for Gemini 2.5 Flash structured extraction. |
+| `GEMINI_MODEL` | Backend & Worker | NO | NO | OPTIONAL | `gemini-2.5-flash` | Gemini model name. |
+| `SUPABASE_URL` | Backend | **YES** | NO | REQUIRED NON-SECRET | `https://[REF].supabase.co` | Supabase project URL for GoTrue Auth and JWKS retrieval. |
+| `SUPABASE_ANON_KEY` | Backend | **YES** | NO | REQUIRED NON-SECRET | `sb_publishable_...` | Supabase anon key for client authentication. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Backend & Scripts | **YES** | **YES** | REQUIRED SECRET | `sb_secret_...` | Admin service role key for user seeding and identity cleanup. |
+| `SUPABASE_JWT_SECRET` | Backend | Conditional | **YES** | REQUIRED SECRET (if HS256) | `uuid-or-secret` | Supabase HS256 token verification key. |
+| `SUPABASE_AUTH_AUDIENCE` | Backend | NO | NO | OPTIONAL | `authenticated` | Expected JWT `aud` claim. |
+| `DATABASE_URL` | Backend & Worker | **YES** | **YES** | REQUIRED SECRET | `postgresql+asyncpg://...:6543/postgres?ssl=require` | Async connection string (Transaction Pooler). |
+| `SYNC_DATABASE_URL` | Alembic Migrations | **YES** | **YES** | REQUIRED SECRET | `postgresql+psycopg://...:5432/postgres?sslmode=require` | Sync connection string (Session Pooler). |
+| `SECRET_KEY` | Backend | **YES** in Prod | **YES** | REQUIRED SECRET | `random-hex-string` | Internal application secret. |
+| `ENVIRONMENT` | Backend | NO | NO | OPTIONAL | `development` / `production` | Environment name. |
+| `CORS_ORIGINS` | Backend | **YES** in Prod | NO | REQUIRED NON-SECRET | `["http://localhost:5173"]` | Allowed frontend origins. |
+| `LOCAL_STORAGE_DIR` | Backend & Worker | NO | NO | OPTIONAL | `backend/uploads` | Local directory for evidence storage. |
+| `WORKER_LEASE_SECONDS` | Worker | NO | NO | OPTIONAL | `60` | Job claim lease timeout. |
+| `WORKER_POLL_INTERVAL_SECONDS` | Worker | NO | NO | OPTIONAL | `2.0` | Idle queue polling frequency. |
+| `WORKER_MAX_JOB_ATTEMPTS` | Worker | NO | NO | OPTIONAL | `3` | Max job execution retries. |
+| `SEED_INSPECTOR_PASSWORD` | Seed Script | NO | **YES** | DEVELOPMENT-ONLY | `Password@Insp1` | Seed password for demo inspector. |
+| `SEED_REVIEWER_PASSWORD` | Seed Script | NO | **YES** | DEVELOPMENT-ONLY | `Password@rev1` | Seed password for demo reviewer. |
 
 ---
 
-## 4. Gemini Configuration
+## 8. Final Configuration Verification
 
-- **Environment Variable:** `GEMINI_API_KEY`
-- **Model Name:** `gemini-2.5-flash` (configurable via `GEMINI_MODEL`)
-- **SDK Provider:** Official `google-genai` Python SDK (`from google import genai`)
-- **Runtime Location:** Consumed exclusively within `backend/app/services/extraction_service.py` by background worker execution during `JobType.EXTRACTION`.
-- **Frontend Exposure:** **ZERO.** `GEMINI_API_KEY` is not present in frontend code or Vite variables and is never transmitted over client APIs.
-- **Worker Dependency:** Worker requires `GEMINI_API_KEY` to process extraction jobs.
-- **Missing / Invalid Key Behavior:**
-  - If `GEMINI_API_KEY` is empty, `ExtractionService.get_client()` raises `ConfigurationError("GEMINI_API_KEY is not configured in backend settings.")`.
-  - If the key is invalid or Gemini API times out / returns malformed output, `AnalysisError` is raised.
-  - The worker catches this, records `job.error_message`, and retries up to 3 times before setting `job.status = "FAILED"`.
-  - **Crucial Rule Maintained:** Technical AI failures are **NEVER converted into a PASS, POTENTIAL_NON_COMPLIANCE, or NOT_APPLICABLE**. They remain explicit processing failure states.
-
----
-
-## 5. Supabase Configuration
-
-The application integrates with Supabase as follows:
-- **Supabase Auth (GoTrue):** User accounts and passwords live in Supabase GoTrue Auth. Login requests are authenticated via GoTrue REST API (`/auth/v1/token?grant_type=password`).
-- **Supabase PostgreSQL:** Application data is stored in the Supabase PostgreSQL database via SQLAlchemy asyncpg connection.
-- **Supabase Storage:** Not required for MVP; the MVP uses local filesystem storage (`backend/uploads`).
-- **Required Supabase Values:**
-  - `SUPABASE_URL`: `https://[PROJECT-REF].supabase.co`
-  - `SUPABASE_ANON_KEY`: Supabase anon/publishable API key
-  - `SUPABASE_SERVICE_ROLE_KEY`: Supabase secret service role key (for user seeding script and orphan identity cleanup)
-  - `DATABASE_URL`: Connection string to PostgreSQL transaction pooler (port 6543)
-  - `SYNC_DATABASE_URL`: Connection string to PostgreSQL session pooler (port 5432)
+1. **Gemini Configuration:**
+   - Server-side only; never passed to React/browser.
+   - Key lookup: `settings.GEMINI_API_KEY`.
+   - Missing key raises `ConfigurationError` immediately.
+   - Failures leave the job in `FAILED` state without generating false compliance results.
+2. **Supabase Auth Configuration:**
+   - Live Supabase JWKS asymmetric validation (`ES256` / `RS256`) via `{SUPABASE_URL}/auth/v1/.well-known/jwks.json`.
+   - Symmetric fallback (`HS256`) via `SUPABASE_JWT_SECRET`.
+3. **Database & Migrations:**
+   - Schema managed exclusively by Alembic (`alembic upgrade head`).
+   - Latest revision: `f6a7b8c9d0e1_add_phase5_performance_indexes.py`.
+4. **Worker Startup:**
+   - Entrypoint: `python -m worker.runner`.
+   - Required for processing image quality, OCR, extraction, and compliance jobs.
+5. **Frontend API & Proxy:**
+   - Dev: `frontend/vite.config.ts` proxies `/api` to `http://127.0.0.1:8000`.
+   - Prod: Reverse proxy routes `/api/v1` to FastAPI backend.
+6. **CORS:**
+   - Explicit origins configured via `CORS_ORIGINS` (never `*` when credentials are enabled).
+7. **Storage:**
+   - Single-node local filesystem (`backend/uploads`) with SHA-256 change detection.
 
 ---
 
-## 6. Database Configuration & Migrations
+## 9. Remaining Verified Conditions
 
-- **Database Engine:** PostgreSQL (Supabase Managed or self-hosted) with SQLAlchemy 2.0.
-- **Migration System:** Alembic.
-- **Latest Migration (`head`):** `f6a7b8c9d0e1_add_phase5_performance_indexes.py`.
-- **Migration Startup Behavior:** Migrations are **NOT** run automatically on FastAPI startup (by design, to avoid multi-instance concurrency locks).
-- **Migration Command:**
-  ```bash
-  alembic upgrade head
-  ```
-- **Execution Requirement:** The operator must run `alembic upgrade head` before starting the FastAPI server and background worker.
+1. **Single-Node Storage Condition:** In multi-container environments, `LOCAL_STORAGE_DIR` must be mounted as a shared persistent volume.
+2. **Worker Separation:** The API server and background worker runner are separate processes. Both must be running for inspections to process.
+3. **Manual Migration Step:** `alembic upgrade head` must be executed before application startup.
 
 ---
 
-## 7. Authentication Architecture
+## 10. Final Assessment
 
-- **Protocol:** OpenID Connect / OAuth2 Bearer Tokens issued by Supabase GoTrue Auth.
-- **Token Verification:**
-  - **Asymmetric JWKS (Primary/Live Mode):** Verifies tokens using public ECDSA P-256 (`ES256`) or RSA (`RS256`) keys fetched directly from `{SUPABASE_URL}/auth/v1/.well-known/jwks.json`. Cached in-memory with automatic 1-hour refresh.
-  - **Symmetric Secret (Fallback/Testing Mode):** Verifies `HS256` tokens using `SUPABASE_JWT_SECRET`.
-- **Claims Enforced:**
-  - `exp`: Expiration timestamp (strictly validated).
-  - `sub`: User UUID (mapped 1:1 to `public.users.id`).
-  - `aud`: Audience (`"authenticated"`).
-  - `iss`: Issuer (`{SUPABASE_URL}/auth/v1`).
-- **Role Enforcement (RBAC):** Roles (`INSPECTOR`, `REVIEWER`, `ADMIN`) are stored authoritatively in `public.users.role` and verified via FastAPI `require_role()` dependency guards.
+### **READY — CONFIGURATION AND REPORT SEMANTICS VERIFIED**
 
----
-
-## 8. Worker
-
-- **Startup Entrypoint:**
-  ```bash
-  python -m worker.runner
-  ```
-- **Architecture:** Standalone polling process that claims jobs from `analysis_jobs` queue table using atomic `with_for_update(skip_locked=True)` row-level locking.
-- **What happens if only FastAPI is started?**
-  - Inspection dockets and evidence uploads succeed at the API layer.
-  - Background analysis jobs (`IMAGE_QUALITY`, `PERCEPTION`, `EXTRACTION`, `EVALUATION`) remain in `PENDING` status.
-  - Analysis does not progress to OCR or compliance evaluation until `python -m worker.runner` is started.
-
----
-
-## 9. Evidence Storage
-
-- **Storage Location:** Configured via `LOCAL_STORAGE_DIR` (default: `backend/uploads`).
-- **Subdirectory Layout:** `backend/uploads/{inspection_id}/{evidence_id}_{safe_filename}`.
-- **Integrity Validation:** Every evidence file has its SHA-256 computed on upload and stored in `evidence_assets.sha256_hash`.
-- **Single-Node Condition:** Backend and Worker must have access to the same physical disk directory or shared volume mount.
-- **Container Persistence:** In Docker/Kubernetes, `LOCAL_STORAGE_DIR` must be mounted as a persistent volume to ensure evidence is not lost across container restarts.
-
----
-
-## 10. OCR Runtime
-
-- **Perception Engine:** RapidOCR (`rapidocr-onnxruntime>=1.2.3`) running PaddleOCR PP-OCRv4 models via `onnxruntime>=1.20.0`.
-- **Model Distribution:** PP-OCRv4 ONNX model weights are packaged directly within `rapidocr-onnxruntime`.
-- **Offline Readiness:** Does not require runtime internet access or dynamic model downloads. Works fully offline once Python packages are installed.
-
----
-
-## 11. PDF Report Structure
-
-Generated dynamically in-memory via ReportLab strictly from the immutable `FinalAuditRecord`.
-
-**Complete Ordered Section Breakdown:**
-1. **Header Banner:** `"LEGAL METROLOGY (PACKAGED COMMODITIES) RULES, 2011"` / `"OFFICIAL REGULATORY INSPECTION & COMPLIANCE REPORT"`.
-2. **Inspection Context Snapshot Table:** Inspection ID, Case Number, Product Name, Origin Status, Rule-Set ID & Version, Evaluation Version, Finalized Timestamp, Final Record ID.
-3. **Master Final Legal Determination Banner:** Final Adjudicated Determination (`COMPLIANT` / `NON_COMPLIANT` / `PASS` / `FAIL`), Final Adjudication Rationale.
-4. **Section 1 — Evidence Inventory & Cryptographic Integrity Hashes:** Evidence ID, Filename / View, File Size, SHA-256 Integrity Hash (Change Detection).
-5. **Section 2 — Mandatory Requirement Applicability:** Requirement Name, Applicability Status (`MANDATORY` / `EXEMPT`), Statutory Citation (e.g. Rule 6(1)(a)), Legal Basis / Rule Logic.
-6. **Section 3 — Compliance Evaluation vs Reviewer Adjudication:** Requirement Name, Automated System Finding, Reviewer Action (`CONFIRMED` / `OVERRIDE`), Final Adjudicated Result, Reviewer Rationale / Override Reason.
-7. **Section 4 — Legal Metrology Officer Sign-Off & Archival Seal:** Official Regulatory Certification statement, Finalized By User ID, Archival Record ID, Audit State: `FINALIZED & READ_ONLY`.
-
-- **Visual Evidence in PDF:** Text and hashes are included; raw image binaries and bounding box diagrams are not rendered inside the PDF.
-- **Digital Signatures:** No cryptographic PKI (X.509) digital signature is attached; the document features an immutable visual archival seal and SHA-256 evidence integrity hashes.
-
----
-
-## 12. DOCX Report Structure
-
-Generated dynamically in-memory via `python-docx` strictly from the immutable `FinalAuditRecord`.
-- **Data Parity:** 1:1 structural and data parity with the official PDF report.
-- **Sections:** Identical four-section structure (Context Snapshot, Master Decision, Evidence Hashes, Applicability, Compliance vs Adjudication, Sign-Off Seal).
-- **Authoritative Status:** The DOCX is provided as an editable export format for administrative filings; the immutable `FinalAuditRecord` stored in the database remains the sole authoritative source of truth.
-
----
-
-## 13. Inspector Permissions
-
-- **PDF Download:** Authorized for inspections created by the Inspector (`created_by_id == current_user.id`) **AFTER** finalization.
-- **DOCX Download:** Authorized for inspections created by the Inspector **AFTER** finalization.
-- **IDOR Protection:** Attempting to download reports for another inspector's inspection returns HTTP 403 Forbidden.
-
----
-
-## 14. Reviewer Permissions
-
-- **PDF Download:** Authorized for **ANY** finalized inspection across the system.
-- **DOCX Download:** Authorized for **ANY** finalized inspection across the system.
-- **Inspection Access:** Full read access across all inspection dockets in the organization.
-
----
-
-## 15. Finalization Requirement
-
-- **Pre-Finalization Reports:** Reports **CANNOT** be downloaded before an inspection is finalized.
-- **Behavior:** Attempting to call `/report/pdf`, `/report/docx`, or `/final-report` on an unfinalized inspection returns HTTP 404 (`Final audit record for inspection {inspection_id} not found`).
-- **Design Invariant:** Reports are only ever generated from frozen, immutable `FinalAuditRecord` instances.
-
----
-
-## 16. Report Audit Events
-
-- **Audit Logging:** Every report download triggers an immutable audit log entry.
-- **Event Type:** `AuditEventType.REPORT_DOWNLOADED`.
-- **Logged Details:**
-  - `inspection_id`: Target inspection UUID.
-  - `actor_id`: User UUID of the downloader.
-  - `actor_role`: Role (`INSPECTOR`, `REVIEWER`, `ADMIN`).
-  - `format`: `"pdf"` or `"docx"`.
-  - `case_number`: Case docket identifier.
-  - `final_record_id`: UUID of the referenced `FinalAuditRecord`.
-  - `timestamp`: UTC timestamp of download.
-
----
-
-## 17. Manual Configuration Checklist
-
-See [deployment_configuration_checklist.md](file:///g:/CompliScan/docs/deployment_configuration_checklist.md) for full parameters. In summary, an operator must supply:
-1. `GEMINI_API_KEY` in `.env`.
-2. Supabase project credentials (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) in `.env`.
-3. Database connection URLs (`DATABASE_URL`, `SYNC_DATABASE_URL`) in `.env`.
-4. Run `alembic upgrade head`.
-5. Run `python backend/scripts/seed_supabase_users.py`.
-
----
-
-## 18. Startup Runbook
-
-See [deployment_runbook.md](file:///g:/CompliScan/docs/deployment_runbook.md) for the complete 16-step operational procedure.
-
----
-
-## 19. Fresh Deployment Test
-
-- **Configuration Template:** Verified `.env.example` contains all variables with safe placeholders.
-- **Dependencies:** Updated `backend/requirements.txt` to include `reportlab>=4.1.0` and `python-docx>=1.1.0`.
-- **Database Migrations:** Clean Alembic migration graph confirmed ending at `f6a7b8c9d0e1_add_phase5_performance_indexes.py`.
-- **User Provisioning:** Seed script `backend/scripts/seed_supabase_users.py` verified idempotent and safe.
-
----
-
-## 20. Security Check
-
-- **Git Secret Scan:** Confirmed `.env` is ignored by `.gitignore` and not tracked in git.
-- **Tracked Files:** No live API keys, JWT secrets, or production passwords exist in version-controlled files.
-- **Frontend Safety:** No server secrets (Gemini API key, database passwords, Supabase service-role keys) are referenced in frontend source files or exposed via `VITE_` variables.
-
----
-
-## 21. Known Production Conditions
-
-1. **Single-Node Filesystem Storage:** Evidence files are stored locally in `backend/uploads`. In multi-container setups, this path must be mounted to a shared persistent volume.
-2. **Worker Process Separation:** The FastAPI API server does not process the background analysis queue inline; `python -m worker.runner` must be run as a dedicated process or container.
-3. **Database Migration Step:** `alembic upgrade head` must be executed manually during deployment before starting the application services.
-
----
-
-## 22. Final Assessment
-
-### **READY — END-TO-END CONFIGURATION DOCUMENTED**
-
-CompliScan LM is completely documented and ready for operational deployment. An operator with access to a Supabase project and a Google Gemini API key can configure and run the full end-to-end Legal Metrology compliance workflow reliably without encountering undocumented settings, hidden dependencies, or unexpected startup failures.
+The CompliScan LM MVP is fully verified. Report semantics accurately reflect the authority model, all configuration secrets and environment variables are documented with safe placeholders, direct runtime dependencies are properly specified, and the complete workflow is reproducible end-to-end.

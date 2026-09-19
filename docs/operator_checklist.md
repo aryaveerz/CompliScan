@@ -44,6 +44,6 @@ Use this concise operational checklist during deployment to verify every require
 - [ ] **Reviewer Login**: Successfully authenticated as `reviewer@compliscan.gov.in`.
 - [ ] **Reviewer Queue & Adjudication**: Opened docket in review queue; reviewed findings; confirmed determinations (or recorded overrides with rationale).
 - [ ] **Finalization**: Finalized inspection; atomically created immutable `FinalAuditRecord` and transitioned docket to `READ_ONLY`.
-- [ ] **Official PDF Report**: Downloaded finalized PDF report; verified context snapshot, evidence hashes, rule citations, reviewer determinations, and official certification.
+- [ ] **Official PDF Report**: Downloaded finalized PDF report; verified context snapshot, evidence hashes, rule citations, reviewer determinations, and record integrity status.
 - [ ] **Official DOCX Report**: Downloaded finalized DOCX report; verified structural 1:1 parity with PDF report.
 - [ ] **Audit History & Verification**: Verified chronological audit trail contains all lifecycle events, including `REPORT_DOWNLOADED`.
