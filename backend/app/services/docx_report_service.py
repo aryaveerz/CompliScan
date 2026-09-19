@@ -204,7 +204,7 @@ class DOCXReportService:
         _set_table_borders(t_ev, "CBD5E1", "4")
 
         # Header
-        ev_headers = ["Evidence ID", "Filename / View", "Size", "SHA-256 Integrity Hash (Tamper-Proof)"]
+        ev_headers = ["Evidence ID", "Filename / View", "Size", "SHA-256 Integrity Hash (Change Detection)"]
         for j, h in enumerate(ev_headers):
             cell = t_ev.rows[0].cells[j]
             cell.text = h

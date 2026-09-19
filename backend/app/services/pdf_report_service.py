@@ -195,7 +195,7 @@ class PDFReportService:
                 Paragraph("<b>Evidence ID</b>", table_cell_bold),
                 Paragraph("<b>Filename / View</b>", table_cell_bold),
                 Paragraph("<b>Size</b>", table_cell_bold),
-                Paragraph("<b>SHA-256 Integrity Hash (Tamper-Proof)</b>", table_cell_bold),
+                Paragraph("<b>SHA-256 Integrity Hash (Change Detection)</b>", table_cell_bold),
             ]
         ]
         evidence_list = final_record.evidence_snapshot or []
