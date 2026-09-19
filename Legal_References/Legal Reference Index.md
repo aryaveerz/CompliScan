@@ -2,12 +2,12 @@
 
 ## ComplianceScan — Legal Metrology (Packaged Commodities) Rules, 2011
 
-**Project:** ComplianceScan  
-**Reference Collection:** Legal Metrology (Packaged Commodities) Rules, 2011  
-**Source Authority:** Department of Consumer Affairs, Ministry of Consumer Affairs, Food & Public Distribution, Government of India  
-**Archive Scope:** 2011–2026  
-**Total Source Files:** 40  
-**Status:** Legal Source Archive / Provenance Reference  
+**Project:** ComplianceScan
+**Reference Collection:** Legal Metrology (Packaged Commodities) Rules, 2011
+**Source Authority:** Department of Consumer Affairs, Ministry of Consumer Affairs, Food & Public Distribution, Government of India
+**Archive Scope:** 2011–2026
+**Total Source Files:** 40
+**Status:** Legal Source Archive / Provenance Reference
 **Last Audit Date:** September 2026 (Phase 0 Reconciliation Audit — Controlled Correction Pass)
 
 ---
@@ -138,4 +138,4 @@ The 40 documents establish a statutory lineage spanning 15 years:
 - **Integrity Guarantee**: All source PDFs in this archive are permanent, uneditable legal artifacts.
 - **Traceability Requirement**: Every rule in the deterministic engine must trace back to a specific Rule subclause documented in an approved legal specification.
 - **No Scope Expansion**: Cataloging an advisory, SOP, or statutory amendment in this index does NOT automatically authorize or commit software implementation.
-
+

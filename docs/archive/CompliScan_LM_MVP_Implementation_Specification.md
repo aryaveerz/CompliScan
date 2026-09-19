@@ -1,10 +1,10 @@
 # CompliScan LM — MVP Implementation Specification
 
-**Project:** CompliScan LM  
-**SIH Problem Statement:** PS ID 26034  
-**Title:** Software System to check compliance of Packaged Commodities under Legal Metrology (Packaged Commodities) Rules, 2011 by scanning products, images and labels.  
-**Document Type:** MVP Implementation Specification  
-**Status:** APPROVED — IMPLEMENTATION SOURCE OF TRUTH FOR MVP  
+**Project:** CompliScan LM
+**SIH Problem Statement:** PS ID 26034
+**Title:** Software System to check compliance of Packaged Commodities under Legal Metrology (Packaged Commodities) Rules, 2011 by scanning products, images and labels.
+**Document Type:** MVP Implementation Specification
+**Status:** APPROVED — IMPLEMENTATION SOURCE OF TRUTH FOR MVP
 **Date:** 2026-09-16
 
 ---

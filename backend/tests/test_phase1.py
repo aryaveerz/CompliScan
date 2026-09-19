@@ -337,7 +337,7 @@ async def test_golden_path_end_to_end():
         assert view_data["status"] == "EVIDENCE_UPLOADED"
         assert view_data["product_name"] == "Tata Salt Vacuum Evaporated Iodized 1kg"
         assert len(view_data["evidence_assets"]) == 2
-        
+
         # Verify hashes exist and are distinct
         hashes = [asset["sha256_hash"] for asset in view_data["evidence_assets"]]
         assert len(set(hashes)) == 2

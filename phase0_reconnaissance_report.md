@@ -1,17 +1,17 @@
 # ComplianceScan — Phase 0 Reconnaissance Report
 
-**Date:** 2026-09-15  
-**Phase:** 0 — Reconnaissance & Reality Check  
-**Agent Status:** STOPPED — Awaiting human approval before Phase 1  
-**Last Updated:** 2026-09-15 18:46 IST — `11_Testing_and_Release_Gate.md` uploaded; report updated.  
+**Date:** 2026-09-15
+**Phase:** 0 — Reconnaissance & Reality Check
+**Agent Status:** STOPPED — Awaiting human approval before Phase 1
+**Last Updated:** 2026-09-15 18:46 IST — `11_Testing_and_Release_Gate.md` uploaded; report updated.
 
 ---
 
 ## 1. Repository Summary
 
-**Repository root:** `g:\CompliScan`  
-**Total files found:** 16 (updated — `11_Testing_and_Release_Gate.md` uploaded after initial audit)  
-**Total directories:** 1 (`Documentation/`)  
+**Repository root:** `g:\CompliScan`
+**Total files found:** 16 (updated — `11_Testing_and_Release_Gate.md` uploaded after initial audit)
+**Total directories:** 1 (`Documentation/`)
 
 The repository contains **documentation only**. There is no application code of any kind — no frontend, no backend, no configuration files, no package manifests, no database schemas, no migrations, no tests, no environment files, no CI/CD definitions, no Docker files, no deployment configuration.
 
@@ -234,7 +234,7 @@ These must be resolved before Phase 1 begins:
 
 | ID | Blocker | Why It Blocks |
 |---|---|---|
-| B-01 | **No code exists** | The entire vertical slice must be built from scratch. | 
+| B-01 | **No code exists** | The entire vertical slice must be built from scratch. |
 | B-02 | **Auth strategy undecided** | Cannot implement role-based access control (Inspector/Reviewer separation) without choosing JWT/session/third-party auth. Every protected API endpoint depends on this. |
 | B-03 | **Cloud DB provider undecided** | Cannot finalize ORM setup, connection pooling, or migrations without a target database. SQLite is only a local dev convenience; the cloud provider must be selected for Phase 1. |
 | B-04 | **Object storage provider undecided** | Evidence upload, storage, and retrieval cannot be properly implemented without a real storage target. |
@@ -422,7 +422,7 @@ The documentation lists Vercel as a "possible option." For a React + Vite SPA ta
 
 **Decision required:** What is the fallback if PaddleOCR cannot be made to work in the deployment environment?
 
-PaddleOCR is the documented MVP choice. However, if installation or deployment constraints prevent it from working reliably, there should be a defined fallback (e.g., Tesseract OCR, or delegating OCR to Gemini directly). 
+PaddleOCR is the documented MVP choice. However, if installation or deployment constraints prevent it from working reliably, there should be a defined fallback (e.g., Tesseract OCR, or delegating OCR to Gemini directly).
 
 **This is not a proposal to change the OCR choice.** It is a risk acknowledgment: if Phase 3 validation reveals an unresolvable blocker, a decision is needed before Phase 4 work begins.
 
@@ -484,5 +484,5 @@ Awaiting explicit human approval and answers to the questions in §16 before pro
 
 ---
 
-*Report produced by engineering agent — Phase 0 Reconnaissance & Reality Check.*  
+*Report produced by engineering agent — Phase 0 Reconnaissance & Reality Check.*
 *Evidence base: Direct repository inspection (`g:\CompliScan`) and full documentation read.*

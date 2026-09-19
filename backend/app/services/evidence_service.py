@@ -1,7 +1,7 @@
 """
 CompliScan LM — Evidence Service.
 Handles evidence validation, SHA-256 calculation, image decoding integrity,
-storage persistence, and lifecycle transitions.
+storage persistence, lifecycle transitions, and asynchronous analysis job enqueueing.
 """
 
 import io
@@ -11,20 +11,27 @@ from typing import List, Optional
 from PIL import Image
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from fastapi import UploadFile
+
 from backend.app.models.evidence import EvidenceAsset
 from backend.app.models.inspection import InspectionCase
+from backend.app.models.image_quality import ImageQualityAssessment
+from backend.app.models.ocr import OCRResult
+from backend.app.models.structured_declaration import StructuredDeclarationResult
+from backend.app.models.analysis_job import AnalysisJob
 from backend.app.models.user import User
 from backend.app.core.config import settings
 from backend.app.core.errors import EvidenceError, NotFoundError, ForbiddenError, InvalidStateError
 from backend.app.core.security import compute_sha256
 from backend.app.services.audit_service import AuditService
+from backend.app.services.analysis_job_service import AnalysisJobService
 from shared.domain.constants import (
     MAX_EVIDENCE_SIZE_BYTES,
     ALLOWED_MIME_TYPES,
     ErrorCode,
 )
-from shared.domain.enums import EvidenceType, AuditEventType, UserRole
+from shared.domain.enums import EvidenceType, AuditEventType, UserRole, JobType
 from shared.domain.states import InspectionLifecycleState, FinalizationStatus
 
 
@@ -64,14 +71,14 @@ class EvidenceService:
         """Save evidence binary to persistent storage directory."""
         target_dir = os.path.join(settings.LOCAL_STORAGE_DIR, inspection_id)
         os.makedirs(target_dir, exist_ok=True)
-        
+
         # Sanitize filename
         safe_filename = "".join(c for c in filename if c.isalnum() or c in "._-")
         storage_path = os.path.join(target_dir, f"{evidence_id}_{safe_filename}")
-        
+
         with open(storage_path, "wb") as f:
             f.write(content)
-        
+
         return storage_path
 
     @classmethod
@@ -83,7 +90,7 @@ class EvidenceService:
         evidence_type: EvidenceType,
         current_user: User,
     ) -> EvidenceAsset:
-        """Process and persist an evidence asset upload."""
+        """Process and persist an evidence asset upload, then enqueue asynchronous quality assessment."""
         # 1. Fetch inspection case
         stmt = select(InspectionCase).where(InspectionCase.id == inspection_id)
         result = await db.execute(stmt)
@@ -140,47 +147,107 @@ class EvidenceService:
         )
         db.add(asset)
 
-        # 9. Update inspection lifecycle state if it was in DRAFT
+        # 9. Auto-enqueue Image Quality Assessment job
+        await AnalysisJobService.enqueue_job(
+            db=db,
+            inspection_id=inspection_id,
+            evidence_id=evidence_id,
+            job_type=JobType.IMAGE_QUALITY,
+        )
+
+        # 10. Update inspection lifecycle state if it was in DRAFT
         if inspection.status == InspectionLifecycleState.DRAFT.value:
             inspection.status = InspectionLifecycleState.EVIDENCE_UPLOADED.value
             await AuditService.log_event(
                 db=db,
-                event_type=AuditEventType.STATUS_TRANSITION,
+                event_type=AuditEventType.EVIDENCE_UPLOADED,
                 inspection_id=inspection_id,
                 actor_id=current_user.id,
                 actor_role=current_user.role,
-                details={"from": InspectionLifecycleState.DRAFT.value, "to": InspectionLifecycleState.EVIDENCE_UPLOADED.value},
+                details={
+                    "evidence_id": evidence_id,
+                    "evidence_type": str(evidence_type),
+                    "original_filename": file.filename,
+                    "file_size_bytes": file_size,
+                    "sha256_hash": sha256_hash,
+                },
             )
-
-        # 10. Audit log
-        await AuditService.log_event(
-            db=db,
-            event_type=AuditEventType.EVIDENCE_UPLOADED,
-            inspection_id=inspection_id,
-            actor_id=current_user.id,
-            actor_role=current_user.role,
-            details={
-                "evidence_id": evidence_id,
-                "filename": file.filename,
-                "sha256_hash": sha256_hash,
-                "size_bytes": file_size,
-                "mime_type": file.content_type,
-            },
-        )
 
         await db.commit()
         await db.refresh(asset)
         return asset
 
     @staticmethod
-    async def get_evidence_by_id(db: AsyncSession, evidence_id: str) -> EvidenceAsset:
-        """Retrieve evidence asset by ID."""
+    async def get_evidence_by_id(
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: Optional[User] = None,
+    ) -> EvidenceAsset:
+        """Retrieve an EvidenceAsset by ID with authorization verification."""
         stmt = select(EvidenceAsset).where(EvidenceAsset.id == evidence_id)
         result = await db.execute(stmt)
         asset = result.scalar_one_or_none()
         if not asset:
             raise NotFoundError(f"Evidence {evidence_id} not found")
+
+        if current_user:
+            stmt_insp = select(InspectionCase).where(InspectionCase.id == asset.inspection_id)
+            res_insp = await db.execute(stmt_insp)
+            inspection = res_insp.scalar_one_or_none()
+            if not inspection:
+                raise NotFoundError(f"Inspection {asset.inspection_id} not found")
+
+            if current_user.role == UserRole.INSPECTOR.value and inspection.created_by_id != current_user.id:
+                raise ForbiddenError("Access denied: You are not authorized to download evidence for another inspector's case")
+
         return asset
+
+    @staticmethod
+    async def get_evidence_quality(db: AsyncSession, evidence_id: str) -> ImageQualityAssessment:
+        """Retrieve the ImageQualityAssessment for a specific evidence asset."""
+        stmt = select(ImageQualityAssessment).where(ImageQualityAssessment.evidence_id == evidence_id)
+        result = await db.execute(stmt)
+        assessment = result.scalar_one_or_none()
+        if not assessment:
+            raise NotFoundError(f"Quality assessment for evidence {evidence_id} not found")
+        return assessment
+
+    @staticmethod
+    async def enqueue_quality_reassessment(
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: User,
+    ) -> AnalysisJob:
+        """
+        Manually re-enqueue an asynchronous Image Quality Assessment job.
+        Enforces server-side authentication, RBAC, and access verification.
+        """
+        stmt = select(EvidenceAsset).where(EvidenceAsset.id == evidence_id)
+        result = await db.execute(stmt)
+        evidence = result.scalar_one_or_none()
+        if not evidence:
+            raise NotFoundError(f"Evidence {evidence_id} not found")
+
+        # Verify inspection access
+        stmt_insp = select(InspectionCase).where(InspectionCase.id == evidence.inspection_id)
+        res_insp = await db.execute(stmt_insp)
+        inspection = res_insp.scalar_one_or_none()
+        if not inspection:
+            raise NotFoundError(f"Inspection {evidence.inspection_id} not found")
+
+        if current_user.role == UserRole.INSPECTOR.value and inspection.created_by_id != current_user.id:
+            raise ForbiddenError("Cannot trigger quality assessment for another inspector's case")
+
+        job = await AnalysisJobService.enqueue_job(
+            db=db,
+            inspection_id=evidence.inspection_id,
+            evidence_id=evidence.id,
+            job_type=JobType.IMAGE_QUALITY,
+            priority=1,  # User-initiated trigger gets higher priority
+        )
+        await db.commit()
+        await db.refresh(job)
+        return job
 
     @staticmethod
     async def delete_draft_evidence(
@@ -234,3 +301,147 @@ class EvidenceService:
         )
 
         await db.commit()
+
+    @staticmethod
+    async def get_evidence_ocr(
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: User,
+    ) -> OCRResult:
+        """
+        Retrieve OCR perception result for an evidence asset with RBAC / case authorization check.
+        """
+        stmt = select(EvidenceAsset).where(EvidenceAsset.id == evidence_id)
+        result = await db.execute(stmt)
+        evidence = result.scalar_one_or_none()
+        if not evidence:
+            raise NotFoundError(f"Evidence {evidence_id} not found")
+
+        stmt_insp = select(InspectionCase).where(InspectionCase.id == evidence.inspection_id)
+        res_insp = await db.execute(stmt_insp)
+        inspection = res_insp.scalar_one_or_none()
+        if not inspection:
+            raise NotFoundError(f"Inspection {evidence.inspection_id} not found")
+
+        if current_user.role == UserRole.INSPECTOR.value and inspection.created_by_id != current_user.id:
+            raise ForbiddenError("Cannot access OCR results for another inspector's case")
+
+        stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == evidence_id)
+        res_ocr = await db.execute(stmt_ocr)
+        ocr_result = res_ocr.scalar_one_or_none()
+        if not ocr_result:
+            raise NotFoundError(f"OCR result for evidence {evidence_id} not found")
+
+        return ocr_result
+
+    @staticmethod
+    async def enqueue_ocr_processing(
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: User,
+    ) -> AnalysisJob:
+        """
+        Manually enqueue an asynchronous PERCEPTION job for an evidence asset.
+        Enforces server-side authentication, RBAC, and inspection state verification.
+        """
+        stmt = select(EvidenceAsset).where(EvidenceAsset.id == evidence_id)
+        result = await db.execute(stmt)
+        evidence = result.scalar_one_or_none()
+        if not evidence:
+            raise NotFoundError(f"Evidence {evidence_id} not found")
+
+        # Verify inspection access
+        stmt_insp = select(InspectionCase).where(InspectionCase.id == evidence.inspection_id)
+        res_insp = await db.execute(stmt_insp)
+        inspection = res_insp.scalar_one_or_none()
+        if not inspection:
+            raise NotFoundError(f"Inspection {evidence.inspection_id} not found")
+
+        if current_user.role == UserRole.INSPECTOR.value and inspection.created_by_id != current_user.id:
+            raise ForbiddenError("Cannot trigger OCR processing for another inspector's case")
+
+        if inspection.finalization_status == FinalizationStatus.READ_ONLY.value:
+            raise InvalidStateError("Cannot process evidence for a finalized, read-only inspection")
+
+        job = await AnalysisJobService.enqueue_job(
+            db=db,
+            inspection_id=evidence.inspection_id,
+            evidence_id=evidence.id,
+            job_type=JobType.PERCEPTION,
+            priority=1,  # User-initiated trigger gets higher priority
+        )
+        await db.commit()
+        await db.refresh(job)
+        return job
+
+    @staticmethod
+    async def get_evidence_declarations(
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: User,
+    ) -> StructuredDeclarationResult:
+        """
+        Retrieve structured declaration extraction result for an evidence asset with RBAC / case authorization check.
+        """
+        stmt = select(EvidenceAsset).where(EvidenceAsset.id == evidence_id)
+        result = await db.execute(stmt)
+        evidence = result.scalar_one_or_none()
+        if not evidence:
+            raise NotFoundError(f"Evidence {evidence_id} not found")
+
+        stmt_insp = select(InspectionCase).where(InspectionCase.id == evidence.inspection_id)
+        res_insp = await db.execute(stmt_insp)
+        inspection = res_insp.scalar_one_or_none()
+        if not inspection:
+            raise NotFoundError(f"Inspection {evidence.inspection_id} not found")
+
+        if current_user.role == UserRole.INSPECTOR.value and inspection.created_by_id != current_user.id:
+            raise ForbiddenError("Cannot access extraction results for another inspector's case")
+
+        stmt_decl = select(StructuredDeclarationResult).where(StructuredDeclarationResult.evidence_id == evidence_id)
+        res_decl = await db.execute(stmt_decl)
+        decl_result = res_decl.scalar_one_or_none()
+        if not decl_result:
+            raise NotFoundError(f"Structured declarations for evidence {evidence_id} not found")
+
+        return decl_result
+
+    @staticmethod
+    async def enqueue_declaration_extraction(
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: User,
+    ) -> AnalysisJob:
+        """
+        Manually enqueue an asynchronous EXTRACTION job for an evidence asset.
+        Enforces server-side authentication, RBAC, and inspection state verification.
+        """
+        stmt = select(EvidenceAsset).where(EvidenceAsset.id == evidence_id)
+        result = await db.execute(stmt)
+        evidence = result.scalar_one_or_none()
+        if not evidence:
+            raise NotFoundError(f"Evidence {evidence_id} not found")
+
+        # Verify inspection access
+        stmt_insp = select(InspectionCase).where(InspectionCase.id == evidence.inspection_id)
+        res_insp = await db.execute(stmt_insp)
+        inspection = res_insp.scalar_one_or_none()
+        if not inspection:
+            raise NotFoundError(f"Inspection {evidence.inspection_id} not found")
+
+        if current_user.role == UserRole.INSPECTOR.value and inspection.created_by_id != current_user.id:
+            raise ForbiddenError("Cannot trigger extraction for another inspector's case")
+
+        if inspection.finalization_status == FinalizationStatus.READ_ONLY.value:
+            raise InvalidStateError("Cannot process evidence for a finalized, read-only inspection")
+
+        job = await AnalysisJobService.enqueue_job(
+            db=db,
+            inspection_id=evidence.inspection_id,
+            evidence_id=evidence.id,
+            job_type=JobType.EXTRACTION,
+            priority=1,  # User-initiated trigger gets higher priority
+        )
+        await db.commit()
+        await db.refresh(job)
+        return job

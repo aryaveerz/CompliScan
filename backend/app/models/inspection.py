@@ -15,6 +15,11 @@ if TYPE_CHECKING:
     from backend.app.models.user import User
     from backend.app.models.evidence import EvidenceAsset
     from backend.app.models.audit import AuditEvent
+    from backend.app.models.compliance import ApplicabilityResult, ComplianceFinding
+    from backend.app.models.verification import DeclarationCorrection, ManualObservation
+    from backend.app.models.reviewer import ReviewerDecision
+    from backend.app.models.evidence_request import EvidenceRequest
+    from backend.app.models.final_audit import FinalAuditRecord
 
 
 class InspectionCase(Base):
@@ -48,3 +53,10 @@ class InspectionCase(Base):
     reviewer: Mapped[Optional["User"]] = relationship("User", foreign_keys=[reviewer_id], back_populates="assigned_inspections")
     evidence_assets: Mapped[List["EvidenceAsset"]] = relationship("EvidenceAsset", back_populates="inspection", cascade="all, delete-orphan")
     audit_events: Mapped[List["AuditEvent"]] = relationship("AuditEvent", back_populates="inspection", cascade="all, delete-orphan")
+    applicability_results: Mapped[List["ApplicabilityResult"]] = relationship("ApplicabilityResult", back_populates="inspection", cascade="all, delete-orphan")
+    compliance_findings: Mapped[List["ComplianceFinding"]] = relationship("ComplianceFinding", back_populates="inspection", cascade="all, delete-orphan")
+    declaration_corrections: Mapped[List["DeclarationCorrection"]] = relationship("DeclarationCorrection", back_populates="inspection", cascade="all, delete-orphan")
+    manual_observations: Mapped[List["ManualObservation"]] = relationship("ManualObservation", back_populates="inspection", cascade="all, delete-orphan")
+    reviewer_decisions: Mapped[List["ReviewerDecision"]] = relationship("ReviewerDecision", back_populates="inspection", cascade="all, delete-orphan")
+    evidence_requests: Mapped[List["EvidenceRequest"]] = relationship("EvidenceRequest", back_populates="inspection", cascade="all, delete-orphan")
+    final_audit_record: Mapped[Optional["FinalAuditRecord"]] = relationship("FinalAuditRecord", back_populates="inspection", uselist=False, cascade="all, delete-orphan")

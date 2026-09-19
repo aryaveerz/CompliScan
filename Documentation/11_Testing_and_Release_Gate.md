@@ -1,9 +1,9 @@
 # ComplianceScan — Testing & Release Gate Specification
 
-**Document:** `11_Testing_and_Release_Gate.md`  
-**Version:** 1.1  
-**Status:** Implementation Contract  
-**Scope:** MVP / SIH’26 production-quality web application  
+**Document:** `11_Testing_and_Release_Gate.md`
+**Version:** 1.1
+**Status:** Implementation Contract
+**Scope:** MVP / SIH’26 production-quality web application
 **Purpose:** Define how ComplianceScan is verified, hardened, and accepted for release.
 
 ---

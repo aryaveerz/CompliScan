@@ -26,6 +26,13 @@ logger = logging.getLogger("compliscan.seed")
 async def seed_user(session: AsyncSession, email: str, default_password_env: str, full_name: str, role: UserRole):
     password = os.environ.get(default_password_env)
     if not password:
+        defaults = {
+            "SEED_INSPECTOR_PASSWORD": "Password@Insp1",
+            "SEED_REVIEWER_PASSWORD": "Password@rev1",
+        }
+        password = defaults.get(default_password_env)
+
+    if not password:
         logger.error(f"Environment variable '{default_password_env}' is required to provision {email}.")
         logger.info(f"Example: set {default_password_env}=YourSecurePassword123!")
         return
@@ -44,19 +51,50 @@ async def seed_user(session: AsyncSession, email: str, default_password_env: str
         auth_id = auth_user["id"]
         logger.info(f"Supabase Auth identity created successfully: {auth_id}")
     except Exception as exc:
-        logger.warning(f"Admin creation returned: {exc}. Checking if user already exists in Supabase...")
-        # If user already exists, try signing in to get their auth ID
-        try:
-            sign_in_res = await supabase_auth_client.sign_in_with_password(email, password)
-            auth_user = sign_in_res.get("user") or {}
-            auth_id = auth_user.get("id")
+        logger.warning(f"Admin creation returned: {exc}. User already registered; updating password via Admin API...")
+        # Check existing user in local database or via Supabase Admin API
+        stmt = select(User).where(User.email == email)
+        result = await session.execute(stmt)
+        existing_user = result.scalar_one_or_none()
+        auth_id = existing_user.id if existing_user else None
+
+        headers = {
+            "apikey": settings.SUPABASE_SERVICE_ROLE_KEY,
+            "Authorization": f"Bearer {settings.SUPABASE_SERVICE_ROLE_KEY}",
+            "Content-Type": "application/json",
+        }
+
+        import httpx
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            if not auth_id:
+                admin_users_res = await client.get(
+                    f"{settings.SUPABASE_URL.rstrip('/')}/auth/v1/admin/users",
+                    headers=headers
+                )
+                if admin_users_res.status_code == 200:
+                    for u in admin_users_res.json().get("users", []):
+                        if u.get("email", "").lower() == email.lower():
+                            auth_id = u.get("id")
+                            break
+
             if not auth_id:
                 logger.error(f"Could not resolve Supabase ID for {email}")
                 return
-            logger.info(f"Resolved existing Supabase Auth identity: {auth_id}")
-        except Exception as sign_in_exc:
-            logger.error(f"Failed to resolve identity for {email}: {sign_in_exc}")
-            return
+
+            # Update password and metadata via Supabase Admin API
+            update_res = await client.put(
+                f"{settings.SUPABASE_URL.rstrip('/')}/auth/v1/admin/users/{auth_id}",
+                json={
+                    "password": password,
+                    "user_metadata": {"full_name": full_name, "role": role.value},
+                    "email_confirm": True
+                },
+                headers=headers
+            )
+            if update_res.status_code not in (200, 201):
+                logger.error(f"Failed to update password for {email}: {update_res.text}")
+                return
+            logger.info(f"Successfully updated password in Supabase Auth for {email} ({auth_id})")
 
     # 2. Synchronize to public.users with 1:1 ID mapping and hashed_password=None
     stmt = select(User).where(User.email == email)

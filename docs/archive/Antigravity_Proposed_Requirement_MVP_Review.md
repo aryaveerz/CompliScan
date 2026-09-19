@@ -1,7 +1,7 @@
 # Antigravity Review — CompliScan LM Proposed Requirement-Complete MVP
-**Document Reviewed:** `CompliScan_LM_Proposed_Requirement_Complete_MVP.md`  
-**Reviewed by:** Antigravity  
-**Date:** 2026-09-16  
+**Document Reviewed:** `CompliScan_LM_Proposed_Requirement_Complete_MVP.md`
+**Reviewed by:** Antigravity
+**Date:** 2026-09-16
 **Status:** REVIEW ONLY — No implementation started.
 
 ---
@@ -57,7 +57,7 @@ The proposal is approvable as the new controlling MVP definition. Four targeted 
 This is the most important technical distinction in the entire proposal. The three-way split:
 ```
 NOT_OBSERVED ≠ MISSING
-UNREADABLE ≠ MISSING  
+UNREADABLE ≠ MISSING
 INSUFFICIENT_EVIDENCE ≠ MISSING
 ```
 is legally correct and technically defensible. Most competing systems would blindly treat OCR failure as a missing declaration. This distinction alone is a meaningful differentiator.
@@ -118,7 +118,7 @@ Expanded from the previous 32-step test. Steps 16–18 (font-size, placement, an
 Declaration → OCR Bounding Box → Image Region → Configured Expected Region → Assessment
 ```
 
-For MVP, the "configured expected region" cannot be a deep understanding of packaging layout rules (which vary by commodity category and are not fully specified in the LM Rules for all cases). 
+For MVP, the "configured expected region" cannot be a deep understanding of packaging layout rules (which vary by commodity category and are not fully specified in the LM Rules for all cases).
 
 **Implementation guidance:** For MVP, placement assessment means:
 - Record the detected bounding-box region (top/bottom/left/right of the image, front/rear face if the Inspector tags it).
@@ -389,5 +389,5 @@ AUTHORIZE FOR IMPLEMENTATION after RC-01 and RC-02 are confirmed.
 
 ---
 
-*Review complete. No code, schema, migration, or implementation artifact created.*  
+*Review complete. No code, schema, migration, or implementation artifact created.*
 *All four recommended adjustments require human confirmation before they are treated as approved changes.*

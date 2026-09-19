@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, PlusCircle, ShieldAlert, Info, Globe, Building2, HelpCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  PlusCircle,
+  AlertCircle,
+  Info,
+  Globe,
+  Building2,
+  HelpCircle,
+} from 'lucide-react';
 import { api } from '../api/client';
 import { OriginStatus } from '../types';
+
+// DESIGN.md: light-mode form (#ffffff container, #cbd5e1 input borders, #1e293b primary button)
 
 export const NewInspectionPage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,37 +49,45 @@ export const NewInspectionPage: React.FC = () => {
     }
   };
 
+  const inputClass =
+    'w-full px-3 py-2 bg-white border border-slate-300 rounded text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 transition-colors';
+
+  const labelClass = 'block text-xs font-medium text-slate-700 mb-1.5';
+
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Back button */}
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+      {/* Back */}
       <Link
         to="/inspections"
-        className="inline-flex items-center space-x-1.5 text-xs text-slate-400 hover:text-white mb-6 transition-colors"
+        className="inline-flex items-center space-x-1.5 text-xs text-slate-500 hover:text-slate-900 mb-6 transition-colors"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-3.5 h-3.5" />
         <span>Back to Inspections</span>
       </Link>
 
-      <div className="glass-panel rounded-2xl p-8 border border-slate-800 shadow-2xl">
+      <div className="bg-white rounded-lg border border-slate-200 shadow-[0_1px_2px_rgba(15,23,42,0.05)] p-6 sm:p-8">
+        {/* Header */}
         <div className="mb-6">
-          <h1 className="text-xl font-extrabold text-white">Create Inspection Case</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Capture initial Product Context under Legal Metrology (Packaged Commodities) Rules, 2011.
+          <h1 className="text-lg font-bold text-slate-900 tracking-tight">Create Inspection Case</h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Capture initial product context under Legal Metrology (Packaged Commodities) Rules, 2011.
           </p>
         </div>
 
+        {/* Error */}
         {error && (
-          <div className="mb-6 p-3.5 bg-rose-950/50 border border-rose-800/60 rounded-xl flex items-center space-x-2 text-xs text-rose-300">
-            <ShieldAlert className="w-4 h-4 shrink-0 text-rose-400" />
+          <div className="mb-5 p-3 bg-red-50 border border-red-200 rounded flex items-center space-x-2 text-xs text-red-700">
+            <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Product Name */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Product Name / Common Brand Name <span className="text-emerald-400">*</span>
+            <label className={labelClass}>
+              Product Name / Common Brand Name{' '}
+              <span className="text-red-500" aria-label="required">*</span>
             </label>
             <input
               type="text"
@@ -77,123 +95,140 @@ export const NewInspectionPage: React.FC = () => {
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
               placeholder="e.g., Parle-G Gold Glucose Biscuits 100g"
-              className="w-full px-3.5 py-2.5 bg-slate-900/80 border border-slate-700 focus:border-emerald-500 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              className={inputClass}
             />
           </div>
 
           {/* Origin Status */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Origin Status (Applicability Trigger) <span className="text-emerald-400">*</span>
+            <label className={labelClass}>
+              Origin Status{' '}
+              <span className="text-slate-400 font-normal">(Applicability Trigger)</span>{' '}
+              <span className="text-red-500" aria-label="required">*</span>
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2">
+              {/* DOMESTIC */}
               <button
                 type="button"
                 onClick={() => setOriginStatus('DOMESTIC')}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded border text-left transition-colors ${
                   originStatus === 'DOMESTIC'
-                    ? 'bg-emerald-950/80 border-emerald-500 text-emerald-300 ring-1 ring-emerald-500'
-                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-[#1e293b] border-[#1e293b] text-white'
+                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                <div className="flex items-center space-x-1.5 font-bold text-xs">
-                  <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="flex items-center space-x-1.5 text-xs font-semibold">
+                  <Building2 className="w-3.5 h-3.5 shrink-0" />
                   <span>DOMESTIC</span>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-1">Made/Packed in India</p>
+                <p className={`text-[10px] mt-0.5 ${originStatus === 'DOMESTIC' ? 'text-slate-300' : 'text-slate-400'}`}>
+                  Made/Packed in India
+                </p>
               </button>
 
+              {/* IMPORTED */}
               <button
                 type="button"
                 onClick={() => setOriginStatus('IMPORTED')}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded border text-left transition-colors ${
                   originStatus === 'IMPORTED'
-                    ? 'bg-amber-950/80 border-amber-500 text-amber-300 ring-1 ring-amber-500'
-                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-[#1e293b] border-[#1e293b] text-white'
+                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                <div className="flex items-center space-x-1.5 font-bold text-xs">
-                  <Globe className="w-3.5 h-3.5 text-amber-400" />
+                <div className="flex items-center space-x-1.5 text-xs font-semibold">
+                  <Globe className="w-3.5 h-3.5 shrink-0" />
                   <span>IMPORTED</span>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-1">Requires COO check</p>
+                <p className={`text-[10px] mt-0.5 ${originStatus === 'IMPORTED' ? 'text-slate-300' : 'text-slate-400'}`}>
+                  Requires COO check
+                </p>
               </button>
 
+              {/* UNKNOWN */}
               <button
                 type="button"
                 onClick={() => setOriginStatus('UNKNOWN')}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded border text-left transition-colors ${
                   originStatus === 'UNKNOWN'
-                    ? 'bg-slate-800 border-slate-500 text-slate-200 ring-1 ring-slate-500'
-                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-[#1e293b] border-[#1e293b] text-white'
+                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                <div className="flex items-center space-x-1.5 font-bold text-xs">
-                  <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex items-center space-x-1.5 text-xs font-semibold">
+                  <HelpCircle className="w-3.5 h-3.5 shrink-0" />
                   <span>UNKNOWN</span>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-1">Determine in review</p>
+                <p className={`text-[10px] mt-0.5 ${originStatus === 'UNKNOWN' ? 'text-slate-300' : 'text-slate-400'}`}>
+                  Determine in review
+                </p>
               </button>
             </div>
           </div>
 
-          {/* Product Category & Reference URL */}
+          {/* Category + Reference URL */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                Product Category <span className="text-slate-500 font-normal">(Optional Metadata)</span>
+              <label className={labelClass}>
+                Product Category{' '}
+                <span className="text-slate-400 font-normal">(Optional)</span>
               </label>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="e.g. Packaged Foods, Personal Care"
-                className="w-full px-3.5 py-2.5 bg-slate-900/80 border border-slate-700 focus:border-emerald-500 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className={inputClass}
               />
             </div>
-
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                Reference / URL <span className="text-slate-500 font-normal">(Optional Metadata)</span>
+              <label className={labelClass}>
+                Reference URL{' '}
+                <span className="text-slate-400 font-normal">(Optional)</span>
               </label>
               <input
                 type="text"
                 value={referenceUrl}
                 onChange={(e) => setReferenceUrl(e.target.value)}
-                placeholder="e.g. https://brand.in/listing"
-                className="w-full px-3.5 py-2.5 bg-slate-900/80 border border-slate-700 focus:border-emerald-500 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                placeholder="https://brand.in/listing"
+                className={inputClass}
               />
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Inspector Notes <span className="text-slate-500 font-normal">(Optional)</span>
+            <label className={labelClass}>
+              Inspector Notes{' '}
+              <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
             <textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Record batch identifiers, market location, sampling details..."
-              className="w-full px-3.5 py-2.5 bg-slate-900/80 border border-slate-700 focus:border-emerald-500 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              placeholder="Record batch identifiers, market location, sampling details…"
+              className={inputClass}
             />
           </div>
 
-          <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-[11px] text-slate-400 flex items-start space-x-2">
-            <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+          {/* Info notice */}
+          <div className="p-3 bg-slate-50 border border-slate-200 rounded flex items-start space-x-2 text-xs text-slate-600">
+            <Info className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
             <span>
-              Creating this case initializes the inspection workspace in <strong>DRAFT</strong> state. Next, you will upload primary package photographs.
+              Creating this case initializes the inspection workspace in{' '}
+              <strong className="font-medium text-slate-700">DRAFT</strong> state. Next, you will
+              upload primary package photographs.
             </span>
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30 flex items-center justify-center space-x-2 transition-all hover:scale-[1.01]"
+            className="w-full py-2.5 px-4 bg-[#1e293b] hover:bg-[#0f172a] disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold text-sm rounded flex items-center justify-center space-x-2 transition-colors"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>{loading ? 'Creating Inspection...' : 'Create Inspection & Proceed to Evidence'}</span>
+            <span>{loading ? 'Creating…' : 'Create Inspection & Proceed to Evidence'}</span>
           </button>
         </form>
       </div>

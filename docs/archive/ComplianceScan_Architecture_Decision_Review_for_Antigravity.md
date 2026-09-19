@@ -1,7 +1,7 @@
 # ComplianceScan — Architecture Decision Review Package for Antigravity
 
-**Project:** ComplianceScan  
-**SIH PS:** 26034  
+**Project:** ComplianceScan
+**SIH PS:** 26034
 **Purpose:** Give Antigravity the current architecture decisions for an independent technical review.
 
 > ## IMPORTANT — THIS IS NOT THE FINAL IMPLEMENTATION SPECIFICATION

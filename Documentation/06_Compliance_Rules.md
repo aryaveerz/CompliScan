@@ -1,11 +1,11 @@
 # ComplianceScan — Compliance Rules Specification
 
-**Document:** `06_Compliance_Rules.md`  
-**Version:** 1.0  
-**Status:** MVP Controlled Rule Specification  
-**Product:** ComplianceScan  
-**Problem Statement:** SIH'26 PS 26034  
-**Domain:** Legal Metrology (Packaged Commodities) inspection assistance  
+**Document:** `06_Compliance_Rules.md`
+**Version:** 1.0
+**Status:** MVP Controlled Rule Specification
+**Product:** ComplianceScan
+**Problem Statement:** SIH'26 PS 26034
+**Domain:** Legal Metrology (Packaged Commodities) inspection assistance
 
 ---
 
@@ -1990,16 +1990,16 @@ The governing principle is:
 
 The implementation team should use official sources when maintaining the controlled rule snapshot.
 
-1. **India Code — Legal Metrology Act, 2009**  
+1. **India Code — Legal Metrology Act, 2009**
    https://www.indiacode.nic.in/handle/123456789/15676
 
-2. **India Code — Legal Metrology Act, 2009, statutory text**  
+2. **India Code — Legal Metrology Act, 2009, statutory text**
    https://www.indiacode.nic.in/bitstream/123456789/4892/1/legalmetrology_act_2009.pdf
 
-3. **India Code — Legal Metrology (Packaged Commodities) Rules, 2011**  
+3. **India Code — Legal Metrology (Packaged Commodities) Rules, 2011**
    https://upload.indiacode.nic.in/showfile?actid=AC_CH_60_1205_00002_00002_1560405527490&filename=9_the_legal_metrology_%28package_commodities%29_rules%2C_2011.pdf&type=rule
 
-4. **Department of Consumer Affairs — consolidated Legal Metrology Packaged Commodities material**  
+4. **Department of Consumer Affairs — consolidated Legal Metrology Packaged Commodities material**
    https://consumeraffairs.nic.in/sites/default/files/file-uploads/latestnews/LM_PCR_All_Amendements.pdf
 
 These references are provided for regulatory traceability. The project must verify the applicable legal position and amendment status before treating a rule snapshot as current for operational use.

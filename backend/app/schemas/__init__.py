@@ -10,7 +10,36 @@ from backend.app.schemas.inspection import (
     InspectionListResponse,
 )
 from backend.app.schemas.evidence import EvidenceResponse, EvidenceListResponse
+from backend.app.schemas.image_quality import (
+    ImageQualityAssessmentResponse,
+    AnalysisJobResponse,
+)
 from backend.app.schemas.audit import AuditEventResponse
+from backend.app.schemas.compliance import (
+    ApplicabilityItemResponse,
+    ApplicabilityListResponse,
+    ComplianceFindingResponse,
+    ComplianceEvaluationSummaryResponse,
+)
+from backend.app.schemas.verification import (
+    DeclarationCorrectionCreate,
+    DeclarationCorrectionResponse,
+    ManualObservationCreate,
+    ManualObservationResponse,
+    VerificationSubmitRequest,
+    VerificationStateResponse,
+)
+from backend.app.schemas.reviewer import (
+    ReviewerDecisionCreate,
+    ReviewerDecisionResponse,
+    ReviewRevisionRequest,
+    EvidenceRequestCreate,
+    EvidenceRequestResponse,
+    EvidenceRequestFulfillRequest,
+    FinalizeInspectionRequest,
+    FinalAuditRecordResponse,
+    ReviewQueueItemResponse,
+)
 
 __all__ = [
     "LoginRequest",
@@ -23,5 +52,26 @@ __all__ = [
     "InspectionListResponse",
     "EvidenceResponse",
     "EvidenceListResponse",
+    "ImageQualityAssessmentResponse",
+    "AnalysisJobResponse",
     "AuditEventResponse",
+    "ApplicabilityItemResponse",
+    "ApplicabilityListResponse",
+    "ComplianceFindingResponse",
+    "ComplianceEvaluationSummaryResponse",
+    "DeclarationCorrectionCreate",
+    "DeclarationCorrectionResponse",
+    "ManualObservationCreate",
+    "ManualObservationResponse",
+    "VerificationSubmitRequest",
+    "VerificationStateResponse",
+    "ReviewerDecisionCreate",
+    "ReviewerDecisionResponse",
+    "ReviewRevisionRequest",
+    "EvidenceRequestCreate",
+    "EvidenceRequestResponse",
+    "EvidenceRequestFulfillRequest",
+    "FinalizeInspectionRequest",
+    "FinalAuditRecordResponse",
+    "ReviewQueueItemResponse",
 ]

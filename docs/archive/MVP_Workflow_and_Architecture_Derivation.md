@@ -1,10 +1,10 @@
 # ComplianceScan — MVP Operational Workflow & System Architecture Derivation
 
-**Project:** ComplianceScan  
-**Document Type:** Formal MVP Architecture & Operational Workflow Derivation  
-**Authority:** Phase 0 Legal Reconciliation Approved (Human Decision Checkpoint)  
-**Status:** DRAFT SPECIFICATION — AWAITING HUMAN APPROVAL (NO CODE AUTHORIZATION)  
-**Date:** September 2026  
+**Project:** ComplianceScan
+**Document Type:** Formal MVP Architecture & Operational Workflow Derivation
+**Authority:** Phase 0 Legal Reconciliation Approved (Human Decision Checkpoint)
+**Status:** DRAFT SPECIFICATION — AWAITING HUMAN APPROVAL (NO CODE AUTHORIZATION)
+**Date:** September 2026
 
 ---
 
@@ -28,8 +28,8 @@ We intentionally establish a strict separation between:
    - Consumer Care Details (Rule 6(1)(e))
    *(Country of Origin under Rule 6(1)(da) is strictly applicability-driven; Unit Sale Price under Rule 6(1)(f) is a documented statutory gap with implementation phase TBD).*
 3. **The Human-in-the-Loop Adjudication Boundary:**
-   > **"PaddleOCR reads. Gemini understands. Backend validates. Applicability determines relevance. Rules evaluate. Evidence supports. Inspector verifies. Reviewer decides."**  
-   > **"AI finds → Evidence proves → Officer decides."**  
+   > **"PaddleOCR reads. Gemini understands. Backend validates. Applicability determines relevance. Rules evaluate. Evidence supports. Inspector verifies. Reviewer decides."**
+   > **"AI finds → Evidence proves → Officer decides."**
    AI models assist solely in perception and semantic structuring; they never render legal verdicts.
 4. **Deployable Architecture:** The MVP is engineered to be deployed on modern cloud infrastructure (containerized backend, persistent database, object storage for original evidence) so that team members, inspectors, and judges can access and test it. Local-only filesystems and machine-specific persistent state are prohibited for deployed environments. Puter is permanently excluded.
 5. **Phase 0 Constraint:** This derivation does **NOT** authorize application coding or project scaffolding. Implementation remains locked until human approval of this derivation document.

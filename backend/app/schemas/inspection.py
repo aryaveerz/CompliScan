@@ -35,7 +35,7 @@ class InspectionResponse(BaseModel):
     status: InspectionLifecycleState
     processing_state: ProcessingState
     finalization_status: FinalizationStatus
-    
+
     # Product context
     product_name: str
     origin_status: OriginStatus
@@ -62,3 +62,32 @@ class InspectionResponse(BaseModel):
 class InspectionListResponse(BaseModel):
     items: List[InspectionResponse]
     total: int
+
+
+class InspectionSearchResultItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    case_number: str
+    status: InspectionLifecycleState
+    processing_state: ProcessingState
+    finalization_status: FinalizationStatus
+    product_name: str
+    origin_status: OriginStatus
+    product_category: Optional[str] = None
+    created_by_id: str
+    reviewer_id: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+    submitted_at: Optional[datetime] = None
+    finalized_at: Optional[datetime] = None
+    final_decision: Optional[str] = None
+    evidence_count: int = 0
+
+
+class InspectionSearchResponse(BaseModel):
+    items: List[InspectionSearchResultItem]
+    total_count: int
+    page: int
+    page_size: int
+    total_pages: int

@@ -1,8 +1,8 @@
 # 02 — TECHNICAL REQUIREMENTS DOCUMENT (TRD)
 
-**Project:** ComplianceScan  
-**SIH'26 Problem Statement:** 26034  
-**Document Version:** 2.0  
+**Project:** ComplianceScan
+**SIH'26 Problem Statement:** 26034
+**Document Version:** 2.0
 **Status:** Target technical requirements with controlled one-day MVP boundary
 
 ---

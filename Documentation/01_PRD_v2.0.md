@@ -1,9 +1,9 @@
 # 01 — PRODUCT REQUIREMENTS DOCUMENT (PRD)
 
-**Project:** ComplianceScan  
-**SIH'26 Problem Statement:** 26034  
-**Problem Statement Title:** Software System to check compliance of Packaged Commodities under Legal Metrology (Packaged Commodities) Rules, 2011 by scanning products, images and labels.  
-**Document Version:** 2.0  
+**Project:** ComplianceScan
+**SIH'26 Problem Statement:** 26034
+**Problem Statement Title:** Software System to check compliance of Packaged Commodities under Legal Metrology (Packaged Commodities) Rules, 2011 by scanning products, images and labels.
+**Document Version:** 2.0
 **Status:** Target product requirements with controlled one-day MVP boundary
 
 ---

@@ -1,7 +1,7 @@
 # Antigravity — Genuine Thoughts on CompliScan LM
 
-**Date:** 2026-09-16  
-**Context:** Isolated, honest assessment — setting aside all specifications.  
+**Date:** 2026-09-16
+**Context:** Isolated, honest assessment — setting aside all specifications.
 **SIH Problem Statement:** *"Software System to check compliance of Packaged Commodities under Legal Metrology (Packaged Commodities) Rules, 2011 by scanning products, images and labels."*
 
 ---

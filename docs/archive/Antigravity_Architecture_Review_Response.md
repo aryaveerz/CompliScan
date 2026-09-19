@@ -1,7 +1,7 @@
 # Antigravity Architecture Review — ComplianceScan
-**Review of:** ComplianceScan Architecture Decision Review Package (Decisions 01–24)  
-**Reviewed by:** Antigravity  
-**Date:** 2026-09-16  
+**Review of:** ComplianceScan Architecture Decision Review Package (Decisions 01–24)
+**Reviewed by:** Antigravity
+**Date:** 2026-09-16
 **Status:** REVIEW ONLY — No code, schema, API contract, or implementation artifact is produced here.
 
 ---
@@ -56,7 +56,7 @@ The architecture is ready to proceed to the Implementation Baseline phase after 
 
 ### C-02 — "Separate asynchronous worker deployment" vs. "No Kubernetes/microservices"
 
-**Decision 12** requires a "Separate asynchronous worker deployment."  
+**Decision 12** requires a "Separate asynchronous worker deployment."
 **Decision 12 and 16** both prohibit Kubernetes/service mesh for MVP.
 
 **Conflict:** The deployment diagram (Decision 24) shows `Background Worker` as a separate box from `FastAPI`, but does not specify the inter-process communication (IPC) mechanism between FastAPI and the worker. Without this, "separate deployment" is undefined at implementation time. Options include:
@@ -225,7 +225,7 @@ For an inspection with 6 compliance domains, a Gemini hallucination in one field
 
 ### AI-03 — Gemini 2.5 Flash: prompt versioning and schema contract
 
-**Decision 19** states: "Prompts are version-controlled artifacts."  
+**Decision 19** states: "Prompts are version-controlled artifacts."
 **Decision 11** specifies Gemini 2.5 Flash.
 
 Gemini API model versions (e.g., `gemini-2.5-flash-preview-*`, `gemini-2.5-flash-stable`) have different capability and output-format profiles. The structured output (JSON mode / response schema) feature in Gemini 2.5 Flash is the correct mechanism for enforcing the output schema contract. This should be the mandated integration approach.
@@ -414,8 +414,8 @@ This requires both:
 
 ### P-01 — Worker/Domain Contract Boundary
 
-**Decision affected:** Decision 23  
-**Current approach:** `worker/` is a top-level directory. Domain contracts are shared "where practical" (undefined).  
+**Decision affected:** Decision 23
+**Current approach:** `worker/` is a top-level directory. Domain contracts are shared "where practical" (undefined).
 **Proposed approach:** The worker is a separate top-level directory (`CompliScan/worker/`) that imports from a shared internal package. Create `CompliScan/shared/` (or `CompliScan/backend/app/shared/`) containing:
 - Result state enums (`PASS`, `POTENTIAL_NON_COMPLIANCE`, etc.)
 - Lifecycle state enums
@@ -424,16 +424,16 @@ This requires both:
 
 The worker imports only from `shared/`. FastAPI imports from `shared/` and its own domain modules.
 
-**Reason:** Prevents result-state enum duplication between two Python packages.  
-**Trade-offs:** Adds a shared package; adds a dependency management concern.  
+**Reason:** Prevents result-state enum duplication between two Python packages.
+**Trade-offs:** Adds a shared package; adds a dependency management concern.
 **MVP impact:** MVP-critical. Without this, result state drift between worker and API is a near-certainty.
 
 ---
 
 ### P-02 — Worker Queue Technology Decision
 
-**Decision affected:** Decision 12 (Deployment Architecture)  
-**Current approach:** "Separate asynchronous worker deployment" is specified. IPC mechanism is unspecified.  
+**Decision affected:** Decision 12 (Deployment Architecture)
+**Current approach:** "Separate asynchronous worker deployment" is specified. IPC mechanism is unspecified.
 **Proposed approach:** Use **ARQ** (Async Redis Queue) as the task broker between FastAPI and the worker for MVP. Rationale:
 - Pure Python asyncio, no Celery complexity.
 - Redis is a single additional infrastructure dependency (Docker Compose service).
@@ -443,16 +443,16 @@ The worker imports only from `shared/`. FastAPI imports from `shared/` and its o
 
 Alternative (if Redis is undesirable): Use a PostgreSQL-backed job table (`analysis_jobs`) polled by the worker. No broker dependency. Less real-time but zero new infrastructure.
 
-**Reason:** "Durable analysis job identity" and "separate deployment" require a real queue, not in-process `asyncio.BackgroundTasks`.  
-**Trade-offs:** Adds Redis (or PostgreSQL job table) as a dependency.  
+**Reason:** "Durable analysis job identity" and "separate deployment" require a real queue, not in-process `asyncio.BackgroundTasks`.
+**Trade-offs:** Adds Redis (or PostgreSQL job table) as a dependency.
 **MVP impact:** MVP-critical. Must be decided before implementation begins.
 
 ---
 
 ### P-03 — Correction Command Model
 
-**Decision affected:** Decision 08 (API Architecture), Decision 03 (Global Invariants)  
-**Current approach:** "Corrections are audited commands, not silent mutations." No correction command model is defined.  
+**Decision affected:** Decision 08 (API Architecture), Decision 03 (Global Invariants)
+**Current approach:** "Corrections are audited commands, not silent mutations." No correction command model is defined.
 **Proposed approach:** Define a correction as a POST to a correction sub-resource:
 
 ```
@@ -467,16 +467,16 @@ This endpoint:
 3. Triggers re-computation (synchronous or queued, depending on scope).
 4. Returns the correction ID and invalidation status.
 
-**Reason:** Without a defined correction command model, implementers will use silent `PATCH` mutations.  
-**Trade-offs:** More complex than a simple `PATCH`. Requires explicit domain event handling.  
+**Reason:** Without a defined correction command model, implementers will use silent `PATCH` mutations.
+**Trade-offs:** More complex than a simple `PATCH`. Requires explicit domain event handling.
 **MVP impact:** MVP-critical. Must be designed before the declaration/compliance modules are implemented.
 
 ---
 
 ### P-04 — `FinalAuditRecord` as Point-in-Time Snapshot
 
-**Decision affected:** Decision 07 (Data Model), Decision 20 (Reporting)  
-**Current approach:** `FinalAuditRecord` is listed as an entity. Its nature (snapshot vs. derived view) is unspecified.  
+**Decision affected:** Decision 07 (Data Model), Decision 20 (Reporting)
+**Current approach:** `FinalAuditRecord` is listed as an entity. Its nature (snapshot vs. derived view) is unspecified.
 **Proposed approach:** `FinalAuditRecord` is a **serialized JSON snapshot** stored at finalization time, containing:
 - Finalized inspection metadata
 - Product/package context
@@ -489,16 +489,16 @@ This endpoint:
 
 This JSON blob is stored in the database alongside the normalized relational data. Reports are generated from this blob, not from re-querying normalized tables.
 
-**Reason:** Prevents future schema migrations from silently changing what historical reports say.  
-**Trade-offs:** Denormalized storage. JSON blob can grow large for inspections with many findings.  
+**Reason:** Prevents future schema migrations from silently changing what historical reports say.
+**Trade-offs:** Denormalized storage. JSON blob can grow large for inspections with many findings.
 **MVP impact:** MVP-critical for legal defensibility of historical reports.
 
 ---
 
 ### P-05 — Field-Level Schema Validation for Gemini Output
 
-**Decision affected:** Decision 19 (AI/OCR Operational Policy)  
-**Current approach:** "Invalid output is rejected/reviewed." Scope of rejection (full or partial) is unspecified.  
+**Decision affected:** Decision 19 (AI/OCR Operational Policy)
+**Current approach:** "Invalid output is rejected/reviewed." Scope of rejection (full or partial) is unspecified.
 **Proposed approach:** Field-level validation:
 - Each field in the Gemini extraction schema is independently validated.
 - Valid fields are accepted as extracted declarations.
@@ -506,8 +506,8 @@ This JSON blob is stored in the database alongside the normalized relational dat
 - Fields not returned by Gemini (missing) are set to `status: NOT_OBSERVED`.
 - Only a complete schema failure (unparseable JSON, wrong top-level structure) triggers `PROCESSING_FAILED`.
 
-**Reason:** A single hallucinated field should not invalidate a full extraction with 5 valid fields.  
-**Trade-offs:** More complex validation logic. Requires field-level status tracking in `ExtractedDeclaration`.  
+**Reason:** A single hallucinated field should not invalidate a full extraction with 5 valid fields.
+**Trade-offs:** More complex validation logic. Requires field-level status tracking in `ExtractedDeclaration`.
 **MVP impact:** MVP-critical for resilience. A single bad Gemini field should not block all compliance evaluation.
 
 ---

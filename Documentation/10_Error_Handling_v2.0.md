@@ -1,8 +1,8 @@
 # 10 — ERROR HANDLING & RECOVERY SPECIFICATION
 
-**Project:** ComplianceScan  
-**SIH'26 Problem Statement:** 26034  
-**Document Version:** 2.0  
+**Project:** ComplianceScan
+**SIH'26 Problem Statement:** 26034
+**Document Version:** 2.0
 **Status:** Target error/recovery model with controlled one-day MVP boundary
 
 ---

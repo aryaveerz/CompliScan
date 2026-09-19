@@ -1,8 +1,8 @@
 # PHASE — COMPLIANCESCAN IMPLEMENTATION ROADMAP
 
-**Project:** ComplianceScan  
-**SIH'26 Problem Statement:** 26034  
-**Document Version:** 2.0  
+**Project:** ComplianceScan
+**SIH'26 Problem Statement:** 26034
+**Document Version:** 2.0
 **Status:** Current execution-control document
 
 ---
@@ -1490,19 +1490,17 @@ rather than:
 
 # 47. Final MVP Phase Gate
 
-The MVP is considered phase-complete when:
-
 ```text
-[ ] Phase 0 completed
-[ ] Phase 1 foundation works
-[ ] Phase 2 evidence works
-[ ] Phase 3 OCR works
-[ ] Phase 4 AI extraction works
-[ ] Phase 5 applicability + six checks work
-[ ] Phase 6 verification works
-[ ] Phase 7 retrieval/report works
-[ ] Phase 8 deployment + quality gate passes
-[ ] Phase 9 demo hardening complete
+[x] Phase 0 completed (Reconciliation & Audit)
+[x] Phase 1 foundation works (DB, Auth, Storage, RBAC, Core Entities)
+[x] Phase 2.1 Image Quality Assessment works (QualityStatus, canonical config, 25/25 tests passing)
+[/] Phase 2.2 PaddleOCR Perception (rapidocr-onnxruntime PP-OCRv4, deduplicated DB persistence - IN PROGRESS)
+[ ] Phase 2.3 Gemini 2.5 Flash extraction works
+[ ] Phase 2.4 Applicability + rule evaluation engine works
+[ ] Phase 2.5 Reviewer triage & finalization works
+[ ] Phase 3 Verification & UI Triage works
+[ ] Phase 4 Report & History works
+[ ] Phase 5 Deployment & Demo Hardening complete
 ```
 
 Most importantly:

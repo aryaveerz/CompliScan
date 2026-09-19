@@ -1,9 +1,9 @@
 # CompliScan LM — MVP Implementation Specification
 
-**Project:** CompliScan LM  
-**SIH Problem Statement:** PS ID 26034  
-**Status:** FINAL — CONTROLLING IMPLEMENTATION SPECIFICATION  
-**Version:** 1.0  
+**Project:** CompliScan LM
+**SIH Problem Statement:** PS ID 26034
+**Status:** FINAL — CONTROLLING IMPLEMENTATION SPECIFICATION
+**Version:** 1.0
 **Date:** 2026-09-16
 
 This document converts the locked architecture, resolved decisions, requirement-complete MVP proposal, and Antigravity review into an implementation contract.
@@ -332,23 +332,23 @@ Evidence handling requires authentication, authorization, MIME/size/decode valid
 
 Assess resolution, blur, brightness/contrast, text visibility, severe cropping, orientation, and related engineering quality signals.
 
-Poor image quality must not automatically become a missing declaration.
+* **Canonical Configuration:** Threshold defaults live in `shared/domain/constants.py`, with optional environment overrides in `backend/app/core/config.py`.
+* **Decoupled Quality Status:** Image quality outputs `QualityStatus` (`SUFFICIENT`, `DEGRADED`, `UNUSABLE`) and `ImageQualityAssessment`. Poor image quality indicates perception readability, NOT a compliance failure or missing declaration (`ComplianceResult`).
 
-### PaddleOCR
+### PaddleOCR Perception Pipeline
 
 PaddleOCR is perception-only.
 
-Output may contain:
-
-- text,
-- OCR confidence,
-- bounding box,
-- source evidence ID,
-- processing metadata.
+* **Engine & Runtime:** Uses `rapidocr-onnxruntime` (ONNX runtime execution of PP-OCRv4 models), selected for verified compatibility with Python 3.14 on Windows and zero C++ compile overhead.
+* **Output Structure (`OcrResult`):**
+  - Raw detected text lines and concatenated text block.
+  - Token list (`tokens`) containing `text`, `confidence` (float 0.0-1.0), and 4-point bounding box (`bbox: [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]`).
+  - Metadata: `processing_version` (e.g. `rapidocr_ppocrv4_v1`), execution time, engine specs.
+* **Idempotency & Deduplication:** Persisted in `ocr_results` with `UNIQUE(evidence_id, processing_version)` constraint.
 
 PaddleOCR must not make legal decisions.
 
-OCR bounding boxes are persisted as `DerivedOcrToken` data.
+OCR bounding boxes are persisted as `DerivedOcrToken` / `ocr_results` data.
 
 ---
 

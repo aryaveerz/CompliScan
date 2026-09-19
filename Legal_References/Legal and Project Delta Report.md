@@ -199,7 +199,7 @@ Reviewer Decision (Authorized official records final legal determination)
 ```
 
 ### Core Operating Principle
-> **"PaddleOCR reads. Gemini understands. Backend validates. Applicability determines relevance. Rules evaluate. Evidence supports. Inspector verifies. Reviewer decides."**  
+> **"PaddleOCR reads. Gemini understands. Backend validates. Applicability determines relevance. Rules evaluate. Evidence supports. Inspector verifies. Reviewer decides."**
 > **"AI finds → Evidence proves → Officer decides."**
 
 ### Prohibitions on AI Behavior

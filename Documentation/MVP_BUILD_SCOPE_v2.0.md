@@ -1,9 +1,9 @@
 # MVP BUILD SCOPE
 
-**Project:** ComplianceScan  
-**SIH'26 Problem Statement:** 26034  
-**Document Version:** 2.0  
-**Status:** Current build-control document  
+**Project:** ComplianceScan
+**SIH'26 Problem Statement:** 26034
+**Document Version:** 2.0
+**Status:** Current build-control document
 **Purpose:** Defines exactly what the one-day MVP will and will not build.
 
 ---

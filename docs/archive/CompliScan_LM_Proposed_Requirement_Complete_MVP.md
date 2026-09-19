@@ -1,10 +1,10 @@
 # CompliScan LM — Proposed Requirement-Complete MVP Specification
 
-**Project:** CompliScan LM  
-**SIH Problem Statement:** PS ID 26034  
-**Purpose:** Define the smallest REAL MVP that demonstrates the major functional requirements of the SIH problem statement while preserving the approved long-term architecture.  
-**Status:** PROPOSED — FOR ANTIGRAVITY REVIEW  
-**Date:** 2026-09-16  
+**Project:** CompliScan LM
+**SIH Problem Statement:** PS ID 26034
+**Purpose:** Define the smallest REAL MVP that demonstrates the major functional requirements of the SIH problem statement while preserving the approved long-term architecture.
+**Status:** PROPOSED — FOR ANTIGRAVITY REVIEW
+**Date:** 2026-09-16
 **Important:** This document is a proposal for review. It is NOT yet the final implementation specification.
 
 ---

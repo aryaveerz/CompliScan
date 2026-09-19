@@ -1,7 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, UserCheck, LogOut, PlusCircle, LayoutDashboard } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { FileSpreadsheet, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+
+// DESIGN.md: light-mode header — bg-white, slate-200 border.
+// Navigation lives in Sidebar. Header owns: brand identity + user info + logout.
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -12,72 +15,54 @@ export const Header: React.FC = () => {
     navigate('/login');
   };
 
+  const roleLabel =
+    user?.role === 'INSPECTOR' ? 'Inspector' : user?.role === 'REVIEWER' ? 'Reviewer' : user?.role ?? '';
+
   return (
-    <header className="sticky top-0 z-50 glass-panel border-b border-slate-800/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo & Name */}
-          <div className="flex items-center space-x-3">
-            <Link to="/inspections" className="flex items-center space-x-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
-                <ShieldCheck className="w-6 h-6 text-slate-950 font-bold" />
-              </div>
-              <div>
-                <div className="flex items-center space-x-1.5">
-                  <span className="font-extrabold text-lg text-white tracking-tight">CompliScan</span>
-                  <span className="px-1.5 py-0.2 bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold rounded border border-emerald-500/30">LM</span>
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Legal Metrology Compliance</p>
-              </div>
-            </Link>
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 h-14 flex items-center">
+      <div className="w-full px-4 sm:px-6 flex items-center justify-between">
+        {/* Brand */}
+        <div className="flex items-center space-x-2.5">
+          <div className="w-7 h-7 bg-[#0f172a] text-white rounded flex items-center justify-center shrink-0">
+            <FileSpreadsheet className="w-4 h-4" />
           </div>
-
-          {/* Navigation & User Menu */}
-          {user && (
-            <div className="flex items-center space-x-4">
-              <nav className="flex items-center space-x-1">
-                <Link
-                  to="/inspections"
-                  className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  <span>Inspections</span>
-                </Link>
-
-                {user.role === 'INSPECTOR' && (
-                  <Link
-                    to="/inspections/new"
-                    className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
-                  >
-                    <PlusCircle className="w-4 h-4" />
-                    <span>New Inspection</span>
-                  </Link>
-                )}
-              </nav>
-
-              <div className="h-6 w-px bg-slate-800"></div>
-
-              {/* User Profile */}
-              <div className="flex items-center space-x-3">
-                <div className="text-right hidden sm:block">
-                  <div className="text-xs font-semibold text-slate-200">{user.full_name}</div>
-                  <div className="text-[11px] font-mono text-emerald-400 font-medium flex items-center justify-end space-x-1">
-                    <UserCheck className="w-3 h-3" />
-                    <span>{user.role}</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleLogout}
-                  title="Logout"
-                  className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg border border-transparent hover:border-rose-900/50 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
+          <div>
+            <div className="text-sm font-bold text-slate-900 leading-tight">CompliScan LM</div>
+            <div className="text-[10px] text-slate-500 leading-none mt-0.5 hidden sm:block">
+              Legal Metrology Compliance Workspace
             </div>
-          )}
+          </div>
         </div>
+
+        {/* User block */}
+        {user && (
+          <div className="flex items-center space-x-3">
+            {/* Name + role */}
+            <div className="text-right hidden sm:block">
+              <div className="text-xs font-semibold text-slate-800 leading-tight">{user.full_name}</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">{roleLabel}</div>
+            </div>
+
+            {/* Avatar initial */}
+            <div className="w-7 h-7 rounded bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+              <span className="text-xs font-semibold text-slate-600">
+                {user.full_name?.charAt(0)?.toUpperCase() ?? '?'}
+              </span>
+            </div>
+
+            {/* Divider */}
+            <div className="h-4 w-px bg-slate-200" />
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              title="Sign out"
+              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

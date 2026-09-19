@@ -854,36 +854,31 @@ The current execution plan is defined by `PHASE.md`.
 The high-level sequence is:
 
 ```text
-PHASE 0
+PHASE 0 [VERIFIED PASSED]
 Repository / Implementation Audit
         ↓
-Human Checkpoint
+PHASE 1 [VERIFIED PASSED]
+Core DB, Auth, Storage, RBAC & Core Entities
         ↓
-PHASE 1
-Minimal Foundation
+PHASE 2.1 [VERIFIED PASSED]
+Image Quality Assessment Pipeline (QualityStatus)
         ↓
-PHASE 2
-Inspection + Image Input
+PHASE 2.2 [IN PROGRESS / PLANNED]
+PaddleOCR Perception Pipeline (rapidocr-onnxruntime PP-OCRv4)
         ↓
-PHASE 3
-Image Processing + PaddleOCR
+PHASE 2.3 [PENDING]
+Gemini 2.5 Flash Declaration Extraction
         ↓
-PHASE 4
-Gemini Declaration Extraction
+PHASE 2.4 [PENDING]
+Applicability + Rule Evaluation Engine
         ↓
-PHASE 5
-Applicability + Six Rules
+PHASE 2.5 [PENDING]
+Inspector Verification & Reviewer Triage
         ↓
-PHASE 6
-Findings + Evidence
+PHASE 3 [PENDING]
+Report & History Persistence
         ↓
-PHASE 7
-Inspector Verification + Result
-        ↓
-PHASE 8
-End-to-End QA + Basic Export
-        ↓
-PHASE 9
+PHASE 4 [PENDING]
 Deployment + Demonstration Readiness
 ```
 

@@ -68,3 +68,4 @@ wheels/
 
 # Local AI/agent tooling
 .agent/
+.impeccable/

@@ -5,6 +5,16 @@ CompliScan LM — Application Configuration.
 from typing import List, Union
 from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from shared.domain.constants import (
+    QUALITY_ASSESSMENT_VERSION,
+    QUALITY_MIN_WIDTH,
+    QUALITY_MIN_HEIGHT,
+    QUALITY_MIN_PIXELS,
+    QUALITY_BLUR_THRESHOLD,
+    QUALITY_MIN_BRIGHTNESS,
+    QUALITY_MAX_BRIGHTNESS,
+    QUALITY_MIN_CONTRAST,
+)
 
 
 class Settings(BaseSettings):
@@ -40,6 +50,27 @@ class Settings(BaseSettings):
 
     # Local storage fallback
     LOCAL_STORAGE_DIR: str = "backend/uploads"
+
+    # Worker / Analysis Job Configuration
+    WORKER_LEASE_SECONDS: int = 60
+    WORKER_POLL_INTERVAL_SECONDS: float = 2.0
+    WORKER_MAX_JOB_ATTEMPTS: int = 3
+
+    # Gemini Semantic Extraction Configuration
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
+
+    # Image Quality Assessment — Environment Overrides with Canonical Defaults
+    # Canonical defaults live in shared.domain.constants. Precedence: ENV VAR > shared constants.
+    QUALITY_VERSION: str = QUALITY_ASSESSMENT_VERSION
+    QUALITY_MIN_WIDTH: int = QUALITY_MIN_WIDTH
+    QUALITY_MIN_HEIGHT: int = QUALITY_MIN_HEIGHT
+    QUALITY_MIN_PIXELS: int = QUALITY_MIN_PIXELS
+    QUALITY_BLUR_THRESHOLD: float = QUALITY_BLUR_THRESHOLD
+    QUALITY_MIN_BRIGHTNESS: float = QUALITY_MIN_BRIGHTNESS
+    QUALITY_MAX_BRIGHTNESS: float = QUALITY_MAX_BRIGHTNESS
+    QUALITY_MIN_CONTRAST: float = QUALITY_MIN_CONTRAST
 
     # CORS
     CORS_ORIGINS: List[str] = [

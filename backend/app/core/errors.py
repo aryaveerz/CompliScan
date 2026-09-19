@@ -75,6 +75,9 @@ class InvalidStateError(AppError):
         )
 
 
+ConflictError = InvalidStateError
+
+
 class EvidenceError(AppError):
     def __init__(self, code: ErrorCode, message: str, status_code: int = status.HTTP_400_BAD_REQUEST, details: Optional[Any] = None):
         super().__init__(
@@ -83,6 +86,41 @@ class EvidenceError(AppError):
             status_code=status_code,
             details=details,
         )
+
+
+class AnalysisError(AppError):
+    def __init__(
+        self,
+        message: str = "Analysis processing failed",
+        code: ErrorCode = ErrorCode.PROCESSING_FAILED,
+        status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        details: Optional[Any] = None,
+        retryable: bool = False,
+    ):
+        super().__init__(
+            code=code,
+            message=message,
+            status_code=status_code,
+            details=details,
+            retryable=retryable,
+        )
+
+
+class ConfigurationError(AppError):
+    def __init__(
+        self,
+        message: str = "Configuration error",
+        code: ErrorCode = ErrorCode.PROCESSING_FAILED,
+        status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        details: Optional[Any] = None,
+    ):
+        super().__init__(
+            code=code,
+            message=message,
+            status_code=status_code,
+            details=details,
+        )
+
 
 
 async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:

@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Upload, Trash2, CheckCircle2, ShieldAlert, Copy, Check, Eye } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Upload, Trash2, CheckCircle2, ShieldAlert, Copy, Check, Eye, Camera } from 'lucide-react';
 import { EvidenceAsset } from '../types';
 import { api } from '../api/client';
+import { CameraCapture } from './CameraCapture';
 
 interface EvidenceUploaderProps {
   inspectionId: string;
@@ -22,15 +23,22 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [copiedHash, setCopiedHash] = useState<string | null>(null);
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraSupported, setCameraSupported] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFiles = async (files: FileList | null) => {
-    if (!files || files.length === 0) return;
+  useEffect(() => {
+    setCameraSupported(Boolean(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+  }, []);
+
+  const handleFiles = async (files: FileList | null | File[]) => {
+    if (!files || (Array.isArray(files) ? files.length === 0 : files.length === 0)) return;
     setError(null);
     setUploading(true);
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    const fileList = Array.isArray(files) ? files : Array.from(files);
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
       try {
         const asset = await api.uploadEvidence(inspectionId, file, 'PRIMARY');
         onUploadSuccess(asset);
@@ -101,6 +109,19 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
               </p>
             </div>
           </div>
+
+          {cameraSupported && (
+            <div className="mt-2.5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowCamera(true)}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-semibold flex items-center space-x-1.5 border border-slate-700 transition-colors"
+              >
+                <Camera className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Capture with Camera</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -239,6 +260,17 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
             </button>
           </div>
         </div>
+      )}
+
+      {/* Camera Capture Modal */}
+      {showCamera && (
+        <CameraCapture
+          onCapture={(file) => {
+            setShowCamera(false);
+            handleFiles([file]);
+          }}
+          onClose={() => setShowCamera(false)}
+        />
       )}
     </div>
   );

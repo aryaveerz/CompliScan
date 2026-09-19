@@ -1,9 +1,9 @@
 # Antigravity Analysis — CompliScan LM MVP Implementation Specification v1.0
 
-**Document Analysed:** `CompliScan_LM_MVP_Implementation_Specification_v1.0.md`  
-**Sections:** 43 sections, 1,271 lines  
-**Status:** FINAL CONTROLLING SPECIFICATION  
-**Analysed by:** Antigravity  
+**Document Analysed:** `CompliScan_LM_MVP_Implementation_Specification_v1.0.md`
+**Sections:** 43 sections, 1,271 lines
+**Status:** FINAL CONTROLLING SPECIFICATION
+**Analysed by:** Antigravity
 **Date:** 2026-09-16
 
 ---
@@ -149,10 +149,10 @@ The status table is accurate. Implementation is NOT YET STARTED. Next action is 
 
 ### §43 — Closing Invariants
 Five closing invariants are the minimal distillation of everything in this document. They should be posted in the team's working environment:
-> Build what is specified.  
-> Do not silently invent what is not specified.  
-> AI observes. Rules evaluate. Evidence supports. Humans decide.  
-> Every correction preserves history.  
+> Build what is specified.
+> Do not silently invent what is not specified.
+> AI observes. Rules evaluate. Evidence supports. Humans decide.
+> Every correction preserves history.
 > Every final decision becomes an immutable snapshot.
 
 ---

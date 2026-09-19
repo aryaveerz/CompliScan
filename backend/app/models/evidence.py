@@ -4,7 +4,7 @@ CompliScan LM — EvidenceAsset Model.
 
 from datetime import datetime, timezone
 import uuid
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.db.base import Base
@@ -13,6 +13,10 @@ from shared.domain.enums import EvidenceType
 if TYPE_CHECKING:
     from backend.app.models.user import User
     from backend.app.models.inspection import InspectionCase
+    from backend.app.models.image_quality import ImageQualityAssessment
+    from backend.app.models.ocr import OCRResult
+    from backend.app.models.structured_declaration import StructuredDeclarationResult
+
 
 
 class EvidenceAsset(Base):
@@ -33,3 +37,24 @@ class EvidenceAsset(Base):
     # Relationships
     inspection: Mapped["InspectionCase"] = relationship("InspectionCase", back_populates="evidence_assets")
     uploaded_by: Mapped["User"] = relationship("User", back_populates="uploaded_evidence")
+    quality_assessment: Mapped[Optional["ImageQualityAssessment"]] = relationship(
+        "ImageQualityAssessment",
+        back_populates="evidence",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    ocr_result: Mapped[Optional["OCRResult"]] = relationship(
+        "OCRResult",
+        back_populates="evidence",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    structured_declarations: Mapped[Optional["StructuredDeclarationResult"]] = relationship(
+        "StructuredDeclarationResult",
+        back_populates="evidence",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )

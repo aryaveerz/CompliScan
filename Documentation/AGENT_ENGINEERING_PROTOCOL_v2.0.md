@@ -2,7 +2,7 @@
 
 **ComplianceScan — SIH'26 Problem Statement 26034**
 
-**Protocol Version:** 2.0  
+**Protocol Version:** 2.0
 **Purpose:** Control AI/vibe-coded implementation so that the current MVP is built safely, honestly, and without uncontrolled scope expansion.
 
 ---

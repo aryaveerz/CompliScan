@@ -1,8 +1,8 @@
 # 09 — DATABASE SPECIFICATION
 
-**Project:** ComplianceScan  
-**SIH'26 Problem Statement:** 26034  
-**Document Version:** 2.0  
+**Project:** ComplianceScan
+**SIH'26 Problem Statement:** 26034
+**Document Version:** 2.0
 **Status:** Target persistence specification with controlled one-day MVP subset
 
 ---
@@ -2865,6 +2865,11 @@ The database implementation must preserve these principles:
 > **Production persistence is cloud-capable from the beginning.**
 
 > **The MVP stores only what is necessary to complete one reliable inspection journey.**
+
+### Implemented & Planned Phase 2 Analysis Tables
+
+* **`image_quality_assessments` (Migration 0002 - Implemented & Verified):** Stores image metrics (overall_score, blur_score, contrast_score, brightness_score, resolution_score) with `QualityStatus` (`SUFFICIENT`, `DEGRADED`, `UNUSABLE`). Strictly decoupled from legal compliance results.
+* **`ocr_results` (Migration 0003 - Planned):** Stores PaddleOCR (`rapidocr-onnxruntime`) perception results including `raw_text`, bounding box tokens JSON array (`tokens`), execution latency, and `processing_version`. Enforces `UNIQUE(evidence_id, processing_version)` for deduplication and idempotency.
 
 ---
 
