@@ -46,8 +46,8 @@ from shared.domain.enums import (
 # ── 1. Configuration & Model Validation ──────────────────────────────────────
 
 def test_gemini_model_configuration():
-    """Verify that the centralized model is configured to a valid Gemini Flash model."""
-    assert settings.GEMINI_MODEL in ("gemini-2.5-flash", "gemini-3.6-flash")
+    """Verify that the centralized model is configured to gemini-3.6-flash."""
+    assert settings.GEMINI_MODEL == "gemini-3.6-flash"
 
 
 # ── 2. Provenance Validation & Guardrails ────────────────────────────────────

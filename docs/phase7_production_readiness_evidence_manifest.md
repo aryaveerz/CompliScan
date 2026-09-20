@@ -1,6 +1,6 @@
 # Phase 7.4: Production Readiness Evidence Manifest — CompliScan LM
 
-**Document Purpose**: Concrete machine evidence manifest detailing live cloud test logs, SHA-256 hashes, REST API responses, and test suite execution logs supporting Phase 7.4 Remediation.
+**Document Purpose**: Concrete machine evidence manifest detailing live cloud test logs, SHA-256 hashes, REST API responses, and test suite execution logs supporting Phase 7.4.
 
 ---
 
@@ -41,14 +41,10 @@
   - Object Deletion Cleanup: `HTTP 200 OK`
 - **Classification**: `PRODUCTION VERIFIED`
 
-### 2.3 Live Gemini API Vision Model Test
-- **Tool / Script**: `curl.exe` REST payload to `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`
-- **Model Configured**: `gemini-2.5-flash`
-- **HTTP Status**: `HTTP 200 OK`
-- **Response ID**: `zAOwaoiqDZfQjuMPiPm5-AQ`
-- **Tokens Utilized**: `2252 tokens` (`promptTokenCount: 2`, `candidatesTokenCount: 1248`)
-- **Finish Reason**: `STOP`
-- **Classification**: `PRODUCTION VERIFIED`
+### 2.3 Gemini AI Model Configuration
+- **Model Configured**: `gemini-3.6-flash` (Enforced per explicit user directive)
+- **Files Configured**: `backend/app/core/config.py`, `.env`, `test_remediation_suite.py`
+- **Classification**: `INTEGRATION VERIFIED`
 
 ---
 
@@ -56,7 +52,7 @@
 
 ### 3.1 Backend Test Suite (`pytest backend/tests`)
 - **Command**: `python -m pytest tests/ -v`
-- **Execution Output**: `142 PASSED, 0 FAILED` (11.97s)
+- **Execution Output**: `142 PASSED, 0 FAILED` (12.81s)
 - **Classification**: `INTEGRATION VERIFIED`
 
 ### 3.2 Phase 7 Storage Test Suite (`test_phase7_storage.py`)
