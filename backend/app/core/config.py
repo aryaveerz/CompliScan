@@ -59,7 +59,7 @@ class Settings(BaseSettings):
 
     # Gemini Semantic Extraction Configuration
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-3.6-flash"
+    GEMINI_MODEL: str = "gemini-2.5-flash"
 
 
     # Image Quality Assessment — Environment Overrides with Canonical Defaults
