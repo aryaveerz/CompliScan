@@ -1,0 +1,101 @@
+{
+  "case_number": "INSP-2026-DEL-LM-D88A",
+  "inspection_id": "INS-JUICE-302D78B9",
+  "product_name": "B Natural Guava Beverage (1L Pack)",
+  "final_decision": "COMPLIANT",
+  "finalized_at": "2026-09-20T09:41:58.640221+00:00",
+  "integrity_hash": "72ca6289b6b37bb01a2410bc040bbe5030937ef973f9848964c0e8d9764ceec9",
+  "model_used": "gemini-3.6-flash",
+  "inspector": {
+    "id": "USR-INSP-9B2249",
+    "name": "Rajesh Kumar",
+    "email": "inspector.juice.7bb9@compliscan.gov.in"
+  },
+  "reviewer": {
+    "id": "USR-REV-AF6128",
+    "name": "Dr. Sunita Sharma",
+    "email": "reviewer.juice.ca76@compliscan.gov.in",
+    "adjudications_count": 7,
+    "summary": "All 7 statutory declarations required under Rule 6(1) of the Legal Metrology Rules, 2011 verified and adjudicated across 4 multi-angle evidence assets."
+  },
+  "evidence_assets": [
+    {
+      "evidence_id": "EV-541DA7F6",
+      "filename": "IMG_20260920_040854.jpg",
+      "sha256": "7987f3a2fcc2601d82ebb79504ecbaee6f3c5964a31f63607728396fcda45a73",
+      "file_size": 1306214
+    },
+    {
+      "evidence_id": "EV-E8B27BFC",
+      "filename": "IMG_20260920_040900.jpg",
+      "sha256": "d0891ea5c2d12522deb98ca8e259583fa259ad6306359dfab0a5eb274777ad00",
+      "file_size": 1199889
+    },
+    {
+      "evidence_id": "EV-8689307D",
+      "filename": "IMG_20260920_040906.jpg",
+      "sha256": "95db45287da0969ecefff09dec87af5052488507b0395d1d08b4ddcd410730b8",
+      "file_size": 1300647
+    },
+    {
+      "evidence_id": "EV-C5739344",
+      "filename": "IMG_20260920_040922.jpg",
+      "sha256": "919b9530ea24a31f172b73fea330754e15c5349d0cdc4aca22f64d7812a3226c",
+      "file_size": 1261675
+    }
+  ],
+  "telemetry_summary": [
+    {
+      "evidence_id": "EV-541DA7F6",
+      "filename": "IMG_20260920_040854.jpg",
+      "sha256": "7987f3a2fcc2601d82ebb79504ecbaee6f3c5964a31f63607728396fcda45a73",
+      "ocr_tokens": 34,
+      "model": "gemini-3.6-flash",
+      "prompt_tokens": null,
+      "candidate_tokens": null,
+      "total_tokens": null,
+      "latency_ms": 420.0,
+      "extraction_status": "COMPLETED",
+      "processing_blocked": false
+    },
+    {
+      "evidence_id": "EV-E8B27BFC",
+      "filename": "IMG_20260920_040900.jpg",
+      "sha256": "d0891ea5c2d12522deb98ca8e259583fa259ad6306359dfab0a5eb274777ad00",
+      "ocr_tokens": 6,
+      "model": "gemini-3.6-flash",
+      "prompt_tokens": null,
+      "candidate_tokens": null,
+      "total_tokens": null,
+      "latency_ms": 420.0,
+      "extraction_status": "COMPLETED",
+      "processing_blocked": false
+    },
+    {
+      "evidence_id": "EV-8689307D",
+      "filename": "IMG_20260920_040906.jpg",
+      "sha256": "95db45287da0969ecefff09dec87af5052488507b0395d1d08b4ddcd410730b8",
+      "ocr_tokens": 70,
+      "model": "gemini-3.6-flash",
+      "prompt_tokens": null,
+      "candidate_tokens": null,
+      "total_tokens": null,
+      "latency_ms": 420.0,
+      "extraction_status": "COMPLETED",
+      "processing_blocked": false
+    },
+    {
+      "evidence_id": "EV-C5739344",
+      "filename": "IMG_20260920_040922.jpg",
+      "sha256": "919b9530ea24a31f172b73fea330754e15c5349d0cdc4aca22f64d7812a3226c",
+      "ocr_tokens": 7,
+      "model": "gemini-3.6-flash",
+      "prompt_tokens": null,
+      "candidate_tokens": null,
+      "total_tokens": null,
+      "latency_ms": 420.0,
+      "extraction_status": "COMPLETED",
+      "processing_blocked": false
+    }
+  ]
+}

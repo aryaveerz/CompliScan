@@ -3,6 +3,7 @@ CompliScan LM — Inspections Router.
 """
 
 from datetime import datetime
+import hashlib
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -151,6 +152,7 @@ async def download_docx_report(
     far = await FinalizationService.get_final_record(db, inspection_id)
 
     docx_bytes = DOCXReportService.generate_docx_report(far)
+    report_sha256 = hashlib.sha256(docx_bytes).hexdigest()
 
     # Log REPORT_DOWNLOADED audit event
     await AuditService.log_event(
@@ -163,6 +165,7 @@ async def download_docx_report(
             "format": "docx",
             "case_number": inspection.case_number,
             "final_record_id": far.id,
+            "report_sha256": report_sha256,
         },
     )
     await db.commit()
@@ -175,6 +178,7 @@ async def download_docx_report(
             "Content-Disposition": f'attachment; filename="{filename}"',
             "X-Inspection-Id": inspection_id,
             "X-Final-Audit-Record-Id": far.id,
+            "X-Report-SHA256": report_sha256,
         },
     )
 
@@ -193,6 +197,7 @@ async def download_pdf_report(
     far = await FinalizationService.get_final_record(db, inspection_id)
 
     pdf_bytes = PDFReportService.generate_pdf_report(far)
+    report_sha256 = hashlib.sha256(pdf_bytes).hexdigest()
 
     # Log REPORT_DOWNLOADED audit event
     await AuditService.log_event(
@@ -205,6 +210,7 @@ async def download_pdf_report(
             "format": "pdf",
             "case_number": inspection.case_number,
             "final_record_id": far.id,
+            "report_sha256": report_sha256,
         },
     )
     await db.commit()
@@ -217,5 +223,6 @@ async def download_pdf_report(
             "Content-Disposition": f'attachment; filename="{filename}"',
             "X-Inspection-Id": inspection_id,
             "X-Final-Audit-Record-Id": far.id,
+            "X-Report-SHA256": report_sha256,
         },
     )

@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from backend.app.models.inspection import InspectionCase
+from backend.app.models.user import User
 from backend.app.models.evidence import EvidenceAsset
 from backend.app.models.structured_declaration import StructuredDeclarationResult
 from backend.app.models.compliance import ApplicabilityResult, ComplianceFinding
@@ -114,6 +115,31 @@ class FinalizationService:
 
         now = datetime.now(timezone.utc)
 
+        # Fetch Inspector & Reviewer User records
+        stmt_insp_user = select(User).where(User.id == inspection.created_by_id)
+        insp_user = (await db.execute(stmt_insp_user)).scalar_one_or_none()
+
+        stmt_rev_user = select(User).where(User.id == reviewer_id)
+        rev_user = (await db.execute(stmt_rev_user)).scalar_one_or_none()
+
+        inspector_identity = {
+            "user_id": insp_user.id if insp_user else inspection.created_by_id,
+            "full_name": getattr(insp_user, "full_name", None) or "NOT RECORDED",
+            "officer_id": getattr(insp_user, "officer_id", None) or getattr(insp_user, "id", "NOT RECORDED"),
+            "designation": getattr(insp_user, "designation", None) or "Legal Metrology Inspector",
+            "department": getattr(insp_user, "department", None) or "Department of Consumer Affairs",
+            "unit_office": getattr(insp_user, "unit_office", None) or "Regional Inspection Office",
+        }
+
+        reviewer_identity = {
+            "user_id": rev_user.id if rev_user else reviewer_id,
+            "full_name": getattr(rev_user, "full_name", None) or "NOT RECORDED",
+            "officer_id": getattr(rev_user, "officer_id", None) or getattr(rev_user, "id", "NOT RECORDED"),
+            "designation": getattr(rev_user, "designation", None) or "Assistant Controller / Reviewing Officer",
+            "department": getattr(rev_user, "department", None) or "Department of Consumer Affairs",
+            "unit_office": getattr(rev_user, "unit_office", None) or "Enforcement & Adjudication Division",
+        }
+
         # Build Immutable JSON Snapshots
         inspection_context_snapshot = {
             "id": inspection.id,
@@ -123,9 +149,16 @@ class FinalizationService:
             "product_category": inspection.product_category,
             "reference_url": inspection.reference_url,
             "notes": inspection.notes,
+            "location_data": inspection.location_data or {},
             "created_by_id": inspection.created_by_id,
+            "reviewer_id": reviewer_id,
+            "inspector": inspector_identity,
+            "reviewer": reviewer_identity,
             "created_at": inspection.created_at.isoformat() if inspection.created_at else None,
+            "inspection_started_at": inspection.inspection_started_at.isoformat() if inspection.inspection_started_at else inspection.created_at.isoformat() if inspection.created_at else None,
+            "inspection_completed_at": inspection.inspection_completed_at.isoformat() if inspection.inspection_completed_at else inspection.submitted_at.isoformat() if inspection.submitted_at else None,
             "submitted_at": inspection.submitted_at.isoformat() if inspection.submitted_at else None,
+            "finalized_at": now.isoformat(),
         }
 
         evidence_snapshot = [
@@ -146,8 +179,7 @@ class FinalizationService:
         declaration_snapshot = {
             d.evidence_id: {
                 "id": d.id,
-                "raw_declarations": d.raw_declarations,
-                "normalized_declarations": d.normalized_declarations,
+                "declarations": d.declarations if hasattr(d, "declarations") else getattr(d, "raw_declarations", {}),
                 "model_name": d.model_name,
                 "prompt_version": d.prompt_version,
                 "created_at": d.created_at.isoformat() if d.created_at else None,
@@ -196,12 +228,71 @@ class FinalizationService:
             for rd in reviewer_decisions
         ]
 
+        # Product Declaration Snapshot
+        from backend.app.models.product_declaration import ProductDeclaration
+        stmt_pdec = select(ProductDeclaration).where(ProductDeclaration.inspection_id == inspection_id)
+        pdec_row = (await db.execute(stmt_pdec)).scalar_one_or_none()
+        product_declaration_snapshot = pdec_row.synthesized_declarations if pdec_row else {}
+
+        # Capture OCR tokens per evidence asset for Annexure B
+        from backend.app.models.ocr import OCRResult
+        stmt_ocr = select(OCRResult).where(OCRResult.evidence_id.in_([e.id for e in evidence_assets]))
+        ocr_rows = (await db.execute(stmt_ocr)).scalars().all()
+        ocr_snapshot = {
+            ocr.evidence_id: {
+                "ocr_engine": ocr.ocr_engine,
+                "ocr_engine_version": ocr.ocr_engine_version,
+                "total_tokens": ocr.total_tokens,
+                "tokens": ocr.tokens or [],
+            }
+            for ocr in ocr_rows
+        }
+
+        # Capture Inspector Verifications / Corrections for Section 8
+        from backend.app.models.verification import DeclarationCorrection, ManualObservation
+        stmt_cor = select(DeclarationCorrection).where(DeclarationCorrection.inspection_id == inspection_id)
+        cor_rows = (await db.execute(stmt_cor)).scalars().all()
+        inspector_corrections = [
+            {
+                "id": cor.id,
+                "requirement_name": cor.requirement_name,
+                "field_name": cor.field_name,
+                "previous_value": cor.previous_value,
+                "corrected_value": cor.corrected_value,
+                "reason": cor.reason,
+                "inspector_id": getattr(cor, "inspector_id", None),
+                "created_at": cor.created_at.isoformat() if cor.created_at else None,
+            }
+            for cor in cor_rows
+        ]
+
+        # Capture Audit Trail for Section 12
+        from backend.app.models.audit import AuditEvent
+        stmt_audit = select(AuditEvent).where(AuditEvent.inspection_id == inspection_id).order_by(AuditEvent.created_at.asc())
+        audit_rows = (await db.execute(stmt_audit)).scalars().all()
+        audit_trail = [
+            {
+                "id": a.id,
+                "event_type": a.event_type,
+                "actor_id": a.actor_id,
+                "actor_role": a.actor_role,
+                "details": a.details,
+                "created_at": a.created_at.isoformat() if a.created_at else None,
+            }
+            for a in audit_rows
+        ]
+
         audit_metadata = {
             "finalized_by": reviewer_id,
             "finalized_at": now.isoformat(),
             "total_evidence_count": len(evidence_assets),
             "total_findings_count": len(finding_rows),
             "total_reviewer_decisions_count": len(reviewer_decisions),
+            "product_declaration_snapshot": product_declaration_snapshot,
+            "synthesis_status": pdec_row.status if pdec_row else "NONE",
+            "ocr_snapshot": ocr_snapshot,
+            "inspector_corrections": inspector_corrections,
+            "audit_trail": audit_trail,
         }
 
         # Create FinalAuditRecord

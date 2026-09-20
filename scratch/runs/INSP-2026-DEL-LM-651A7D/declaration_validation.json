@@ -1,0 +1,24 @@
+{
+  "inspection_id": "INS-UNI-651A7D",
+  "validation_engine_version": "v1.0",
+  "evaluated_at": "2026-09-20T11:48:01.110887+00:00",
+  "inspection_date_used": "2026-09-20",
+  "date_observations": [],
+  "derived_dates": [],
+  "conflicts": [],
+  "temporal_validations": [],
+  "scope_integrity": {
+    "inspection_id": "INS-UNI-651A7D",
+    "is_isolated": true,
+    "violating_evidence_ids": [],
+    "violating_token_maps": {},
+    "notes": [
+      "Scope isolation verified. Zero cross-inspection contamination detected."
+    ]
+  },
+  "overall_validation_status": "VALID",
+  "statutory_finding_recommendation": null,
+  "notes": [
+    "All observed date declarations and scope validations passed deterministically."
+  ]
+}

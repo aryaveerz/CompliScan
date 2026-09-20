@@ -1,0 +1,243 @@
+================================================================================
+COMPLISCAN LM — COMPLETE TECH STACK ARCHITECTURE & USAGE GUIDE
+================================================================================
+
+This document explains all the technologies, frameworks, libraries, and tools 
+used across CompliScan LM in a straightforward, human-friendly way — detailing 
+what each technology is, where it is used in the project, and why we chose it.
+
+================================================================================
+1. FRONTEND LAYER (WHAT THE USER SEES & INTERACTS WITH)
+================================================================================
+
+* React (with TypeScript)
+  - What it is: A modern, component-driven web framework combined with strict 
+    typing.
+  - Where it is used: The entire user interface — the inspector scanning screens, 
+    live camera viewfinders, reviewer adjudication drawers, case history ledgers, 
+    and executive dashboard charts.
+  - Why we used it: TypeScript keeps the code rock-solid. When dealing with legal 
+    metrology declarations (MRP amounts, net quantities, date strings, and token 
+    bounding coordinates), TypeScript ensures data fields never break or display 
+    unpredictably on screen.
+
+* Vite
+  - What it is: A lightning-fast frontend development tool and bundle compiler.
+  - Where it is used: Building and serving the frontend application.
+  - Why we used it: It provides instant hot-module replacement during local 
+    development and generates optimized, lightweight static assets for production.
+
+* Tailwind CSS + Custom Vanilla CSS
+  - What it is: A utility-first CSS framework combined with custom style rules.
+  - Where it is used: Styling all buttons, inspection cards, status badges 
+    (PASS, POTENTIAL_NON_COMPLIANCE, REQUIRES_REVIEW), tables, and modal drawers.
+  - Why we used it: Allows us to build a crisp, modern, departmental-grade user 
+    interface with high visual contrast that easily adapts to both desktop 
+    monitors and mobile phone screens.
+
+* Lucide Icons
+  - What it is: A clean, consistent SVG icon set.
+  - Where it is used: Across navigation menus, camera controls, evidence status 
+    indicators, and action buttons.
+
+* HTML5 MediaDevices (Web Camera API)
+  - What it is: Browser API that directly accesses the device's hardware cameras.
+  - Where it is used: The live camera scanning and photo capture interface.
+  - Why we used it: Allows field inspectors on phones or tablets to take live photos 
+    of package panels with on-screen framing guides (viewfinders) for the Principal 
+    Display Panel (PDP), side panels, manufacturer text, and gable top seals.
+
+
+================================================================================
+2. BACKEND & API ENGINE (WHERE BUSINESS LOGIC RUNS)
+================================================================================
+
+* Python 3.12
+  - What it is: The latest stable release of the Python programming language.
+  - Where it is used: The entire backend service, computer vision pipeline, 
+    deterministic rule engine, and report generation systems.
+  - Why we used it: Fast execution, excellent asynchronous support, and the rich 
+    ecosystem for computer vision and PDF/document manipulation.
+
+* FastAPI
+  - What it is: A high-performance, asynchronous web framework for building REST APIs.
+  - Where it is used: Powers all backend API endpoints (uploading photos, starting 
+    OCR jobs, synthesizing multi-image evidence, reviewer queues, and report exports).
+  - Why we used it: Asynchronous speed, automatic OpenAPI documentation at `/docs`, 
+    and native support for strict Pydantic schemas.
+
+* Pydantic v2
+  - What it is: High-speed data validation and schema management library.
+  - Where it is used: Every request and response payload across the API, database 
+    models, and AI extraction contracts.
+  - Why we used it: It acts as an uncompromising gatekeeper. If an LLM response or 
+    user request is missing mandatory fields or uses invalid types, Pydantic catches 
+    it immediately before it touches our database.
+
+* Uvicorn
+  - What it is: A lightning-fast ASGI web server.
+  - Where it is used: Running and serving the FastAPI application in runtime 
+    environments.
+
+
+================================================================================
+3. COMPUTER VISION & OCR (PERCEPTION LAYER)
+================================================================================
+
+* OpenCV (cv2)
+  - What it is: The industry-standard open-source computer vision library.
+  - Where it is used: The `ImageQualityService` — the very first stop for every 
+    uploaded or captured package photo.
+  - Why we used it: We use it to calculate image sharpness (using Laplacian 
+    variance) and lighting exposure histograms. If an inspector takes a blurry or 
+    pitch-dark photo, OpenCV catches it instantly and flags it as `NEEDS_REVIEW` 
+    or `UNUSABLE` so the user can retake it before downstream processing.
+
+* PaddleOCR (ONNX Runtime)
+  - What it is: High-accuracy optical character recognition (DBNet detection + 
+    SVTR text recognition) running via the ONNX runtime engine.
+  - Where it is used: Local text detection and recognition across package photos.
+  - Why we used it: It runs locally on the machine/server without sending private 
+    package photos across the internet. It produces clean text tokens along with 
+    exact bounding box coordinates `[x1, y1, x2, y2]` and confidence scores.
+
+
+================================================================================
+4. ARTIFICIAL INTELLIGENCE & SEMANTIC STRUCTURING LAYER
+================================================================================
+
+* Google Gemini (gemini-3.6-flash)
+  - What it is: Google's state-of-the-art multimodal generative model.
+  - Where it is used: Structuring messy OCR text into canonical data categories.
+  - Why & How it is used: Packaging text is cluttered and non-standard. We use 
+    `gemini-3.6-flash` strictly to take the OCR words and map them to fields 
+    (Manufacturer Name, Address, Net Quantity, MRP, Dates, Consumer Care). 
+    CRITICAL RULE: Gemini is strictly prohibited from making legal compliance 
+    determinations. It only organizes observed words and maps them back to 
+    verified OCR token numbers.
+
+* HTTPX (Async Client)
+  - What it is: A modern async HTTP client for Python.
+  - Where it is used: Calling the Gemini REST API with built-in retry backoffs, 
+    timeout controls, and daily quota detection.
+
+
+================================================================================
+5. STATUTORY RULE ENGINE (DETERMINISTIC LEGAL LOGIC)
+================================================================================
+
+* Pure Deterministic Python Engine (ComplianceEvaluationService)
+  - What it is: Custom deterministic rule algorithms.
+  - Where it is used: Evaluating package declarations against the Legal Metrology 
+    (Packaged Commodities) Rules, 2011.
+  - Why we used it: Legal decisions must NEVER be hallucinated or delegated to an 
+    LLM. Our Python rule engine deterministically evaluates:
+      - Rule 6(1)(a): Manufacturer/Packer/Importer identity & complete postal address.
+      - Rule 6(1)(b): Generic or common commodity name.
+      - Rule 6(1)(c): Net quantity with legal metric units (g, kg, ml, l, m, N, U).
+      - Rule 6(1)(d): Month and year of manufacture or packing.
+      - Rule 6(1)(e): Maximum Retail Price with mandatory "inclusive of all taxes" text.
+      - Rule 6(1)(f): Consumer care grievance redressal contact channels.
+      - Rule 6(1)(da): Country of origin (enforced for imported goods; exempt for domestic).
+
+
+================================================================================
+6. DATABASE, STORAGE & MIGRATIONS
+================================================================================
+
+* PostgreSQL (hosted on Supabase)
+  - What it is: An enterprise-grade relational SQL database.
+  - Where it is used: The primary persistent database storing users, inspections, 
+    evidence files, OCR tokens, synthesized declarations, compliance findings, 
+    and finalized audit records.
+  - Why we used it: ACID transaction guarantees, robust JSON column indexing, and 
+    reliable row-level security.
+
+* SQLAlchemy (Async ORM)
+  - What it is: Python's premier Object Relational Mapper configured for async I/O.
+  - Where it is used: Managing database connections, executing non-blocking queries, 
+    and defining Python data models.
+
+* Alembic
+  - What it is: Database migration and schema versioning tool.
+  - Where it is used: Managing database evolution (e.g. creating the 
+    `product_declarations` table, adding telemetry columns) safely without data loss.
+
+
+================================================================================
+7. SECURITY, AUTHENTICATION & INTEGRITY
+================================================================================
+
+* Supabase Auth & JSON Web Tokens (JWT)
+  - What it is: Token-based authentication and user session management.
+  - Where it is used: User registration, secure login, and API request authorization.
+  - Why we used it: Enforces strict Role-Based Access Control (RBAC) separating 
+    field `INSPECTOR` accounts (who upload evidence and inspect findings) from 
+    senior `REVIEWER` accounts (who override findings, issue evidence requests, 
+    and finalize cases).
+
+* Python hashlib (SHA-256)
+  - What it is: Built-in cryptographic hashing library.
+  - Where it is used:
+    1. Computing a unique SHA-256 fingerprint for every uploaded image to prevent 
+       duplicate or corrupted evidence.
+    2. Sealing the entire `FinalAuditRecord` with a composite cryptographic hash, 
+       locking finalized cases into an immutable `READ_ONLY` state that cannot be 
+       altered.
+
+
+================================================================================
+8. OFFICIAL REPORT GENERATION (PDF & WORD DOCX)
+================================================================================
+
+* ReportLab (Python PDF Library)
+  - What it is: Programmatic PDF generation engine.
+  - Where it is used: Creating the official, tamper-proof PDF inspection report.
+  - Why we used it: Generates court-ready, official departmental documents styled 
+    to Indian Legal Metrology standards, complete with case numbers, photo registers, 
+    multi-angle evidence tables, reviewer rationales, and cryptographic seals.
+
+* python-docx
+  - What it is: Python library for creating Microsoft Word (.docx) files.
+  - Where it is used: Creating matching editable Word documents.
+  - Why we used it: Gives government officers an editable copy that matches the 
+    official PDF 1-to-1 in data, structure, colors, and layout for internal notes 
+    or drafting show-cause notices.
+
+
+================================================================================
+9. TESTING & QUALITY ASSURANCE
+================================================================================
+
+* Pytest & pytest-asyncio
+  - What it is: The premier automated testing framework for Python.
+  - Where it is used: The comprehensive test suite (`backend/tests/`) with 97 
+    automated tests.
+  - Why we used it: Verifies every single subsystem — image quality thresholds, 
+    PaddleOCR token index boundaries, Gemini extraction schema validation, Legal 
+    Metrology compliance rules, reviewer workflows, and PDF/Word report exports.
+
+
+================================================================================
+SUMMARY TABLE: QUICK REFERENCE
+================================================================================
+
++------------------------+------------------------------------+---------------------------------------------------------------+
+| System Layer           | Technologies Used                  | Role In CompliScan LM                                         |
++------------------------+------------------------------------+---------------------------------------------------------------+
+| Frontend UI            | React, TypeScript, Vite, Tailwind  | Web app, inspector workflows, review queue, dashboards.       |
+| Mobile / Capture       | HTML5 MediaDevices (Web Camera)    | Live photo capture with on-screen panel framing guides.       |
+| Backend API            | Python 3.12, FastAPI, Pydantic v2  | Async REST APIs, schema validation, lifecycle management.     |
+| Computer Vision        | OpenCV (cv2)                       | Blur detection, lighting checks, image quality gating.        |
+| OCR Engine             | PaddleOCR (ONNX Runtime)           | On-device text recognition and bounding box extraction.       |
+| Semantic AI            | Google Gemini (gemini-3.6-flash)   | Mapping raw OCR words into structured declaration fields.     |
+| Legal Rule Engine      | Pure Python (Deterministic)        | Statutory Rule 6(1) evaluations (strictly non-AI).            |
+| Database & ORM         | PostgreSQL (Supabase), SQLAlchemy  | Relational database, async queries, and Alembic migrations.   |
+| Security & RBAC        | Supabase Auth (JWT), SHA-256       | User authentication, Inspector/Reviewer roles, audit locks.   |
+| Official Reports       | ReportLab (PDF), python-docx (DOCX)| 5-Section Indian Legal Metrology inspection reports.         |
+| Automated QA           | Pytest, pytest-asyncio             | Full 97-test automated verification suite (100% pass rate).   |
++------------------------+------------------------------------+---------------------------------------------------------------+
+
+================================================================================
+END OF TECH STACK GUIDE — COMPLISCAN LM
+================================================================================

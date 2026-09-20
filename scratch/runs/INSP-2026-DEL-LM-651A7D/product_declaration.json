@@ -1,0 +1,215 @@
+{
+  "manufacturer_identity": {
+    "observation_status": "OBSERVED",
+    "final_value": {
+      "status": "OBSERVED",
+      "declaration_type": "MANUFACTURER_AND_MARKETER",
+      "name": "Itcltd.\nCpcb Regn.No.\nBo-08-000-07-Aaaci5950L-22\nCm\n8901725100117",
+      "address": "No.10012031000312",
+      "raw_text": "MARKETED BY:ITCLTD.\nCPCB Regn.No.\nBO-08-000-07-AAACI5950L-22\nCM\n8901725100117",
+      "source_token_ids": [
+        21,
+        29
+      ]
+    },
+    "supporting_evidence_ids": [
+      "EV-UNI-58A5A902"
+    ],
+    "supporting_ocr_token_map": {
+      "EV-UNI-58A5A902": []
+    },
+    "source_raw_texts": [
+      "MARKETED BY:ITCLTD.\nCPCB Regn.No.\nBO-08-000-07-AAACI5950L-22\nCM\n8901725100117"
+    ],
+    "corroborating_count": 1,
+    "conflicting_evidence_ids": [],
+    "conflicting_candidates": [],
+    "synthesis_notes": "Single evidence observation verified."
+  },
+  "commodity_name": {
+    "observation_status": "CONFLICTING",
+    "final_value": null,
+    "supporting_evidence_ids": [
+      "EV-UNI-58A5A902"
+    ],
+    "supporting_ocr_token_map": {
+      "EV-UNI-58A5A902": [],
+      "EV-UNI-BBC64ED3": [],
+      "EV-UNI-98D166D7": [],
+      "EV-UNI-B25D1E50": []
+    },
+    "source_raw_texts": [
+      "Board",
+      "Natural",
+      "LAMPAK",
+      "SHAKE WELL BEFORE SERVING"
+    ],
+    "corroborating_count": 1,
+    "conflicting_evidence_ids": [
+      "EV-UNI-BBC64ED3",
+      "EV-UNI-98D166D7",
+      "EV-UNI-B25D1E50"
+    ],
+    "conflicting_candidates": [
+      {
+        "evidence_id": "EV-UNI-58A5A902",
+        "value": {
+          "status": "OBSERVED",
+          "name": "Board",
+          "raw_text": "Board",
+          "source_token_ids": [
+            1
+          ]
+        },
+        "raw_text": "Board"
+      },
+      {
+        "evidence_id": "EV-UNI-BBC64ED3",
+        "value": {
+          "status": "OBSERVED",
+          "name": "Natural",
+          "raw_text": "Natural",
+          "source_token_ids": [
+            1
+          ]
+        },
+        "raw_text": "Natural"
+      },
+      {
+        "evidence_id": "EV-UNI-98D166D7",
+        "value": {
+          "status": "OBSERVED",
+          "name": "LAMPAK",
+          "raw_text": "LAMPAK",
+          "source_token_ids": [
+            0
+          ]
+        },
+        "raw_text": "LAMPAK"
+      },
+      {
+        "evidence_id": "EV-UNI-B25D1E50",
+        "value": {
+          "status": "OBSERVED",
+          "name": "SHAKE WELL BEFORE SERVING",
+          "raw_text": "SHAKE WELL BEFORE SERVING",
+          "source_token_ids": [
+            0
+          ]
+        },
+        "raw_text": "SHAKE WELL BEFORE SERVING"
+      }
+    ],
+    "synthesis_notes": "Conflicting declarations observed between evidence ['EV-UNI-58A5A902'] and ['EV-UNI-BBC64ED3', 'EV-UNI-98D166D7', 'EV-UNI-B25D1E50']."
+  },
+  "net_quantity": {
+    "observation_status": "OBSERVED",
+    "final_value": {
+      "status": "OBSERVED",
+      "quantity_value": 100.0,
+      "unit": "ml",
+      "unit_raw": "100ml",
+      "raw_text": "100ml",
+      "source_token_ids": [
+        6
+      ]
+    },
+    "supporting_evidence_ids": [
+      "EV-UNI-98D166D7"
+    ],
+    "supporting_ocr_token_map": {
+      "EV-UNI-98D166D7": []
+    },
+    "source_raw_texts": [
+      "100ml"
+    ],
+    "corroborating_count": 1,
+    "conflicting_evidence_ids": [],
+    "conflicting_candidates": [],
+    "synthesis_notes": "Single evidence observation verified."
+  },
+  "manufacture_packing_date": {
+    "observation_status": "NOT_OBSERVED",
+    "final_value": null,
+    "supporting_evidence_ids": [],
+    "supporting_ocr_token_map": {},
+    "source_raw_texts": [],
+    "corroborating_count": 0,
+    "conflicting_evidence_ids": [],
+    "conflicting_candidates": [],
+    "synthesis_notes": "Not observed across any evidence asset."
+  },
+  "mrp": {
+    "observation_status": "NOT_OBSERVED",
+    "final_value": null,
+    "supporting_evidence_ids": [],
+    "supporting_ocr_token_map": {},
+    "source_raw_texts": [],
+    "corroborating_count": 0,
+    "conflicting_evidence_ids": [],
+    "conflicting_candidates": [],
+    "synthesis_notes": "Not observed across any evidence asset."
+  },
+  "consumer_care": {
+    "observation_status": "OBSERVED",
+    "final_value": {
+      "status": "OBSERVED",
+      "contact_name": "Consumer Care Cell",
+      "phone": "1800425444444",
+      "email": "itccares@itc.in",
+      "raw_text": "CONTACT:CONSUMER CARE",
+      "source_token_ids": [
+        61,
+        67
+      ]
+    },
+    "supporting_evidence_ids": [
+      "EV-UNI-98D166D7"
+    ],
+    "supporting_ocr_token_map": {
+      "EV-UNI-98D166D7": []
+    },
+    "source_raw_texts": [
+      "CONTACT:CONSUMER CARE"
+    ],
+    "corroborating_count": 1,
+    "conflicting_evidence_ids": [],
+    "conflicting_candidates": [],
+    "synthesis_notes": "Single evidence observation verified."
+  },
+  "country_of_origin": {
+    "observation_status": "NOT_OBSERVED",
+    "final_value": null,
+    "supporting_evidence_ids": [],
+    "supporting_ocr_token_map": {},
+    "source_raw_texts": [],
+    "corroborating_count": 0,
+    "conflicting_evidence_ids": [],
+    "conflicting_candidates": [],
+    "synthesis_notes": "Not observed across any evidence asset."
+  },
+  "date_validation": {
+    "inspection_id": "INS-UNI-651A7D",
+    "validation_engine_version": "v1.0",
+    "evaluated_at": "2026-09-20T11:48:01.110887+00:00",
+    "inspection_date_used": "2026-09-20",
+    "date_observations": [],
+    "derived_dates": [],
+    "conflicts": [],
+    "temporal_validations": [],
+    "scope_integrity": {
+      "inspection_id": "INS-UNI-651A7D",
+      "is_isolated": true,
+      "violating_evidence_ids": [],
+      "violating_token_maps": {},
+      "notes": [
+        "Scope isolation verified. Zero cross-inspection contamination detected."
+      ]
+    },
+    "overall_validation_status": "VALID",
+    "statutory_finding_recommendation": null,
+    "notes": [
+      "All observed date declarations and scope validations passed deterministically."
+    ]
+  }
+}

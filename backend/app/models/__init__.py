@@ -15,6 +15,7 @@ from backend.app.models.verification import DeclarationCorrection, ManualObserva
 from backend.app.models.reviewer import ReviewerDecision
 from backend.app.models.evidence_request import EvidenceRequest
 from backend.app.models.final_audit import FinalAuditRecord
+from backend.app.models.product_declaration import ProductDeclaration
 
 __all__ = [
     "User",
@@ -32,4 +33,5 @@ __all__ = [
     "ReviewerDecision",
     "EvidenceRequest",
     "FinalAuditRecord",
+    "ProductDeclaration",
 ]

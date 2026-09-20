@@ -1,0 +1,920 @@
+[
+  {
+    "token_index": 0,
+    "line_index": 0,
+    "text": "MIX",
+    "confidence": 0.9789,
+    "bounding_box": {
+      "points": [
+        [
+          449.0,
+          76.0
+        ],
+        [
+          481.0,
+          76.0
+        ],
+        [
+          481.0,
+          95.0
+        ],
+        [
+          449.0,
+          95.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 1,
+    "line_index": 1,
+    "text": "Board",
+    "confidence": 0.9814,
+    "bounding_box": {
+      "points": [
+        [
+          442.0,
+          96.0
+        ],
+        [
+          490.0,
+          96.0
+        ],
+        [
+          490.0,
+          117.0
+        ],
+        [
+          442.0,
+          117.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 2,
+    "line_index": 2,
+    "text": "FSC",
+    "confidence": 0.9894,
+    "bounding_box": {
+      "points": [
+        [
+          346.0,
+          125.0
+        ],
+        [
+          402.0,
+          123.0
+        ],
+        [
+          403.0,
+          144.0
+        ],
+        [
+          347.0,
+          146.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 3,
+    "line_index": 3,
+    "text": "FSCC199245",
+    "confidence": 0.9954,
+    "bounding_box": {
+      "points": [
+        [
+          406.0,
+          123.0
+        ],
+        [
+          525.0,
+          120.0
+        ],
+        [
+          525.0,
+          140.0
+        ],
+        [
+          406.0,
+          143.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 4,
+    "line_index": 4,
+    "text": "Natural",
+    "confidence": 0.9895,
+    "bounding_box": {
+      "points": [
+        [
+          252.0,
+          308.0
+        ],
+        [
+          383.0,
+          290.0
+        ],
+        [
+          388.0,
+          329.0
+        ],
+        [
+          257.0,
+          347.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 5,
+    "line_index": 5,
+    "text": "KEEPYOUR",
+    "confidence": 0.9912,
+    "bounding_box": {
+      "points": [
+        [
+          313.0,
+          500.0
+        ],
+        [
+          423.0,
+          496.0
+        ],
+        [
+          424.0,
+          520.0
+        ],
+        [
+          314.0,
+          524.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 6,
+    "line_index": 6,
+    "text": "OTHERS",
+    "confidence": 0.982,
+    "bounding_box": {
+      "points": [
+        [
+          561.0,
+          510.0
+        ],
+        [
+          679.0,
+          508.0
+        ],
+        [
+          679.0,
+          542.0
+        ],
+        [
+          561.0,
+          544.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 7,
+    "line_index": 7,
+    "text": "CITY CLEAN",
+    "confidence": 0.9519,
+    "bounding_box": {
+      "points": [
+        [
+          311.0,
+          521.0
+        ],
+        [
+          424.0,
+          516.0
+        ],
+        [
+          425.0,
+          540.0
+        ],
+        [
+          313.0,
+          545.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 8,
+    "line_index": 8,
+    "text": "INGREDIENTS:",
+    "confidence": 0.9909,
+    "bounding_box": {
+      "points": [
+        [
+          365.0,
+          745.0
+        ],
+        [
+          632.0,
+          738.0
+        ],
+        [
+          633.0,
+          768.0
+        ],
+        [
+          366.0,
+          775.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 9,
+    "line_index": 9,
+    "text": "Water,Guava Pulp (20%),",
+    "confidence": 0.9405,
+    "bounding_box": {
+      "points": [
+        [
+          299.0,
+          777.0
+        ],
+        [
+          696.0,
+          769.0
+        ],
+        [
+          697.0,
+          805.0
+        ],
+        [
+          299.0,
+          813.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 10,
+    "line_index": 10,
+    "text": "Sugar,Acidity Regulator[330],",
+    "confidence": 0.9431,
+    "bounding_box": {
+      "points": [
+        [
+          260.0,
+          811.0
+        ],
+        [
+          739.0,
+          800.0
+        ],
+        [
+          740.0,
+          839.0
+        ],
+        [
+          261.0,
+          850.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 11,
+    "line_index": 11,
+    "text": "Stabilizers[440,466,415],",
+    "confidence": 0.9532,
+    "bounding_box": {
+      "points": [
+        [
+          294.0,
+          841.0
+        ],
+        [
+          709.0,
+          831.0
+        ],
+        [
+          710.0,
+          871.0
+        ],
+        [
+          296.0,
+          881.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 12,
+    "line_index": 12,
+    "text": "Natural Flavours and Natural",
+    "confidence": 0.9518,
+    "bounding_box": {
+      "points": [
+        [
+          275.0,
+          880.0
+        ],
+        [
+          729.0,
+          868.0
+        ],
+        [
+          730.0,
+          901.0
+        ],
+        [
+          276.0,
+          913.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 13,
+    "line_index": 13,
+    "text": "Flavouring Substances,",
+    "confidence": 0.983,
+    "bounding_box": {
+      "points": [
+        [
+          312.0,
+          910.0
+        ],
+        [
+          692.0,
+          902.0
+        ],
+        [
+          693.0,
+          937.0
+        ],
+        [
+          313.0,
+          945.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 14,
+    "line_index": 14,
+    "text": "Vitamins,lodized Saltand",
+    "confidence": 0.9537,
+    "bounding_box": {
+      "points": [
+        [
+          296.0,
+          944.0
+        ],
+        [
+          711.0,
+          932.0
+        ],
+        [
+          712.0,
+          968.0
+        ],
+        [
+          298.0,
+          980.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 15,
+    "line_index": 15,
+    "text": "Colours\uff08150d,124,110\uff09",
+    "confidence": 0.9166,
+    "bounding_box": {
+      "points": [
+        [
+          313.0,
+          977.0
+        ],
+        [
+          695.0,
+          967.0
+        ],
+        [
+          696.0,
+          1004.0
+        ],
+        [
+          314.0,
+          1014.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 16,
+    "line_index": 16,
+    "text": "May contain Milk,Nut and Soy",
+    "confidence": 0.9096,
+    "bounding_box": {
+      "points": [
+        [
+          259.0,
+          1041.0
+        ],
+        [
+          740.0,
+          1028.0
+        ],
+        [
+          741.0,
+          1068.0
+        ],
+        [
+          260.0,
+          1081.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 17,
+    "line_index": 17,
+    "text": "Source of Vitamin C,Source of",
+    "confidence": 0.9189,
+    "bounding_box": {
+      "points": [
+        [
+          259.0,
+          1097.0
+        ],
+        [
+          751.0,
+          1083.0
+        ],
+        [
+          752.0,
+          1119.0
+        ],
+        [
+          260.0,
+          1133.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 18,
+    "line_index": 18,
+    "text": "Vitamin E",
+    "confidence": 0.9494,
+    "bounding_box": {
+      "points": [
+        [
+          421.0,
+          1130.0
+        ],
+        [
+          602.0,
+          1127.0
+        ],
+        [
+          603.0,
+          1160.0
+        ],
+        [
+          421.0,
+          1163.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 19,
+    "line_index": 19,
+    "text": "\uff085%of RDA per 100 kcal)",
+    "confidence": 0.8782,
+    "bounding_box": {
+      "points": [
+        [
+          306.0,
+          1177.0
+        ],
+        [
+          708.0,
+          1168.0
+        ],
+        [
+          709.0,
+          1204.0
+        ],
+        [
+          307.0,
+          1213.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 20,
+    "line_index": 20,
+    "text": "For Brand Owner's",
+    "confidence": 0.9077,
+    "bounding_box": {
+      "points": [
+        [
+          482.0,
+          1229.0
+        ],
+        [
+          640.0,
+          1224.0
+        ],
+        [
+          641.0,
+          1254.0
+        ],
+        [
+          483.0,
+          1259.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 21,
+    "line_index": 21,
+    "text": "Address,Manufacturing",
+    "confidence": 0.9095,
+    "bounding_box": {
+      "points": [
+        [
+          485.0,
+          1256.0
+        ],
+        [
+          686.0,
+          1253.0
+        ],
+        [
+          686.0,
+          1283.0
+        ],
+        [
+          486.0,
+          1286.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 22,
+    "line_index": 22,
+    "text": "and/or Packaging",
+    "confidence": 0.9611,
+    "bounding_box": {
+      "points": [
+        [
+          487.0,
+          1285.0
+        ],
+        [
+          637.0,
+          1284.0
+        ],
+        [
+          637.0,
+          1315.0
+        ],
+        [
+          488.0,
+          1316.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 23,
+    "line_index": 23,
+    "text": "Units'FSSAI License",
+    "confidence": 0.9349,
+    "bounding_box": {
+      "points": [
+        [
+          487.0,
+          1315.0
+        ],
+        [
+          653.0,
+          1311.0
+        ],
+        [
+          653.0,
+          1340.0
+        ],
+        [
+          488.0,
+          1344.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 24,
+    "line_index": 24,
+    "text": "Number&Address,",
+    "confidence": 0.9851,
+    "bounding_box": {
+      "points": [
+        [
+          486.0,
+          1342.0
+        ],
+        [
+          652.0,
+          1338.0
+        ],
+        [
+          652.0,
+          1368.0
+        ],
+        [
+          487.0,
+          1372.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 25,
+    "line_index": 25,
+    "text": "pleasescan theQR",
+    "confidence": 0.9703,
+    "bounding_box": {
+      "points": [
+        [
+          486.0,
+          1372.0
+        ],
+        [
+          650.0,
+          1367.0
+        ],
+        [
+          652.0,
+          1397.0
+        ],
+        [
+          487.0,
+          1402.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 26,
+    "line_index": 26,
+    "text": "Code.",
+    "confidence": 0.9798,
+    "bounding_box": {
+      "points": [
+        [
+          488.0,
+          1401.0
+        ],
+        [
+          542.0,
+          1401.0
+        ],
+        [
+          542.0,
+          1431.0
+        ],
+        [
+          488.0,
+          1431.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 27,
+    "line_index": 27,
+    "text": "fssat",
+    "confidence": 0.9301,
+    "bounding_box": {
+      "points": [
+        [
+          464.0,
+          1431.0
+        ],
+        [
+          535.0,
+          1431.0
+        ],
+        [
+          535.0,
+          1477.0
+        ],
+        [
+          464.0,
+          1477.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 28,
+    "line_index": 28,
+    "text": "Lic.No.10012031000312",
+    "confidence": 0.9873,
+    "bounding_box": {
+      "points": [
+        [
+          358.0,
+          1473.0
+        ],
+        [
+          639.0,
+          1468.0
+        ],
+        [
+          639.0,
+          1505.0
+        ],
+        [
+          359.0,
+          1510.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 29,
+    "line_index": 29,
+    "text": "MARKETED BY:ITCLTD.",
+    "confidence": 0.9578,
+    "bounding_box": {
+      "points": [
+        [
+          360.0,
+          1516.0
+        ],
+        [
+          599.0,
+          1514.0
+        ],
+        [
+          600.0,
+          1544.0
+        ],
+        [
+          361.0,
+          1546.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 30,
+    "line_index": 30,
+    "text": "CPCB Regn.No.",
+    "confidence": 0.9455,
+    "bounding_box": {
+      "points": [
+        [
+          361.0,
+          1542.0
+        ],
+        [
+          513.0,
+          1545.0
+        ],
+        [
+          513.0,
+          1572.0
+        ],
+        [
+          360.0,
+          1569.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 31,
+    "line_index": 31,
+    "text": "BO-08-000-07-AAACI5950L-22",
+    "confidence": 0.9656,
+    "bounding_box": {
+      "points": [
+        [
+          358.0,
+          1569.0
+        ],
+        [
+          658.0,
+          1567.0
+        ],
+        [
+          658.0,
+          1601.0
+        ],
+        [
+          358.0,
+          1603.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 32,
+    "line_index": 32,
+    "text": "CM",
+    "confidence": 0.6611,
+    "bounding_box": {
+      "points": [
+        [
+          149.0,
+          1753.0
+        ],
+        [
+          249.0,
+          1764.0
+        ],
+        [
+          243.0,
+          1825.0
+        ],
+        [
+          143.0,
+          1814.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 33,
+    "line_index": 33,
+    "text": "8901725100117",
+    "confidence": 0.9935,
+    "bounding_box": {
+      "points": [
+        [
+          322.0,
+          1791.0
+        ],
+        [
+          679.0,
+          1783.0
+        ],
+        [
+          680.0,
+          1823.0
+        ],
+        [
+          323.0,
+          1831.0
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  }
+]

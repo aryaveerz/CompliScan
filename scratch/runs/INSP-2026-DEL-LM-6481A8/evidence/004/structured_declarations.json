@@ -1,0 +1,10 @@
+{
+  "commodity_name": {
+    "status": "OBSERVED",
+    "name": "SHAKE WELL BEFORE SERVING",
+    "raw_text": "SHAKE WELL BEFORE SERVING",
+    "source_token_ids": [
+      0
+    ]
+  }
+}

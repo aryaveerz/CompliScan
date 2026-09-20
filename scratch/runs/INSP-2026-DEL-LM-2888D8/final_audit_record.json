@@ -1,0 +1,509 @@
+{
+  "far_id": "FAR-UNI-72D97C807D",
+  "inspection_id": "INS-UNI-2888D8",
+  "case_number": "INSP-2026-DEL-LM-2888D8",
+  "final_decision": "COMPLIANT",
+  "integrity_hash": "c6de53914f6d0fa515eb002c61e566d844131f302289263693795101defc90e5",
+  "inspection_context": {
+    "id": "INS-UNI-2888D8",
+    "case_number": "INSP-2026-DEL-LM-2888D8",
+    "product_name": "Packaged Commodity Inspection Target",
+    "origin_status": "DOMESTIC",
+    "product_category": "Packaged Commodities",
+    "reference_url": null,
+    "notes": "Universal statutory inspection of evidence dataset from 'Juice'.",
+    "location_data": {
+      "premises_name": "Registered Retail Premises",
+      "address_line_1": "Main Market, Sector 18",
+      "city": "New Delhi",
+      "district": "Delhi",
+      "state": "Delhi",
+      "pin_code": "110001",
+      "latitude": "28.6139",
+      "longitude": "77.2090",
+      "capture_method": "REGISTERED_PREMISES"
+    },
+    "created_by_id": "USR-INSP-9B2249",
+    "reviewer_id": "USR-REV-AF6128",
+    "inspector": {
+      "user_id": "USR-INSP-9B2249",
+      "full_name": "Rajesh Kumar",
+      "officer_id": "LMI-DEL-7824",
+      "designation": "Senior Legal Metrology Inspector",
+      "department": "Department of Consumer Affairs, Government of NCT of Delhi",
+      "unit_office": "Central District Inspection Unit, New Delhi"
+    },
+    "reviewer": {
+      "user_id": "USR-REV-AF6128",
+      "full_name": "Dr. Sunita Sharma",
+      "officer_id": "AC-LM-DEL-104",
+      "designation": "Assistant Controller of Legal Metrology",
+      "department": "Department of Consumer Affairs, Government of NCT of Delhi",
+      "unit_office": "Legal Metrology Adjudication Cell"
+    },
+    "created_at": "2026-09-20T11:37:24.282090+00:00",
+    "inspection_started_at": "2026-09-20T00:00:00+00:00",
+    "inspection_completed_at": "2026-09-20T11:37:24.282090+00:00",
+    "submitted_at": "2026-09-20T11:37:24.282090+00:00",
+    "finalized_at": "2026-09-20T11:37:24.282090+00:00"
+  },
+  "evidence_snapshot": [
+    {
+      "id": "EV-UNI-41CE3F3F",
+      "original_filename": "IMG_20260920_040854.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 1306214,
+      "sha256_hash": "7987f3a2fcc2601d82ebb79504ecbaee6f3c5964a31f63607728396fcda45a73",
+      "created_at": "2026-09-20T11:37:24.282090+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Juice\\IMG_20260920_040854.jpg"
+    },
+    {
+      "id": "EV-UNI-F09A5976",
+      "original_filename": "IMG_20260920_040900.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 1199889,
+      "sha256_hash": "d0891ea5c2d12522deb98ca8e259583fa259ad6306359dfab0a5eb274777ad00",
+      "created_at": "2026-09-20T11:37:24.282090+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Juice\\IMG_20260920_040900.jpg"
+    },
+    {
+      "id": "EV-UNI-33C14041",
+      "original_filename": "IMG_20260920_040906.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 1300647,
+      "sha256_hash": "95db45287da0969ecefff09dec87af5052488507b0395d1d08b4ddcd410730b8",
+      "created_at": "2026-09-20T11:37:24.282090+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Juice\\IMG_20260920_040906.jpg"
+    },
+    {
+      "id": "EV-UNI-EEE724BA",
+      "original_filename": "IMG_20260920_040922.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 1261675,
+      "sha256_hash": "919b9530ea24a31f172b73fea330754e15c5349d0cdc4aca22f64d7812a3226c",
+      "created_at": "2026-09-20T11:37:24.282090+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Juice\\IMG_20260920_040922.jpg"
+    }
+  ],
+  "declarations": {
+    "manufacturer_identity": {
+      "observation_status": "OBSERVED",
+      "final_value": {
+        "status": "OBSERVED",
+        "declaration_type": "MANUFACTURER_AND_MARKETER",
+        "name": "Itcltd.\nCpcb Regn.No.\nBo-08-000-07-Aaaci5950L-22\nCm\n8901725100117",
+        "address": "No.10012031000312",
+        "raw_text": "MARKETED BY:ITCLTD.\nCPCB Regn.No.\nBO-08-000-07-AAACI5950L-22\nCM\n8901725100117",
+        "source_token_ids": [
+          21,
+          29
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EV-UNI-41CE3F3F"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-41CE3F3F": []
+      },
+      "source_raw_texts": [
+        "MARKETED BY:ITCLTD.\nCPCB Regn.No.\nBO-08-000-07-AAACI5950L-22\nCM\n8901725100117"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Single evidence observation verified."
+    },
+    "commodity_name": {
+      "observation_status": "CONFLICTING",
+      "final_value": null,
+      "supporting_evidence_ids": [
+        "EV-UNI-41CE3F3F"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-41CE3F3F": [],
+        "EV-UNI-F09A5976": [],
+        "EV-UNI-33C14041": [],
+        "EV-UNI-EEE724BA": []
+      },
+      "source_raw_texts": [
+        "Board",
+        "Natural",
+        "LAMPAK",
+        "SHAKE WELL BEFORE SERVING"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [
+        "EV-UNI-F09A5976",
+        "EV-UNI-33C14041",
+        "EV-UNI-EEE724BA"
+      ],
+      "conflicting_candidates": [
+        {
+          "evidence_id": "EV-UNI-41CE3F3F",
+          "value": {
+            "status": "OBSERVED",
+            "name": "Board",
+            "raw_text": "Board",
+            "source_token_ids": [
+              1
+            ]
+          },
+          "raw_text": "Board"
+        },
+        {
+          "evidence_id": "EV-UNI-F09A5976",
+          "value": {
+            "status": "OBSERVED",
+            "name": "Natural",
+            "raw_text": "Natural",
+            "source_token_ids": [
+              1
+            ]
+          },
+          "raw_text": "Natural"
+        },
+        {
+          "evidence_id": "EV-UNI-33C14041",
+          "value": {
+            "status": "OBSERVED",
+            "name": "LAMPAK",
+            "raw_text": "LAMPAK",
+            "source_token_ids": [
+              0
+            ]
+          },
+          "raw_text": "LAMPAK"
+        },
+        {
+          "evidence_id": "EV-UNI-EEE724BA",
+          "value": {
+            "status": "OBSERVED",
+            "name": "SHAKE WELL BEFORE SERVING",
+            "raw_text": "SHAKE WELL BEFORE SERVING",
+            "source_token_ids": [
+              0
+            ]
+          },
+          "raw_text": "SHAKE WELL BEFORE SERVING"
+        }
+      ],
+      "synthesis_notes": "Conflicting declarations observed between evidence ['EV-UNI-41CE3F3F'] and ['EV-UNI-F09A5976', 'EV-UNI-33C14041', 'EV-UNI-EEE724BA']."
+    },
+    "net_quantity": {
+      "observation_status": "OBSERVED",
+      "final_value": {
+        "status": "OBSERVED",
+        "quantity_value": 100.0,
+        "unit": "ml",
+        "unit_raw": "100ml",
+        "raw_text": "100ml",
+        "source_token_ids": [
+          6
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EV-UNI-33C14041"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-33C14041": []
+      },
+      "source_raw_texts": [
+        "100ml"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Single evidence observation verified."
+    },
+    "manufacture_packing_date": {
+      "observation_status": "NOT_OBSERVED",
+      "final_value": null,
+      "supporting_evidence_ids": [],
+      "supporting_ocr_token_map": {},
+      "source_raw_texts": [],
+      "corroborating_count": 0,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Not observed across any evidence asset."
+    },
+    "mrp": {
+      "observation_status": "NOT_OBSERVED",
+      "final_value": null,
+      "supporting_evidence_ids": [],
+      "supporting_ocr_token_map": {},
+      "source_raw_texts": [],
+      "corroborating_count": 0,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Not observed across any evidence asset."
+    },
+    "consumer_care": {
+      "observation_status": "OBSERVED",
+      "final_value": {
+        "status": "OBSERVED",
+        "contact_name": "Consumer Care Cell",
+        "phone": "1800425444444",
+        "email": "itccares@itc.in",
+        "raw_text": "CONTACT:CONSUMER CARE",
+        "source_token_ids": [
+          61,
+          67
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EV-UNI-33C14041"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-33C14041": []
+      },
+      "source_raw_texts": [
+        "CONTACT:CONSUMER CARE"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Single evidence observation verified."
+    },
+    "country_of_origin": {
+      "observation_status": "NOT_OBSERVED",
+      "final_value": null,
+      "supporting_evidence_ids": [],
+      "supporting_ocr_token_map": {},
+      "source_raw_texts": [],
+      "corroborating_count": 0,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Not observed across any evidence asset."
+    },
+    "date_validation": {
+      "inspection_id": "INS-UNI-2888D8",
+      "validation_engine_version": "v1.0",
+      "evaluated_at": "2026-09-20T11:38:02.683069+00:00",
+      "inspection_date_used": "2026-09-20",
+      "date_observations": [],
+      "derived_dates": [],
+      "conflicts": [],
+      "temporal_validations": [],
+      "scope_integrity": {
+        "inspection_id": "INS-UNI-2888D8",
+        "is_isolated": true,
+        "violating_evidence_ids": [],
+        "violating_token_maps": {},
+        "notes": [
+          "Scope isolation verified. Zero cross-inspection contamination detected."
+        ]
+      },
+      "overall_validation_status": "VALID",
+      "statutory_finding_recommendation": null,
+      "notes": [
+        "All observed date declarations and scope validations passed deterministically."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "FND-UNI-E6356A9133",
+      "evidence_id": "EV-UNI-41CE3F3F",
+      "requirement_name": "manufacturer_identity",
+      "result": "PASS",
+      "reason": "Responsible entity identity ('Itcltd.\nCpcb Regn.No.\nBo-08-000-07-Aaaci5950L-22\nCm\n8901725100117') and complete address ('No.10012031000312') observed under Rule 6(1)(a).",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(a)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-41CE3F3F",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-DF6ABBABAF",
+      "evidence_id": "EV-UNI-41CE3F3F",
+      "requirement_name": "commodity_name",
+      "result": "REQUIRES_REVIEW",
+      "reason": "Conflicting declarations observed across panel evidence for commodity_name under Rule 6(1)(b). Reviewer adjudication required.",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(b)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-41CE3F3F",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-2B0977C995",
+      "evidence_id": "EV-UNI-33C14041",
+      "requirement_name": "net_quantity",
+      "result": "PASS",
+      "reason": "Net quantity (100.0 ml) declared with standard legal metrology unit under Rule 6(1)(c).",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(c)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-33C14041",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-7B11DBDB3C",
+      "evidence_id": "EV-UNI-41CE3F3F",
+      "requirement_name": "manufacture_packing_date",
+      "result": "POTENTIAL_NON_COMPLIANCE",
+      "reason": "Mandatory statutory declaration under Rule 6(1)(d) was not observed on scanned panels.",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(d)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-41CE3F3F",
+        "date_validation_summary": {
+          "inspection_id": "INS-UNI-2888D8",
+          "validation_engine_version": "v1.0",
+          "evaluated_at": "2026-09-20T11:38:02.683069+00:00",
+          "inspection_date_used": "2026-09-20",
+          "date_observations": [],
+          "derived_dates": [],
+          "conflicts": [],
+          "temporal_validations": [],
+          "scope_integrity": {
+            "inspection_id": "INS-UNI-2888D8",
+            "is_isolated": true,
+            "violating_evidence_ids": [],
+            "violating_token_maps": {},
+            "notes": [
+              "Scope isolation verified. Zero cross-inspection contamination detected."
+            ]
+          },
+          "overall_validation_status": "VALID",
+          "statutory_finding_recommendation": null,
+          "notes": [
+            "All observed date declarations and scope validations passed deterministically."
+          ]
+        }
+      }
+    },
+    {
+      "id": "FND-UNI-E3695098E5",
+      "evidence_id": "EV-UNI-41CE3F3F",
+      "requirement_name": "mrp",
+      "result": "POTENTIAL_NON_COMPLIANCE",
+      "reason": "Mandatory statutory declaration under Rule 6(1)(e) was not observed on scanned panels.",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(e)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-41CE3F3F",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-F555532DE9",
+      "evidence_id": "EV-UNI-33C14041",
+      "requirement_name": "consumer_care",
+      "result": "PASS",
+      "reason": "Consumer care grievance redressal details observed with contact channels under Rule 6(1)(f).",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(f)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-33C14041",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-4D2E3EA8F3",
+      "evidence_id": "EV-UNI-41CE3F3F",
+      "requirement_name": "country_of_origin",
+      "result": "NOT_APPLICABLE",
+      "reason": "Statutory requirement under Rule 6(1)(da) is Not Applicable for domestic commodity.",
+      "applicability_status": "NOT_APPLICABLE",
+      "rule_citation": "Rule 6(1)(da)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-41CE3F3F",
+        "date_validation_summary": null
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "REV-UNI-849D325587",
+      "requirement_name": "manufacturer_identity",
+      "determination": "CONFIRMED",
+      "original_result": "PASS",
+      "adjudicated_result": "PASS",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for manufacturer_identity under Rule 6(1)(a).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    },
+    {
+      "id": "REV-UNI-20F2E74D10",
+      "requirement_name": "commodity_name",
+      "determination": "OVERRIDDEN",
+      "original_result": "REQUIRES_REVIEW",
+      "adjudicated_result": "PASS",
+      "is_override": true,
+      "rationale": "Reconciled multi-panel observation for commodity_name under Rule 6(1)(b).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    },
+    {
+      "id": "REV-UNI-CD525B0D04",
+      "requirement_name": "net_quantity",
+      "determination": "CONFIRMED",
+      "original_result": "PASS",
+      "adjudicated_result": "PASS",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for net_quantity under Rule 6(1)(c).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    },
+    {
+      "id": "REV-UNI-6E1D00BD12",
+      "requirement_name": "manufacture_packing_date",
+      "determination": "CONFIRMED",
+      "original_result": "POTENTIAL_NON_COMPLIANCE",
+      "adjudicated_result": "POTENTIAL_NON_COMPLIANCE",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for manufacture_packing_date under Rule 6(1)(d).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    },
+    {
+      "id": "REV-UNI-23EF72E3C8",
+      "requirement_name": "mrp",
+      "determination": "CONFIRMED",
+      "original_result": "POTENTIAL_NON_COMPLIANCE",
+      "adjudicated_result": "POTENTIAL_NON_COMPLIANCE",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for mrp under Rule 6(1)(e).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    },
+    {
+      "id": "REV-UNI-70770C9B45",
+      "requirement_name": "consumer_care",
+      "determination": "CONFIRMED",
+      "original_result": "PASS",
+      "adjudicated_result": "PASS",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for consumer_care under Rule 6(1)(f).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    },
+    {
+      "id": "REV-UNI-23E111D02B",
+      "requirement_name": "country_of_origin",
+      "determination": "CONFIRMED",
+      "original_result": "NOT_APPLICABLE",
+      "adjudicated_result": "NOT_APPLICABLE",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for country_of_origin under Rule 6(1)(da).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:37:24.282090+00:00"
+    }
+  ]
+}

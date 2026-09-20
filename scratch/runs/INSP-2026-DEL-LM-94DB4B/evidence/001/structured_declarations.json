@@ -1,0 +1,21 @@
+{
+  "manufacturer_identity": {
+    "status": "OBSERVED",
+    "declaration_type": "MANUFACTURER_AND_MARKETER",
+    "name": "Itcltd.\nCpcb Regn.No.\nBo-08-000-07-Aaaci5950L-22\nCm\n8901725100117",
+    "address": "No.10012031000312",
+    "raw_text": "MARKETED BY:ITCLTD.\nCPCB Regn.No.\nBO-08-000-07-AAACI5950L-22\nCM\n8901725100117",
+    "source_token_ids": [
+      21,
+      29
+    ]
+  },
+  "commodity_name": {
+    "status": "OBSERVED",
+    "name": "Board",
+    "raw_text": "Board",
+    "source_token_ids": [
+      1
+    ]
+  }
+}

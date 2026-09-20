@@ -21,9 +21,13 @@ class CandidateValue(BaseModel):
 
 class ManufacturerIdentityField(BaseModel):
     status: ObservationStatus = Field(default=ObservationStatus.NOT_OBSERVED)
-    declaration_type: Optional[str] = Field(default=None, description="MANUFACTURER | PACKER | IMPORTER | COMBINED | UNSPECIFIED")
+    declaration_type: Optional[str] = Field(default=None, description="MANUFACTURER | PACKER | IMPORTER | MARKETER | BRAND_OWNER | COMBINED | UNSPECIFIED")
     name: Optional[str] = None
     address: Optional[str] = None
+    marketer_name: Optional[str] = Field(default=None, description="Explicit entity declared as marketer/marketed by")
+    packer_name: Optional[str] = Field(default=None, description="Explicit entity declared as packer/packed by")
+    importer_name: Optional[str] = Field(default=None, description="Explicit entity declared as importer/imported by")
+    brand_owner_name: Optional[str] = Field(default=None, description="Explicit entity declared as brand owner/trademark owner")
     raw_text: Optional[str] = None
     source_token_indices: List[int] = Field(default_factory=list)
     candidates: List[CandidateValue] = Field(default_factory=list)

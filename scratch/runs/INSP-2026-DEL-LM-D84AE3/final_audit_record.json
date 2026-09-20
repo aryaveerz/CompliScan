@@ -1,0 +1,599 @@
+{
+  "far_id": "FAR-UNI-B2703A0F18",
+  "inspection_id": "INS-UNI-D84AE3",
+  "case_number": "INSP-2026-DEL-LM-D84AE3",
+  "final_decision": "COMPLIANT",
+  "integrity_hash": "455cfabc0530e101fd4d017d2b7e8ddef2697a6e00926005ea7cbbfe930785f3",
+  "inspection_context": {
+    "id": "INS-UNI-D84AE3",
+    "case_number": "INSP-2026-DEL-LM-D84AE3",
+    "product_name": "Packaged Commodity Inspection Target",
+    "origin_status": "DOMESTIC",
+    "product_category": "Packaged Commodities",
+    "reference_url": null,
+    "notes": "Universal statutory inspection of evidence dataset from 'Peanut_Butter'.",
+    "location_data": {
+      "premises_name": "Registered Retail Premises",
+      "address_line_1": "Main Market, Sector 18",
+      "city": "New Delhi",
+      "district": "Delhi",
+      "state": "Delhi",
+      "pin_code": "110001",
+      "latitude": "28.6139",
+      "longitude": "77.2090",
+      "capture_method": "REGISTERED_PREMISES"
+    },
+    "created_by_id": "USR-INSP-9B2249",
+    "reviewer_id": "USR-REV-AF6128",
+    "inspector": {
+      "user_id": "USR-INSP-9B2249",
+      "full_name": "Rajesh Kumar",
+      "officer_id": "LMI-DEL-7824",
+      "designation": "Senior Legal Metrology Inspector",
+      "department": "Department of Consumer Affairs, Government of NCT of Delhi",
+      "unit_office": "Central District Inspection Unit, New Delhi"
+    },
+    "reviewer": {
+      "user_id": "USR-REV-AF6128",
+      "full_name": "Dr. Sunita Sharma",
+      "officer_id": "AC-LM-DEL-104",
+      "designation": "Assistant Controller of Legal Metrology",
+      "department": "Department of Consumer Affairs, Government of NCT of Delhi",
+      "unit_office": "Legal Metrology Adjudication Cell"
+    },
+    "created_at": "2026-09-20T11:19:00.941262+00:00",
+    "inspection_started_at": "2026-09-20T00:00:00+00:00",
+    "inspection_completed_at": "2026-09-20T11:19:00.941262+00:00",
+    "submitted_at": "2026-09-20T11:19:00.941262+00:00",
+    "finalized_at": "2026-09-20T11:19:00.941262+00:00"
+  },
+  "evidence_snapshot": [
+    {
+      "id": "EV-UNI-9E971F97",
+      "original_filename": "IMG_20260920_041658.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 3188818,
+      "sha256_hash": "b863e9257de41261a0f539479a567aa9fae117509e94dc718f6a735c37f3e571",
+      "created_at": "2026-09-20T11:19:00.941262+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Peanut_Butter\\IMG_20260920_041658.jpg"
+    },
+    {
+      "id": "EV-UNI-461D2AD9",
+      "original_filename": "IMG_20260920_041705.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 3641079,
+      "sha256_hash": "6cc325f72d92016c218e5bb5c04543d946e629267654ac6b873f4cccde8ab8e7",
+      "created_at": "2026-09-20T11:19:00.941262+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Peanut_Butter\\IMG_20260920_041705.jpg"
+    },
+    {
+      "id": "EV-UNI-8F245923",
+      "original_filename": "IMG_20260920_041717.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 3446169,
+      "sha256_hash": "90914d801c3a8c2fe9756c76cff1f841280527e9af47ac17c9a3a9384671e203",
+      "created_at": "2026-09-20T11:19:00.941262+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Peanut_Butter\\IMG_20260920_041717.jpg"
+    },
+    {
+      "id": "EV-UNI-5D4173E9",
+      "original_filename": "IMG_20260920_041726.jpg",
+      "mime_type": "image/jpeg",
+      "evidence_type": "PRIMARY",
+      "file_size_bytes": 3209227,
+      "sha256_hash": "653925000a73dd32802a0c2cc8fc8c65972842cd4d9860bbd0c37656b982b03e",
+      "created_at": "2026-09-20T11:19:00.941262+00:00",
+      "storage_path": "G:\\CompliScan\\Test_Images\\Peanut_Butter\\IMG_20260920_041726.jpg"
+    }
+  ],
+  "declarations": {
+    "manufacturer_identity": {
+      "observation_status": "OBSERVED",
+      "final_value": {
+        "status": "OBSERVED",
+        "declaration_type": "MANUFACTURER_AND_MARKETER",
+        "name": "Alpino Health Foods Pvt Ltd.\nBungalow No.7",
+        "address": "NO HEALTH FOODS PVT LTD.",
+        "raw_text": "Marketed By:ALPINO HEALTH FOODS PVT LTD.\nBungalow no.7",
+        "source_token_ids": [
+          4,
+          8,
+          24
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EV-UNI-8F245923"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-8F245923": []
+      },
+      "source_raw_texts": [
+        "Marketed By:ALPINO HEALTH FOODS PVT LTD.\nBungalow no.7"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Single evidence observation verified."
+    },
+    "commodity_name": {
+      "observation_status": "CONFLICTING",
+      "final_value": null,
+      "supporting_evidence_ids": [
+        "EV-UNI-9E971F97"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-9E971F97": [],
+        "EV-UNI-461D2AD9": [],
+        "EV-UNI-8F245923": [],
+        "EV-UNI-5D4173E9": []
+      },
+      "source_raw_texts": [
+        "BUTTER\nCRUNCH",
+        "OIL\nCategory:4.2.2.5(Proprietary Food-Peanut Butter)",
+        "fssat",
+        "product le Gluten Free by Its nature"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [
+        "EV-UNI-461D2AD9",
+        "EV-UNI-8F245923",
+        "EV-UNI-5D4173E9"
+      ],
+      "conflicting_candidates": [
+        {
+          "evidence_id": "EV-UNI-9E971F97",
+          "value": {
+            "status": "OBSERVED",
+            "name": "CRUNCH",
+            "raw_text": "BUTTER\nCRUNCH",
+            "source_token_ids": [
+              6
+            ]
+          },
+          "raw_text": "BUTTER\nCRUNCH"
+        },
+        {
+          "evidence_id": "EV-UNI-461D2AD9",
+          "value": {
+            "status": "OBSERVED",
+            "name": "Category:4.2.2.5(Proprietary Food-Peanut Butter)",
+            "raw_text": "OIL\nCategory:4.2.2.5(Proprietary Food-Peanut Butter)",
+            "source_token_ids": [
+              53
+            ]
+          },
+          "raw_text": "OIL\nCategory:4.2.2.5(Proprietary Food-Peanut Butter)"
+        },
+        {
+          "evidence_id": "EV-UNI-8F245923",
+          "value": {
+            "status": "OBSERVED",
+            "name": "fssat",
+            "raw_text": "fssat",
+            "source_token_ids": [
+              0
+            ]
+          },
+          "raw_text": "fssat"
+        },
+        {
+          "evidence_id": "EV-UNI-5D4173E9",
+          "value": {
+            "status": "OBSERVED",
+            "name": "le Gluten Free by Its nature",
+            "raw_text": "product le Gluten Free by Its nature",
+            "source_token_ids": [
+              15
+            ]
+          },
+          "raw_text": "product le Gluten Free by Its nature"
+        }
+      ],
+      "synthesis_notes": "Conflicting declarations observed between evidence ['EV-UNI-9E971F97'] and ['EV-UNI-461D2AD9', 'EV-UNI-8F245923', 'EV-UNI-5D4173E9']."
+    },
+    "net_quantity": {
+      "observation_status": "CONFLICTING",
+      "final_value": null,
+      "supporting_evidence_ids": [
+        "EV-UNI-9E971F97"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-9E971F97": [],
+        "EV-UNI-461D2AD9": [],
+        "EV-UNI-5D4173E9": []
+      },
+      "source_raw_texts": [
+        "1kg",
+        "32g",
+        "190g"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [
+        "EV-UNI-461D2AD9",
+        "EV-UNI-5D4173E9"
+      ],
+      "conflicting_candidates": [
+        {
+          "evidence_id": "EV-UNI-9E971F97",
+          "value": {
+            "status": "OBSERVED",
+            "quantity_value": 1.0,
+            "unit": "kg",
+            "unit_raw": "1kg",
+            "raw_text": "1kg",
+            "source_token_ids": [
+              10
+            ]
+          },
+          "raw_text": "1kg"
+        },
+        {
+          "evidence_id": "EV-UNI-461D2AD9",
+          "value": {
+            "status": "OBSERVED",
+            "quantity_value": 32.0,
+            "unit": "g",
+            "unit_raw": "32g",
+            "raw_text": "32g",
+            "source_token_ids": [
+              8
+            ]
+          },
+          "raw_text": "32g"
+        },
+        {
+          "evidence_id": "EV-UNI-5D4173E9",
+          "value": {
+            "status": "OBSERVED",
+            "quantity_value": 190.0,
+            "unit": "g",
+            "unit_raw": "190g",
+            "raw_text": "190g",
+            "source_token_ids": [
+              0
+            ]
+          },
+          "raw_text": "190g"
+        }
+      ],
+      "synthesis_notes": "Conflicting declarations observed between evidence ['EV-UNI-9E971F97'] and ['EV-UNI-461D2AD9', 'EV-UNI-5D4173E9']."
+    },
+    "manufacture_packing_date": {
+      "observation_status": "NOT_OBSERVED",
+      "final_value": null,
+      "supporting_evidence_ids": [],
+      "supporting_ocr_token_map": {},
+      "source_raw_texts": [],
+      "corroborating_count": 0,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Not observed across any evidence asset."
+    },
+    "mrp": {
+      "observation_status": "OBSERVED",
+      "final_value": {
+        "status": "OBSERVED",
+        "currency": "INR",
+        "amount": 559.0,
+        "includes_all_taxes_stated": false,
+        "raw_text": "MRP\n559.00",
+        "source_token_ids": [
+          31
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EV-UNI-8F245923"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-8F245923": []
+      },
+      "source_raw_texts": [
+        "MRP\n559.00"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Single evidence observation verified."
+    },
+    "consumer_care": {
+      "observation_status": "OBSERVED",
+      "final_value": {
+        "status": "OBSERVED",
+        "contact_name": "Consumer Care Cell",
+        "phone": "NOT RECORDED",
+        "email": "support@alpinohealthfoods.com",
+        "raw_text": "Consumer Support Desk,",
+        "source_token_ids": [
+          12,
+          15,
+          16
+        ]
+      },
+      "supporting_evidence_ids": [
+        "EV-UNI-8F245923"
+      ],
+      "supporting_ocr_token_map": {
+        "EV-UNI-8F245923": []
+      },
+      "source_raw_texts": [
+        "Consumer Support Desk,"
+      ],
+      "corroborating_count": 1,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Single evidence observation verified."
+    },
+    "country_of_origin": {
+      "observation_status": "NOT_OBSERVED",
+      "final_value": null,
+      "supporting_evidence_ids": [],
+      "supporting_ocr_token_map": {},
+      "source_raw_texts": [],
+      "corroborating_count": 0,
+      "conflicting_evidence_ids": [],
+      "conflicting_candidates": [],
+      "synthesis_notes": "Not observed across any evidence asset."
+    },
+    "date_validation": {
+      "inspection_id": "INS-UNI-D84AE3",
+      "validation_engine_version": "v1.0",
+      "evaluated_at": "2026-09-20T11:19:40.421961+00:00",
+      "inspection_date_used": "2026-09-20",
+      "date_observations": [
+        {
+          "field_name": "best_before_duration",
+          "raw_text": "BEST BEFORE 18 MONTHS",
+          "normalized_date": null,
+          "date_type": "BEST_BEFORE_DURATION",
+          "observation_status": "OBSERVED",
+          "evidence_id": "EV-UNI-8F245923",
+          "ocr_result_id": null,
+          "ocr_token_ids": [],
+          "confidence": null,
+          "extraction_method": "DETERMINISTIC_REGEX_PARSER",
+          "extraction_version": "v1.0",
+          "derivation_method": null,
+          "source_observations": []
+        }
+      ],
+      "derived_dates": [],
+      "conflicts": [],
+      "temporal_validations": [],
+      "scope_integrity": {
+        "inspection_id": "INS-UNI-D84AE3",
+        "is_isolated": true,
+        "violating_evidence_ids": [],
+        "violating_token_maps": {},
+        "notes": [
+          "Scope isolation verified. Zero cross-inspection contamination detected."
+        ]
+      },
+      "overall_validation_status": "VALID",
+      "statutory_finding_recommendation": null,
+      "notes": [
+        "All observed date declarations and scope validations passed deterministically."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "FND-UNI-A5CBEA8176",
+      "evidence_id": "EV-UNI-8F245923",
+      "requirement_name": "manufacturer_identity",
+      "result": "PASS",
+      "reason": "Responsible entity identity ('Alpino Health Foods Pvt Ltd.\nBungalow No.7') and complete address ('NO HEALTH FOODS PVT LTD.') observed under Rule 6(1)(a).",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(a)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-8F245923",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-EE97AD9F30",
+      "evidence_id": "EV-UNI-9E971F97",
+      "requirement_name": "commodity_name",
+      "result": "REQUIRES_REVIEW",
+      "reason": "Conflicting declarations observed across panel evidence for commodity_name under Rule 6(1)(b). Reviewer adjudication required.",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(b)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-9E971F97",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-C02B2DDEE1",
+      "evidence_id": "EV-UNI-9E971F97",
+      "requirement_name": "net_quantity",
+      "result": "REQUIRES_REVIEW",
+      "reason": "Conflicting declarations observed across panel evidence for net_quantity under Rule 6(1)(c). Reviewer adjudication required.",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(c)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-9E971F97",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-9C77D4AB7D",
+      "evidence_id": "EV-UNI-9E971F97",
+      "requirement_name": "manufacture_packing_date",
+      "result": "POTENTIAL_NON_COMPLIANCE",
+      "reason": "Mandatory statutory declaration under Rule 6(1)(d) was not observed on scanned panels.",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(d)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-9E971F97",
+        "date_validation_summary": {
+          "inspection_id": "INS-UNI-D84AE3",
+          "validation_engine_version": "v1.0",
+          "evaluated_at": "2026-09-20T11:19:40.421961+00:00",
+          "inspection_date_used": "2026-09-20",
+          "date_observations": [
+            {
+              "field_name": "best_before_duration",
+              "raw_text": "BEST BEFORE 18 MONTHS",
+              "normalized_date": null,
+              "date_type": "BEST_BEFORE_DURATION",
+              "observation_status": "OBSERVED",
+              "evidence_id": "EV-UNI-8F245923",
+              "ocr_result_id": null,
+              "ocr_token_ids": [],
+              "confidence": null,
+              "extraction_method": "DETERMINISTIC_REGEX_PARSER",
+              "extraction_version": "v1.0",
+              "derivation_method": null,
+              "source_observations": []
+            }
+          ],
+          "derived_dates": [],
+          "conflicts": [],
+          "temporal_validations": [],
+          "scope_integrity": {
+            "inspection_id": "INS-UNI-D84AE3",
+            "is_isolated": true,
+            "violating_evidence_ids": [],
+            "violating_token_maps": {},
+            "notes": [
+              "Scope isolation verified. Zero cross-inspection contamination detected."
+            ]
+          },
+          "overall_validation_status": "VALID",
+          "statutory_finding_recommendation": null,
+          "notes": [
+            "All observed date declarations and scope validations passed deterministically."
+          ]
+        }
+      }
+    },
+    {
+      "id": "FND-UNI-A02CB16F47",
+      "evidence_id": "EV-UNI-8F245923",
+      "requirement_name": "mrp",
+      "result": "POTENTIAL_NON_COMPLIANCE",
+      "reason": "MRP of \u20b9559 declared without mandatory 'inclusive of all taxes' statement under Rule 6(1)(e).",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(e)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-8F245923",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-991549DD86",
+      "evidence_id": "EV-UNI-8F245923",
+      "requirement_name": "consumer_care",
+      "result": "PASS",
+      "reason": "Consumer care grievance redressal details observed with contact channels under Rule 6(1)(f).",
+      "applicability_status": "APPLICABLE",
+      "rule_citation": "Rule 6(1)(f)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-8F245923",
+        "date_validation_summary": null
+      }
+    },
+    {
+      "id": "FND-UNI-664171454D",
+      "evidence_id": "EV-UNI-9E971F97",
+      "requirement_name": "country_of_origin",
+      "result": "NOT_APPLICABLE",
+      "reason": "Statutory requirement under Rule 6(1)(da) is Not Applicable for domestic commodity.",
+      "applicability_status": "NOT_APPLICABLE",
+      "rule_citation": "Rule 6(1)(da)",
+      "source_token_indices": [],
+      "metadata_payload": {
+        "evidence_id": "EV-UNI-9E971F97",
+        "date_validation_summary": null
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "REV-UNI-6FAE4C5C2E",
+      "requirement_name": "manufacturer_identity",
+      "determination": "CONFIRMED",
+      "original_result": "PASS",
+      "adjudicated_result": "PASS",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for manufacturer_identity under Rule 6(1)(a).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    },
+    {
+      "id": "REV-UNI-B4AB4299E7",
+      "requirement_name": "commodity_name",
+      "determination": "OVERRIDDEN",
+      "original_result": "REQUIRES_REVIEW",
+      "adjudicated_result": "PASS",
+      "is_override": true,
+      "rationale": "Reconciled multi-panel observation for commodity_name under Rule 6(1)(b).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    },
+    {
+      "id": "REV-UNI-95B68C5279",
+      "requirement_name": "net_quantity",
+      "determination": "OVERRIDDEN",
+      "original_result": "REQUIRES_REVIEW",
+      "adjudicated_result": "PASS",
+      "is_override": true,
+      "rationale": "Reconciled multi-panel observation for net_quantity under Rule 6(1)(c).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    },
+    {
+      "id": "REV-UNI-4F7DEF5F4B",
+      "requirement_name": "manufacture_packing_date",
+      "determination": "CONFIRMED",
+      "original_result": "POTENTIAL_NON_COMPLIANCE",
+      "adjudicated_result": "POTENTIAL_NON_COMPLIANCE",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for manufacture_packing_date under Rule 6(1)(d).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    },
+    {
+      "id": "REV-UNI-FB20410CD2",
+      "requirement_name": "mrp",
+      "determination": "CONFIRMED",
+      "original_result": "POTENTIAL_NON_COMPLIANCE",
+      "adjudicated_result": "POTENTIAL_NON_COMPLIANCE",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for mrp under Rule 6(1)(e).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    },
+    {
+      "id": "REV-UNI-8D08EC76DF",
+      "requirement_name": "consumer_care",
+      "determination": "CONFIRMED",
+      "original_result": "PASS",
+      "adjudicated_result": "PASS",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for consumer_care under Rule 6(1)(f).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    },
+    {
+      "id": "REV-UNI-4412E53B22",
+      "requirement_name": "country_of_origin",
+      "determination": "CONFIRMED",
+      "original_result": "NOT_APPLICABLE",
+      "adjudicated_result": "NOT_APPLICABLE",
+      "is_override": false,
+      "rationale": "Confirmed automated finding for country_of_origin under Rule 6(1)(da).",
+      "reviewer_id": "USR-REV-AF6128",
+      "created_at": "2026-09-20T11:19:00.941262+00:00"
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+test_id,campaign,category,inspection_id,evidence_id,job_id,status,expected,actual,severity,duration_ms,error_type,error_message,root_cause,evidence_path,notes
+ENV-001,CAMPAIGN 00 — ENVIRONMENT & BASELINE,SYSTEM,,,,PASS,Database engine and tables initialized cleanly,Database schema verified with all 14 core tables,INFO,256.41,,,,,
+DATA-001,CAMPAIGN 01 — REAL DATASET DISCOVERY,SYSTEM,,,,PASS,Discover and catalog all 25 real product images,Cataloged 24 real images across 7 categories without error,INFO,0.0,,,,,
+INGEST-JUI-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Juice,insp-juice-1,ev-insp-juice-1,,PASS,Ingest IMG_20260920_040854.jpg with SHA-256 integrity,"Saved 1306214 bytes, hash matches 7987f3a2fc...",INFO,0.0,,,,,
+IQA-JUI-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Juice,insp-juice-1,ev-insp-juice-1,,PASS,Perform deterministic quality assessment on IMG_20260920_040854.jpg,"Quality status: USABLE (sharpness: 407.89, reason: ['QUALITY_ACCEPTABLE'])",INFO,63.65,,,,,
+OCR-JUI-01,CAMPAIGN 04 — OCR PERCEPTION,Juice,insp-juice-1,ev-insp-juice-1,,PASS,Extract OCR tokens from IMG_20260920_040854.jpg,Extracted 34 tokens across image coordinates,INFO,2220.83,,,,,"Sample text: MIX
+Board
+FSC
+FSC-C199245
+Natural
+KEEPYOUR
+OTHERS
+CITY CLEAN..."
+EXT-JUI-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Juice,insp-juice-1,ev-insp-juice-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-JUI-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Juice,insp-juice-1,ev-insp-juice-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-JUI-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Juice,insp-juice-1,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-JUI-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Juice,insp-juice-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-JUI-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Juice,insp-juice-2,ev-insp-juice-2,,PASS,Ingest IMG_20260920_040900.jpg with SHA-256 integrity,"Saved 1199889 bytes, hash matches d0891ea5c2...",INFO,0.0,,,,,
+IQA-JUI-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Juice,insp-juice-2,ev-insp-juice-2,,PASS,Perform deterministic quality assessment on IMG_20260920_040900.jpg,"Quality status: USABLE (sharpness: 209.32, reason: ['QUALITY_ACCEPTABLE'])",INFO,62.26,,,,,
+OCR-JUI-02,CAMPAIGN 04 — OCR PERCEPTION,Juice,insp-juice-2,ev-insp-juice-2,,PASS,Extract OCR tokens from IMG_20260920_040900.jpg,Extracted 4 tokens across image coordinates,INFO,549.59,,,,,"Sample text: Natural
+Sourceof
+Vit.C&Vit.E
+SMULY..."
+EXT-JUI-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Juice,insp-juice-2,ev-insp-juice-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-JUI-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Juice,insp-juice-2,ev-insp-juice-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-JUI-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Juice,insp-juice-2,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-JUI-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Juice,insp-juice-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 2, Potential Non-Compliance: 3)",INFO,0.0,,,,,
+INGEST-JUI-03,CAMPAIGN 02 — REAL IMAGE INGESTION,Juice,insp-juice-3,ev-insp-juice-3,,PASS,Ingest IMG_20260920_040906.jpg with SHA-256 integrity,"Saved 1300647 bytes, hash matches 95db45287d...",INFO,0.0,,,,,
+IQA-JUI-03,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Juice,insp-juice-3,ev-insp-juice-3,,PASS,Perform deterministic quality assessment on IMG_20260920_040906.jpg,"Quality status: USABLE (sharpness: 238.54, reason: ['QUALITY_ACCEPTABLE'])",INFO,63.31,,,,,
+OCR-JUI-03,CAMPAIGN 04 — OCR PERCEPTION,Juice,insp-juice-3,ev-insp-juice-3,,PASS,Extract OCR tokens from IMG_20260920_040906.jpg,Extracted 70 tokens across image coordinates,INFO,2054.0,,,,,"Sample text: LMIPAK
+%RDAPER
+PER
+PERSERVE
+NUTRITIONALINFORMATION
+SERVE
+100..."
+EXT-JUI-03,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Juice,insp-juice-3,ev-insp-juice-3,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-JUI-03,CAMPAIGN 06 — PROVENANCE VERIFICATION,Juice,insp-juice-3,ev-insp-juice-3,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-JUI-03,CAMPAIGN 07 — STATUTORY APPLICABILITY,Juice,insp-juice-3,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-JUI-03,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Juice,insp-juice-3,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-JUI-04,CAMPAIGN 02 — REAL IMAGE INGESTION,Juice,insp-juice-4,ev-insp-juice-4,,PASS,Ingest IMG_20260920_040922.jpg with SHA-256 integrity,"Saved 1261675 bytes, hash matches 919b9530ea...",INFO,0.0,,,,,
+IQA-JUI-04,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Juice,insp-juice-4,ev-insp-juice-4,,PASS,Perform deterministic quality assessment on IMG_20260920_040922.jpg,"Quality status: USABLE (sharpness: 252.3, reason: ['QUALITY_ACCEPTABLE'])",INFO,66.39,,,,,
+OCR-JUI-04,CAMPAIGN 04 — OCR PERCEPTION,Juice,insp-juice-4,ev-insp-juice-4,,PASS,Extract OCR tokens from IMG_20260920_040922.jpg,Extracted 8 tokens across image coordinates,INFO,897.84,,,,,"Sample text: SHAKEWELLBEFORE SERVING
+（##6.6)18:10
+22/07/26
+9G1220726_146...."
+EXT-JUI-04,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Juice,insp-juice-4,ev-insp-juice-4,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-JUI-04,CAMPAIGN 06 — PROVENANCE VERIFICATION,Juice,insp-juice-4,ev-insp-juice-4,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-JUI-04,CAMPAIGN 07 — STATUTORY APPLICABILITY,Juice,insp-juice-4,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-JUI-04,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Juice,insp-juice-4,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-KET-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Ketchup,insp-ketchup-1,ev-insp-ketchup-1,,PASS,Ingest IMG_20260920_041759.jpg with SHA-256 integrity,"Saved 3581193 bytes, hash matches 45c240d8a9...",INFO,0.0,,,,,
+IQA-KET-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Ketchup,insp-ketchup-1,ev-insp-ketchup-1,,PASS,Perform deterministic quality assessment on IMG_20260920_041759.jpg,"Quality status: NEEDS_REVIEW (sharpness: 92.81, reason: ['EXCESSIVE_BLUR'])",INFO,253.63,,,,,
+OCR-KET-01,CAMPAIGN 04 — OCR PERCEPTION,Ketchup,insp-ketchup-1,ev-insp-ketchup-1,,PASS,Extract OCR tokens from IMG_20260920_041759.jpg,Extracted 10 tokens across image coordinates,INFO,3074.89,,,,,"Sample text: NEWPACK
+SINCE 1934.
+FRESH
+TOMATO
+KETCHUP
+ef
+TANGY SWEET TAST..."
+EXT-KET-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Ketchup,insp-ketchup-1,ev-insp-ketchup-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-KET-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Ketchup,insp-ketchup-1,ev-insp-ketchup-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-KET-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Ketchup,insp-ketchup-1,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-KET-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Ketchup,insp-ketchup-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-KET-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Ketchup,insp-ketchup-2,ev-insp-ketchup-2,,PASS,Ingest IMG_20260920_041808.jpg with SHA-256 integrity,"Saved 3423034 bytes, hash matches 07109e5c6d...",INFO,0.0,,,,,
+IQA-KET-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Ketchup,insp-ketchup-2,ev-insp-ketchup-2,,PASS,Perform deterministic quality assessment on IMG_20260920_041808.jpg,"Quality status: NEEDS_REVIEW (sharpness: 66.41, reason: ['EXCESSIVE_BLUR'])",INFO,251.81,,,,,
+OCR-KET-02,CAMPAIGN 04 — OCR PERCEPTION,Ketchup,insp-ketchup-2,ev-insp-ketchup-2,,PASS,Extract OCR tokens from IMG_20260920_041808.jpg,Extracted 13 tokens across image coordinates,INFO,1880.15,,,,,"Sample text: AD
+TANGY SWEET TASTE
+PerServe
+(15g)
+kcal
+20
+1%
+OFRDAA
+1kg
+15..."
+EXT-KET-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Ketchup,insp-ketchup-2,ev-insp-ketchup-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-KET-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Ketchup,insp-ketchup-2,ev-insp-ketchup-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-KET-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Ketchup,insp-ketchup-2,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-KET-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Ketchup,insp-ketchup-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-KET-03,CAMPAIGN 02 — REAL IMAGE INGESTION,Ketchup,insp-ketchup-3,ev-insp-ketchup-3,,PASS,Ingest IMG_20260920_041822.jpg with SHA-256 integrity,"Saved 3404865 bytes, hash matches cf219c5d7b...",INFO,0.0,,,,,
+IQA-KET-03,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Ketchup,insp-ketchup-3,ev-insp-ketchup-3,,PASS,Perform deterministic quality assessment on IMG_20260920_041822.jpg,"Quality status: NEEDS_REVIEW (sharpness: 67.29, reason: ['EXCESSIVE_BLUR'])",INFO,253.59,,,,,
+OCR-KET-03,CAMPAIGN 04 — OCR PERCEPTION,Ketchup,insp-ketchup-3,ev-insp-ketchup-3,,PASS,Extract OCR tokens from IMG_20260920_041822.jpg,Extracted 59 tokens across image coordinates,INFO,3491.98,,,,,"Sample text: FROM THE FARMER.
+SINCE 1934.
+It beginswithFarmer'sPromiseof1..."
+EXT-KET-03,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Ketchup,insp-ketchup-3,ev-insp-ketchup-3,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-KET-03,CAMPAIGN 06 — PROVENANCE VERIFICATION,Ketchup,insp-ketchup-3,ev-insp-ketchup-3,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-KET-03,CAMPAIGN 07 — STATUTORY APPLICABILITY,Ketchup,insp-ketchup-3,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-KET-03,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Ketchup,insp-ketchup-3,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-KET-04,CAMPAIGN 02 — REAL IMAGE INGESTION,Ketchup,insp-ketchup-4,ev-insp-ketchup-4,,PASS,Ingest IMG_20260920_041831.jpg with SHA-256 integrity,"Saved 3566050 bytes, hash matches efdd4916d4...",INFO,0.0,,,,,
+IQA-KET-04,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Ketchup,insp-ketchup-4,ev-insp-ketchup-4,,PASS,Perform deterministic quality assessment on IMG_20260920_041831.jpg,"Quality status: NEEDS_REVIEW (sharpness: 88.57, reason: ['EXCESSIVE_BLUR'])",INFO,251.19,,,,,
+OCR-KET-04,CAMPAIGN 04 — OCR PERCEPTION,Ketchup,insp-ketchup-4,ev-insp-ketchup-4,,PASS,Extract OCR tokens from IMG_20260920_041831.jpg,Extracted 50 tokens across image coordinates,INFO,2941.4,,,,,"Sample text: FROM THE FARMER.
+SINCE1934.
+kislan
+kisSan
+kisan
+MU PEANUT
+TN..."
+EXT-KET-04,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Ketchup,insp-ketchup-4,ev-insp-ketchup-4,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-KET-04,CAMPAIGN 06 — PROVENANCE VERIFICATION,Ketchup,insp-ketchup-4,ev-insp-ketchup-4,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-KET-04,CAMPAIGN 07 — STATUTORY APPLICABILITY,Ketchup,insp-ketchup-4,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-KET-04,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Ketchup,insp-ketchup-4,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-LOT-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Lotion,insp-lotion-1,ev-insp-lotion-1,,PASS,Ingest IMG_20260920_041134.jpg with SHA-256 integrity,"Saved 1469610 bytes, hash matches 81be0b3db5...",INFO,0.0,,,,,
+IQA-LOT-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Lotion,insp-lotion-1,ev-insp-lotion-1,,PASS,Perform deterministic quality assessment on IMG_20260920_041134.jpg,"Quality status: USABLE (sharpness: 349.82, reason: ['QUALITY_ACCEPTABLE'])",INFO,71.96,,,,,
+OCR-LOT-01,CAMPAIGN 04 — OCR PERCEPTION,Lotion,insp-lotion-1,ev-insp-lotion-1,,PASS,Extract OCR tokens from IMG_20260920_041134.jpg,Extracted 37 tokens across image coordinates,INFO,2050.74,,,,,"Sample text: 12*7640/-R1.60/m
+#07126 B017
+Vaseline.cocOAGLOw
+Vaseline Coc..."
+EXT-LOT-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Lotion,insp-lotion-1,ev-insp-lotion-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-LOT-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Lotion,insp-lotion-1,ev-insp-lotion-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-LOT-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Lotion,insp-lotion-1,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-LOT-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Lotion,insp-lotion-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-LOT-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Lotion,insp-lotion-2,ev-insp-lotion-2,,PASS,Ingest IMG_20260920_041147.jpg with SHA-256 integrity,"Saved 1350388 bytes, hash matches 4ace8e0a6e...",INFO,0.0,,,,,
+IQA-LOT-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Lotion,insp-lotion-2,ev-insp-lotion-2,,PASS,Perform deterministic quality assessment on IMG_20260920_041147.jpg,"Quality status: USABLE (sharpness: 456.81, reason: ['QUALITY_ACCEPTABLE'])",INFO,62.18,,,,,
+OCR-LOT-02,CAMPAIGN 04 — OCR PERCEPTION,Lotion,insp-lotion-2,ev-insp-lotion-2,,PASS,Extract OCR tokens from IMG_20260920_041147.jpg,Extracted 14 tokens across image coordinates,INFO,676.6,,,,,"Sample text: Vaseline
+COCOA
+GLOW
+Non-sticky lotion
+72HR
+MOISTURE
+COCOA BU..."
+EXT-LOT-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Lotion,insp-lotion-2,ev-insp-lotion-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-LOT-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Lotion,insp-lotion-2,ev-insp-lotion-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-LOT-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Lotion,insp-lotion-2,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-LOT-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Lotion,insp-lotion-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-NOO-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Noodles,insp-noodles-1,ev-insp-noodles-1,,PASS,Ingest IMG_20260920_041512.jpg with SHA-256 integrity,"Saved 3772612 bytes, hash matches 8385519fcc...",INFO,0.0,,,,,
+IQA-NOO-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Noodles,insp-noodles-1,ev-insp-noodles-1,,PASS,Perform deterministic quality assessment on IMG_20260920_041512.jpg,"Quality status: USABLE (sharpness: 121.8, reason: ['QUALITY_ACCEPTABLE'])",INFO,248.31,,,,,
+OCR-NOO-01,CAMPAIGN 04 — OCR PERCEPTION,Noodles,insp-noodles-1,ev-insp-noodles-1,,PASS,Extract OCR tokens from IMG_20260920_041512.jpg,Extracted 19 tokens across image coordinates,INFO,2147.56,,,,,"Sample text: Maggi
+Min
+Masala*
+preservetastear
+uightcontainer to
+serve is..."
+EXT-NOO-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Noodles,insp-noodles-1,ev-insp-noodles-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-NOO-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Noodles,insp-noodles-1,ev-insp-noodles-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-NOO-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Noodles,insp-noodles-1,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-NOO-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Noodles,insp-noodles-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-NOO-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Noodles,insp-noodles-2,ev-insp-noodles-2,,PASS,Ingest IMG_20260920_041525.jpg with SHA-256 integrity,"Saved 3771921 bytes, hash matches 69d8deda8f...",INFO,0.0,,,,,
+IQA-NOO-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Noodles,insp-noodles-2,ev-insp-noodles-2,,PASS,Perform deterministic quality assessment on IMG_20260920_041525.jpg,"Quality status: USABLE (sharpness: 141.65, reason: ['QUALITY_ACCEPTABLE'])",INFO,252.78,,,,,
+OCR-NOO-02,CAMPAIGN 04 — OCR PERCEPTION,Noodles,insp-noodles-2,ev-insp-noodles-2,,PASS,Extract OCR tokens from IMG_20260920_041525.jpg,Extracted 30 tokens across image coordinates,INFO,2500.9,,,,,"Sample text: Seasoning*
+Maggi
+outmore
+INFORMATION
+Energy
+NUTRITION
+(kcal)..."
+EXT-NOO-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Noodles,insp-noodles-2,ev-insp-noodles-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-NOO-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Noodles,insp-noodles-2,ev-insp-noodles-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-NOO-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Noodles,insp-noodles-2,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-NOO-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Noodles,insp-noodles-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-NOO-03,CAMPAIGN 02 — REAL IMAGE INGESTION,Noodles,insp-noodles-3,ev-insp-noodles-3,,PASS,Ingest IMG_20260920_041557.jpg with SHA-256 integrity,"Saved 4216025 bytes, hash matches 65e8bae779...",INFO,0.0,,,,,
+IQA-NOO-03,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Noodles,insp-noodles-3,ev-insp-noodles-3,,PASS,Perform deterministic quality assessment on IMG_20260920_041557.jpg,"Quality status: USABLE (sharpness: 309.93, reason: ['QUALITY_ACCEPTABLE'])",INFO,250.71,,,,,
+OCR-NOO-03,CAMPAIGN 04 — OCR PERCEPTION,Noodles,insp-noodles-3,ev-insp-noodles-3,,PASS,Extract OCR tokens from IMG_20260920_041557.jpg,Extracted 77 tokens across image coordinates,INFO,4452.07,,,,,"Sample text: undertheseal
+Lic.No.10021021000783
+NESTLEINDIA LIMIT
+07-AAAC..."
+EXT-NOO-03,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Noodles,insp-noodles-3,ev-insp-noodles-3,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-NOO-03,CAMPAIGN 06 — PROVENANCE VERIFICATION,Noodles,insp-noodles-3,ev-insp-noodles-3,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-NOO-03,CAMPAIGN 07 — STATUTORY APPLICABILITY,Noodles,insp-noodles-3,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-NOO-03,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Noodles,insp-noodles-3,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-PEA-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Peanut_Butter,insp-peanut_butter-1,ev-insp-peanut_butter-1,,PASS,Ingest IMG_20260920_041658.jpg with SHA-256 integrity,"Saved 3188818 bytes, hash matches b863e9257d...",INFO,0.0,,,,,
+IQA-PEA-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Peanut_Butter,insp-peanut_butter-1,ev-insp-peanut_butter-1,,PASS,Perform deterministic quality assessment on IMG_20260920_041658.jpg,"Quality status: NEEDS_REVIEW (sharpness: 53.04, reason: ['EXCESSIVE_BLUR'])",INFO,244.65,,,,,
+OCR-PEA-01,CAMPAIGN 04 — OCR PERCEPTION,Peanut_Butter,insp-peanut_butter-1,ev-insp-peanut_butter-1,,PASS,Extract OCR tokens from IMG_20260920_041658.jpg,Extracted 14 tokens across image coordinates,INFO,1964.47,,,,,"Sample text: Alpino
+19%
+PROTEIN
+CHOCOLATE
+PEANUT
+BUTTER
+CRUNCH
+Net Wekn
+1..."
+EXT-PEA-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Peanut_Butter,insp-peanut_butter-1,ev-insp-peanut_butter-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-PEA-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Peanut_Butter,insp-peanut_butter-1,ev-insp-peanut_butter-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-PEA-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Peanut_Butter,insp-peanut_butter-1,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-PEA-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Peanut_Butter,insp-peanut_butter-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-PEA-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Peanut_Butter,insp-peanut_butter-2,ev-insp-peanut_butter-2,,PASS,Ingest IMG_20260920_041705.jpg with SHA-256 integrity,"Saved 3641079 bytes, hash matches 6cc325f72d...",INFO,0.0,,,,,
+IQA-PEA-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Peanut_Butter,insp-peanut_butter-2,ev-insp-peanut_butter-2,,PASS,Perform deterministic quality assessment on IMG_20260920_041705.jpg,"Quality status: USABLE (sharpness: 144.75, reason: ['QUALITY_ACCEPTABLE'])",INFO,254.19,,,,,
+OCR-PEA-02,CAMPAIGN 04 — OCR PERCEPTION,Peanut_Butter,insp-peanut_butter-2,ev-insp-peanut_butter-2,,PASS,Extract OCR tokens from IMG_20260920_041705.jpg,Extracted 57 tokens across image coordinates,INFO,3183.44,,,,,"Sample text: Peanut has different names. It is
+known as Singdana or'Sheng..."
+EXT-PEA-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Peanut_Butter,insp-peanut_butter-2,ev-insp-peanut_butter-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-PEA-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Peanut_Butter,insp-peanut_butter-2,ev-insp-peanut_butter-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-PEA-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Peanut_Butter,insp-peanut_butter-2,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-PEA-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Peanut_Butter,insp-peanut_butter-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-PEA-03,CAMPAIGN 02 — REAL IMAGE INGESTION,Peanut_Butter,insp-peanut_butter-3,ev-insp-peanut_butter-3,,PASS,Ingest IMG_20260920_041717.jpg with SHA-256 integrity,"Saved 3446169 bytes, hash matches 90914d801c...",INFO,0.0,,,,,
+IQA-PEA-03,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Peanut_Butter,insp-peanut_butter-3,ev-insp-peanut_butter-3,,PASS,Perform deterministic quality assessment on IMG_20260920_041717.jpg,"Quality status: NEEDS_REVIEW (sharpness: 88.0, reason: ['EXCESSIVE_BLUR'])",INFO,247.2,,,,,
+OCR-PEA-03,CAMPAIGN 04 — OCR PERCEPTION,Peanut_Butter,insp-peanut_butter-3,ev-insp-peanut_butter-3,,PASS,Extract OCR tokens from IMG_20260920_041717.jpg,Extracted 33 tokens across image coordinates,INFO,3323.81,,,,,"Sample text: fsat
+PLEASE RECYCLE
+DISCARD RESPONSIBLY
+PROUDLY MADEININDIA
+..."
+EXT-PEA-03,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Peanut_Butter,insp-peanut_butter-3,ev-insp-peanut_butter-3,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-PEA-03,CAMPAIGN 06 — PROVENANCE VERIFICATION,Peanut_Butter,insp-peanut_butter-3,ev-insp-peanut_butter-3,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-PEA-03,CAMPAIGN 07 — STATUTORY APPLICABILITY,Peanut_Butter,insp-peanut_butter-3,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-PEA-03,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Peanut_Butter,insp-peanut_butter-3,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-PEA-04,CAMPAIGN 02 — REAL IMAGE INGESTION,Peanut_Butter,insp-peanut_butter-4,ev-insp-peanut_butter-4,,PASS,Ingest IMG_20260920_041726.jpg with SHA-256 integrity,"Saved 3209227 bytes, hash matches 653925000a...",INFO,0.0,,,,,
+IQA-PEA-04,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Peanut_Butter,insp-peanut_butter-4,ev-insp-peanut_butter-4,,PASS,Perform deterministic quality assessment on IMG_20260920_041726.jpg,"Quality status: NEEDS_REVIEW (sharpness: 58.23, reason: ['EXCESSIVE_BLUR'])",INFO,344.29,,,,,
+OCR-PEA-04,CAMPAIGN 04 — OCR PERCEPTION,Peanut_Butter,insp-peanut_butter-4,ev-insp-peanut_butter-4,,PASS,Extract OCR tokens from IMG_20260920_041726.jpg,Extracted 15 tokens across image coordinates,INFO,2348.59,,,,,"Sample text: 190g
+PROTEIN
+NON-GMO
+DELICIOUS
+TASTE
+DIETARY
+FIBRE
+GLUTEN
+FR..."
+EXT-PEA-04,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Peanut_Butter,insp-peanut_butter-4,ev-insp-peanut_butter-4,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-PEA-04,CAMPAIGN 06 — PROVENANCE VERIFICATION,Peanut_Butter,insp-peanut_butter-4,ev-insp-peanut_butter-4,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-PEA-04,CAMPAIGN 07 — STATUTORY APPLICABILITY,Peanut_Butter,insp-peanut_butter-4,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-PEA-04,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Peanut_Butter,insp-peanut_butter-4,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-SER-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Serum,insp-serum-1,ev-insp-serum-1,,PASS,Ingest IMG_20260920_041216.jpg with SHA-256 integrity,"Saved 1267343 bytes, hash matches d807600315...",INFO,0.0,,,,,
+IQA-SER-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Serum,insp-serum-1,ev-insp-serum-1,,PASS,Perform deterministic quality assessment on IMG_20260920_041216.jpg,"Quality status: USABLE (sharpness: 329.8, reason: ['QUALITY_ACCEPTABLE'])",INFO,75.43,,,,,
+OCR-SER-01,CAMPAIGN 04 — OCR PERCEPTION,Serum,insp-serum-1,ev-insp-serum-1,,PASS,Extract OCR tokens from IMG_20260920_041216.jpg,Extracted 16 tokens across image coordinates,INFO,1046.52,,,,,"Sample text: 30ml
+5%VitaminC
+DailyFace Serum
+FOR SKINILLUMINATION
++ vitam..."
+EXT-SER-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Serum,insp-serum-1,ev-insp-serum-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-SER-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Serum,insp-serum-1,ev-insp-serum-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-SER-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Serum,insp-serum-1,,,PASS,Determine applicability based on origin: IMPORTED,Evaluated 7 rules; COO is APPLICABLE,INFO,0.0,,,,,
+COMP-SER-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Serum,insp-serum-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 5, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-SER-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Serum,insp-serum-2,ev-insp-serum-2,,PASS,Ingest IMG_20260920_041224.jpg with SHA-256 integrity,"Saved 1393045 bytes, hash matches 20c3828a63...",INFO,0.0,,,,,
+IQA-SER-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Serum,insp-serum-2,ev-insp-serum-2,,PASS,Perform deterministic quality assessment on IMG_20260920_041224.jpg,"Quality status: USABLE (sharpness: 801.43, reason: ['QUALITY_ACCEPTABLE'])",INFO,66.33,,,,,
+OCR-SER-02,CAMPAIGN 04 — OCR PERCEPTION,Serum,insp-serum-2,ev-insp-serum-2,,PASS,Extract OCR tokens from IMG_20260920_041224.jpg,Extracted 38 tokens across image coordinates,INFO,2353.44,,,,,"Sample text: FOR EXTERNALUSE ONLY
+Avoid contactwith eyes&
+Keep out of rea..."
+EXT-SER-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Serum,insp-serum-2,ev-insp-serum-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-SER-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Serum,insp-serum-2,ev-insp-serum-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-SER-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Serum,insp-serum-2,,,PASS,Determine applicability based on origin: IMPORTED,Evaluated 7 rules; COO is APPLICABLE,INFO,0.0,,,,,
+COMP-SER-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Serum,insp-serum-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 5, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-SER-03,CAMPAIGN 02 — REAL IMAGE INGESTION,Serum,insp-serum-3,ev-insp-serum-3,,PASS,Ingest IMG_20260920_041232.jpg with SHA-256 integrity,"Saved 1431613 bytes, hash matches 9843868a5a...",INFO,0.0,,,,,
+IQA-SER-03,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Serum,insp-serum-3,ev-insp-serum-3,,PASS,Perform deterministic quality assessment on IMG_20260920_041232.jpg,"Quality status: USABLE (sharpness: 798.77, reason: ['QUALITY_ACCEPTABLE'])",INFO,71.47,,,,,
+OCR-SER-03,CAMPAIGN 04 — OCR PERCEPTION,Serum,insp-serum-3,ev-insp-serum-3,,PASS,Extract OCR tokens from IMG_20260920_041232.jpg,Extracted 32 tokens across image coordinates,INFO,2573.33,,,,,"Sample text: Our Promises:
+SULFATE FREE
+DYE FREE
+PARABENFREE
+MINERALOILFR..."
+EXT-SER-03,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Serum,insp-serum-3,ev-insp-serum-3,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-SER-03,CAMPAIGN 06 — PROVENANCE VERIFICATION,Serum,insp-serum-3,ev-insp-serum-3,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-SER-03,CAMPAIGN 07 — STATUTORY APPLICABILITY,Serum,insp-serum-3,,,PASS,Determine applicability based on origin: IMPORTED,Evaluated 7 rules; COO is APPLICABLE,INFO,0.0,,,,,
+COMP-SER-03,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Serum,insp-serum-3,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 5, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-SER-04,CAMPAIGN 02 — REAL IMAGE INGESTION,Serum,insp-serum-4,ev-insp-serum-4,,PASS,Ingest IMG_20260920_041238.jpg with SHA-256 integrity,"Saved 1438450 bytes, hash matches da14c58456...",INFO,0.0,,,,,
+IQA-SER-04,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Serum,insp-serum-4,ev-insp-serum-4,,PASS,Perform deterministic quality assessment on IMG_20260920_041238.jpg,"Quality status: USABLE (sharpness: 768.79, reason: ['QUALITY_ACCEPTABLE'])",INFO,67.27,,,,,
+OCR-SER-04,CAMPAIGN 04 — OCR PERCEPTION,Serum,insp-serum-4,ev-insp-serum-4,,PASS,Extract OCR tokens from IMG_20260920_041238.jpg,Extracted 33 tokens across image coordinates,INFO,3070.36,,,,,"Sample text: Whatmakes itAwesome?
+We are here to make one thing very clea..."
+EXT-SER-04,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Serum,insp-serum-4,ev-insp-serum-4,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-SER-04,CAMPAIGN 06 — PROVENANCE VERIFICATION,Serum,insp-serum-4,ev-insp-serum-4,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-SER-04,CAMPAIGN 07 — STATUTORY APPLICABILITY,Serum,insp-serum-4,,,PASS,Determine applicability based on origin: IMPORTED,Evaluated 7 rules; COO is APPLICABLE,INFO,0.0,,,,,
+COMP-SER-04,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Serum,insp-serum-4,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 5, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-TAB-01,CAMPAIGN 02 — REAL IMAGE INGESTION,Tablet,insp-tablet-1,ev-insp-tablet-1,,PASS,Ingest IMG_20260920_041335.jpg with SHA-256 integrity,"Saved 1279601 bytes, hash matches 8500eabdf6...",INFO,0.0,,,,,
+IQA-TAB-01,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Tablet,insp-tablet-1,ev-insp-tablet-1,,PASS,Perform deterministic quality assessment on IMG_20260920_041335.jpg,"Quality status: USABLE (sharpness: 211.63, reason: ['QUALITY_ACCEPTABLE'])",INFO,64.99,,,,,
+OCR-TAB-01,CAMPAIGN 04 — OCR PERCEPTION,Tablet,insp-tablet-1,ev-insp-tablet-1,,PASS,Extract OCR tokens from IMG_20260920_041335.jpg,Extracted 8 tokens across image coordinates,INFO,796.18,,,,,"Sample text: CARBAMIDE
+FORTE
+METHYLCOBALAMIN
+500
+mcg
+VITAMIN B12
+TABLETS
+..."
+EXT-TAB-01,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Tablet,insp-tablet-1,ev-insp-tablet-1,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-TAB-01,CAMPAIGN 06 — PROVENANCE VERIFICATION,Tablet,insp-tablet-1,ev-insp-tablet-1,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-TAB-01,CAMPAIGN 07 — STATUTORY APPLICABILITY,Tablet,insp-tablet-1,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-TAB-01,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Tablet,insp-tablet-1,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-TAB-02,CAMPAIGN 02 — REAL IMAGE INGESTION,Tablet,insp-tablet-2,ev-insp-tablet-2,,PASS,Ingest IMG_20260920_041347.jpg with SHA-256 integrity,"Saved 1318021 bytes, hash matches 54cb59b3b0...",INFO,0.0,,,,,
+IQA-TAB-02,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Tablet,insp-tablet-2,ev-insp-tablet-2,,PASS,Perform deterministic quality assessment on IMG_20260920_041347.jpg,"Quality status: USABLE (sharpness: 269.74, reason: ['QUALITY_ACCEPTABLE'])",INFO,66.8,,,,,
+OCR-TAB-02,CAMPAIGN 04 — OCR PERCEPTION,Tablet,insp-tablet-2,ev-insp-tablet-2,,PASS,Extract OCR tokens from IMG_20260920_041347.jpg,Extracted 12 tokens across image coordinates,INFO,808.83,,,,,"Sample text: MFG.LIC.NO.:G/28/1856
+BATCH NO.
+DATE OF MANUFACTURE
+EXPIRYDA..."
+EXT-TAB-02,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Tablet,insp-tablet-2,ev-insp-tablet-2,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-TAB-02,CAMPAIGN 06 — PROVENANCE VERIFICATION,Tablet,insp-tablet-2,ev-insp-tablet-2,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-TAB-02,CAMPAIGN 07 — STATUTORY APPLICABILITY,Tablet,insp-tablet-2,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-TAB-02,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Tablet,insp-tablet-2,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+INGEST-TAB-03,CAMPAIGN 02 — REAL IMAGE INGESTION,Tablet,insp-tablet-3,ev-insp-tablet-3,,PASS,Ingest IMG_20260920_041355.jpg with SHA-256 integrity,"Saved 3213517 bytes, hash matches 73b9553bd4...",INFO,0.0,,,,,
+IQA-TAB-03,CAMPAIGN 03 — IMAGE QUALITY ASSESSMENT,Tablet,insp-tablet-3,ev-insp-tablet-3,,PASS,Perform deterministic quality assessment on IMG_20260920_041355.jpg,"Quality status: NEEDS_REVIEW (sharpness: 60.31, reason: ['EXCESSIVE_BLUR'])",INFO,252.67,,,,,
+OCR-TAB-03,CAMPAIGN 04 — OCR PERCEPTION,Tablet,insp-tablet-3,ev-insp-tablet-3,,PASS,Extract OCR tokens from IMG_20260920_041355.jpg,Extracted 12 tokens across image coordinates,INFO,2414.14,,,,,"Sample text: Composition:
+Eachfilm coated tablet contains:
+500mcg
+Methylc..."
+EXT-TAB-03,CAMPAIGN 05 — GEMINI STRUCTURED EXTRACTION,Tablet,insp-tablet-3,ev-insp-tablet-3,,PASS,Extract and structure 7 Legal Metrology domains,Structured 7 domains with strict token grounding,INFO,0.0,,,,,
+PROV-TAB-03,CAMPAIGN 06 — PROVENANCE VERIFICATION,Tablet,insp-tablet-3,ev-insp-tablet-3,,PASS,Verify token indices map strictly to valid OCR tokens,"All referenced token indices reside within [0, N-1] with zero phantom references",INFO,0.0,,,,,
+APP-TAB-03,CAMPAIGN 07 — STATUTORY APPLICABILITY,Tablet,insp-tablet-3,,,PASS,Determine applicability based on origin: DOMESTIC,Evaluated 7 rules; COO is NOT_APPLICABLE,INFO,0.0,,,,,
+COMP-TAB-03,CAMPAIGN 08 — DETERMINISTIC COMPLIANCE,Tablet,insp-tablet-3,,,PASS,Evaluate statutory rules against grounded declarations,"Generated 7 findings (Pass: 4, Potential Non-Compliance: 1)",INFO,0.0,,,,,
+VERIFY-001,CAMPAIGN 09 — HUMAN INSPECTOR VERIFICATION,SYSTEM,insp-serum-1,,,PASS,Record declaration correction and submit checklist,"Verification completed, docket transitioned to SUBMITTED_FOR_REVIEW",INFO,0.0,,,,,
+REV-001,CAMPAIGN 10 — REVIEWER GOVERNANCE,SYSTEM,insp-serum-1,,,PASS,Adjudicate all 7 compliance findings,Recorded 7 reviewer determinations with statutory rationale,INFO,0.0,,,,,
+FINAL-001,CAMPAIGN 11 — FINALIZATION & IMMUTABILITY,SYSTEM,insp-serum-1,,,PASS,Construct immutable FinalAuditRecord and lock docket to READ_ONLY,"FinalAuditRecord created (FAR-3EA6D3ABDBAC), final_decision='COMPLIANT', status=READ_ONLY",INFO,0.0,,,,,
+FINAL-002,CAMPAIGN 11 — FINALIZATION & IMMUTABILITY,SYSTEM,insp-serum-1,,,PASS,Reject modification of finalized inspection,Modification rejected with ConflictError / InvalidStateError,INFO,0.0,,,,,
+REPORT-001,CAMPAIGN 12 — PDF/DOCX REPORTING,SYSTEM,insp-serum-1,,,PASS,Generate valid binary PDF and DOCX reports from FinalAuditRecord,Generated PDF (6040 bytes) and DOCX (37731 bytes) with complete section parity,INFO,0.0,,,,,
+AUDIT-001,CAMPAIGN 13 — AUDIT TRAIL INTEGRITY,SYSTEM,insp-serum-1,,,PASS,Verify complete append-only chronological audit trail,"Ledger contains 13 events across lifecycle (COMPLIANCE_EVALUATED, REVIEWER_DECISION_RECORDED, DECLARATION_MANUALLY_CORRECTED, APPLICABILITY_EVALUATED, INSPECTION_FINALIZED, INSPECTION_SUBMITTED_FOR_REVIEW)",INFO,0.0,,,,,
+SEC-001,CAMPAIGN 15 — SECURITY / RBAC / IDOR,SYSTEM,,,,PASS,Enforce strict IDOR isolation across inspectors,Inspector 2 access denied with ForbiddenError,INFO,0.0,,,,,
+FAIL-001,CAMPAIGN 16 — FAILURE INJECTION,SYSTEM,,,,PASS,Reject corrupt binary payload gracefully with UNUSABLE and IMAGE_DECODE_FAILED,"Returned quality_status=UNUSABLE, reason_codes=['IMAGE_DECODE_FAILED']",INFO,0.0,,,,,
+FAIL-002,CAMPAIGN 16 — FAILURE INJECTION,SYSTEM,,,,PASS,Zero-token OCR bypasses Gemini LLM without generating compliance findings,Gating prevents downstream LLM invocation; marked BLOCKED safely,INFO,0.0,,,,,
+CONC-001,CAMPAIGN 17 — CONCURRENCY,SYSTEM,,,,PASS,Worker 1 claims job; Worker 2 receives None (no duplicate execution),"Worker 1 claimed job JOB-5B32DF19F801, Worker 2 received None",INFO,0.0,,,,,
+ADV-001,CAMPAIGN 21 — ADVERSARIAL TESTING,SYSTEM,,,,PASS,Conflicting or unreadable declarations preserve REQUIRES_REVIEW,Rule engine outputs REQUIRES_REVIEW under uncertainty; never fabricates false PASS,INFO,0.0,,,,,

@@ -1,0 +1,9 @@
+{
+  "evidence_id": "EV-UNI-DF5876BD",
+  "has_barcode": false,
+  "total_barcodes": 0,
+  "barcodes": [],
+  "detection_engine": "OpenCV BarcodeDetector",
+  "detection_engine_version": "5.0.0",
+  "detected_at": "2026-09-20T11:11:12.979627+00:00"
+}

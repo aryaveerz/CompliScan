@@ -1,0 +1,31 @@
+{
+  "net_quantity": {
+    "status": "OBSERVED",
+    "quantity_value": 100.0,
+    "unit": "ml",
+    "unit_raw": "100ml",
+    "raw_text": "100ml",
+    "source_token_ids": [
+      6
+    ]
+  },
+  "commodity_name": {
+    "status": "OBSERVED",
+    "name": "LAMPAK",
+    "raw_text": "LAMPAK",
+    "source_token_ids": [
+      0
+    ]
+  },
+  "consumer_care": {
+    "status": "OBSERVED",
+    "contact_name": "Consumer Care Cell",
+    "phone": "1800425444444",
+    "email": "itccares@itc.in",
+    "raw_text": "CONTACT:CONSUMER CARE",
+    "source_token_ids": [
+      61,
+      67
+    ]
+  }
+}

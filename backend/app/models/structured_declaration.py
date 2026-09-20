@@ -6,7 +6,7 @@ Stores structured Legal Metrology declarations extracted via Gemini 2.5 Flash.
 from datetime import datetime, timezone
 import uuid
 from typing import Optional, TYPE_CHECKING
-from sqlalchemy import String, Boolean, DateTime, ForeignKey, JSON, UniqueConstraint
+from sqlalchemy import String, Text, Boolean, DateTime, ForeignKey, JSON, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.db.base import Base
 
@@ -54,7 +54,7 @@ class StructuredDeclarationResult(Base):
     )
     model_name: Mapped[str] = mapped_column(
         String(100),
-        default="gemini-2.5-flash",
+        default="gemini-3.6-flash",
         nullable=False,
     )
     model_version: Mapped[Optional[str]] = mapped_column(
@@ -83,8 +83,12 @@ class StructuredDeclarationResult(Base):
         default=False,
         nullable=False,
     )
+    block_code: Mapped[Optional[str]] = mapped_column(
+        String(50),
+        nullable=True,
+    )
     block_reason: Mapped[Optional[str]] = mapped_column(
-        String(100),
+        Text,
         nullable=True,
     )
 
@@ -92,6 +96,12 @@ class StructuredDeclarationResult(Base):
     declarations: Mapped[dict] = mapped_column(
         JSON,
         nullable=False,
+    )
+
+    # Runtime Telemetry (Latency, Token Counts, HTTP Status, Trace ID)
+    telemetry: Mapped[Optional[dict]] = mapped_column(
+        JSON,
+        nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

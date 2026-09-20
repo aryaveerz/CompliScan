@@ -4,6 +4,7 @@ Provides backend-authoritative endpoints for reviewer queues, adjudications/over
 evidence requests, revisions, atomic finalization, and PDF report retrieval.
 """
 
+import hashlib
 from typing import List
 from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -271,6 +272,7 @@ async def get_final_pdf_report(
     far = await FinalizationService.get_final_record(db, inspection_id)
 
     pdf_bytes = PDFReportService.generate_pdf_report(far)
+    report_sha256 = hashlib.sha256(pdf_bytes).hexdigest()
 
     # Log REPORT_DOWNLOADED audit event
     await AuditService.log_event(
@@ -283,6 +285,7 @@ async def get_final_pdf_report(
             "format": "pdf",
             "case_number": inspection.case_number,
             "final_record_id": far.id,
+            "report_sha256": report_sha256,
         },
     )
     await db.commit()
@@ -295,5 +298,6 @@ async def get_final_pdf_report(
             "Content-Disposition": f'attachment; filename="{filename}"',
             "X-Inspection-Id": inspection_id,
             "X-Final-Audit-Record-Id": far.id,
+            "X-Report-SHA256": report_sha256,
         },
     )

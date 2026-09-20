@@ -1,0 +1,123 @@
+[
+  {
+    "id": "FND-UNI-4E78DAC2AB",
+    "evidence_id": "EV-UNI-DBE546A1",
+    "requirement_name": "manufacturer_identity",
+    "result": "PASS",
+    "reason": "Responsible entity identity ('Itcltd.\nCpcb Regn.No.\nBo-08-000-07-Aaaci5950L-22\nCm\n8901725100117') and complete address ('No.10012031000312') observed under Rule 6(1)(a).",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(a)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-DBE546A1",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-397C5ACBB9",
+    "evidence_id": "EV-UNI-DBE546A1",
+    "requirement_name": "commodity_name",
+    "result": "REQUIRES_REVIEW",
+    "reason": "Conflicting declarations observed across panel evidence for commodity_name under Rule 6(1)(b). Reviewer adjudication required.",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(b)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-DBE546A1",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-531D3A16EF",
+    "evidence_id": "EV-UNI-0AFB5FFF",
+    "requirement_name": "net_quantity",
+    "result": "PASS",
+    "reason": "Net quantity (100.0 ml) declared with standard legal metrology unit under Rule 6(1)(c).",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(c)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-0AFB5FFF",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-FD1FC800F5",
+    "evidence_id": "EV-UNI-DBE546A1",
+    "requirement_name": "manufacture_packing_date",
+    "result": "POTENTIAL_NON_COMPLIANCE",
+    "reason": "Mandatory statutory declaration under Rule 6(1)(d) was not observed on scanned panels.",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(d)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-DBE546A1",
+      "date_validation_summary": {
+        "inspection_id": "INS-UNI-F11428",
+        "validation_engine_version": "v1.0",
+        "evaluated_at": "2026-09-20T11:14:20.250381+00:00",
+        "inspection_date_used": "2026-09-20",
+        "date_observations": [],
+        "derived_dates": [],
+        "conflicts": [],
+        "temporal_validations": [],
+        "scope_integrity": {
+          "inspection_id": "INS-UNI-F11428",
+          "is_isolated": true,
+          "violating_evidence_ids": [],
+          "violating_token_maps": {},
+          "notes": [
+            "Scope isolation verified. Zero cross-inspection contamination detected."
+          ]
+        },
+        "overall_validation_status": "VALID",
+        "statutory_finding_recommendation": null,
+        "notes": [
+          "All observed date declarations and scope validations passed deterministically."
+        ]
+      }
+    }
+  },
+  {
+    "id": "FND-UNI-27C41D2523",
+    "evidence_id": "EV-UNI-DBE546A1",
+    "requirement_name": "mrp",
+    "result": "POTENTIAL_NON_COMPLIANCE",
+    "reason": "Mandatory statutory declaration under Rule 6(1)(e) was not observed on scanned panels.",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(e)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-DBE546A1",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-1CAC43D8A1",
+    "evidence_id": "EV-UNI-0AFB5FFF",
+    "requirement_name": "consumer_care",
+    "result": "PASS",
+    "reason": "Consumer care grievance redressal details observed with contact channels under Rule 6(1)(f).",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(f)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-0AFB5FFF",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-AE201D7CCA",
+    "evidence_id": "EV-UNI-DBE546A1",
+    "requirement_name": "country_of_origin",
+    "result": "NOT_APPLICABLE",
+    "reason": "Statutory requirement under Rule 6(1)(da) is Not Applicable for domestic commodity.",
+    "applicability_status": "NOT_APPLICABLE",
+    "rule_citation": "Rule 6(1)(da)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-DBE546A1",
+      "date_validation_summary": null
+    }
+  }
+]

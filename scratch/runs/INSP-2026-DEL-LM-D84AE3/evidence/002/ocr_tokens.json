@@ -1,0 +1,1595 @@
+[
+  {
+    "token_index": 0,
+    "line_index": 0,
+    "text": "Peanut has different names.t s",
+    "confidence": 0.9069,
+    "bounding_box": {
+      "points": [
+        [
+          1061.9,
+          954.19
+        ],
+        [
+          1820.4,
+          978.87
+        ],
+        [
+          1818.35,
+          1054.96
+        ],
+        [
+          1059.85,
+          1030.28
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 1,
+    "line_index": 1,
+    "text": "known as Singdana or'Shengdaane",
+    "confidence": 0.9611,
+    "bounding_box": {
+      "points": [
+        [
+          1059.85,
+          1024.11
+        ],
+        [
+          1877.8,
+          1052.9
+        ],
+        [
+          1875.75,
+          1133.1
+        ],
+        [
+          1057.8,
+          1104.31
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 2,
+    "line_index": 2,
+    "text": "King",
+    "confidence": 0.9944,
+    "bounding_box": {
+      "points": [
+        [
+          717.5,
+          1110.48
+        ],
+        [
+          1047.55,
+          1118.71
+        ],
+        [
+          1043.45,
+          1332.58
+        ],
+        [
+          713.4,
+          1324.35
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 3,
+    "line_index": 3,
+    "text": "IS",
+    "confidence": 0.9465,
+    "bounding_box": {
+      "points": [
+        [
+          930.7,
+          1094.03
+        ],
+        [
+          1006.55,
+          1094.03
+        ],
+        [
+          1006.55,
+          1168.06
+        ],
+        [
+          930.7,
+          1168.06
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 4,
+    "line_index": 4,
+    "text": "in the west,Mungafali, in the north",
+    "confidence": 0.9066,
+    "bounding_box": {
+      "points": [
+        [
+          1061.9,
+          1102.26
+        ],
+        [
+          1861.4,
+          1124.88
+        ],
+        [
+          1859.35,
+          1198.91
+        ],
+        [
+          1059.85,
+          1176.29
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 5,
+    "line_index": 5,
+    "text": "and\u2018Pallelu'&\u2018Kadalal' in the",
+    "confidence": 0.8753,
+    "bounding_box": {
+      "points": [
+        [
+          1055.75,
+          1176.29
+        ],
+        [
+          1760.95,
+          1198.91
+        ],
+        [
+          1758.9,
+          1275.0
+        ],
+        [
+          1053.7,
+          1252.38
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 6,
+    "line_index": 6,
+    "text": "southern part of india.",
+    "confidence": 0.9682,
+    "bounding_box": {
+      "points": [
+        [
+          1061.9,
+          1254.44
+        ],
+        [
+          1596.95,
+          1266.77
+        ],
+        [
+          1594.9,
+          1334.64
+        ],
+        [
+          1059.85,
+          1322.3
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 7,
+    "line_index": 7,
+    "text": "NUTRITIONAL INFORMATION (Approx.values",
+    "confidence": 0.8837,
+    "bounding_box": {
+      "points": [
+        [
+          733.9,
+          1429.23
+        ],
+        [
+          1904.45,
+          1460.08
+        ],
+        [
+          1902.4,
+          1548.51
+        ],
+        [
+          731.85,
+          1517.66
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 8,
+    "line_index": 8,
+    "text": "No.of Servings per pack:31(Approx) Serving Size:32g (2tbsp)",
+    "confidence": 0.9239,
+    "bounding_box": {
+      "points": [
+        [
+          740.05,
+          1523.83
+        ],
+        [
+          1892.15,
+          1542.34
+        ],
+        [
+          1892.15,
+          1601.98
+        ],
+        [
+          740.05,
+          1583.47
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 9,
+    "line_index": 9,
+    "text": "Per",
+    "confidence": 0.9788,
+    "bounding_box": {
+      "points": [
+        [
+          1529.3,
+          1628.71
+        ],
+        [
+          1631.8,
+          1628.71
+        ],
+        [
+          1631.8,
+          1690.4
+        ],
+        [
+          1529.3,
+          1690.4
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 10,
+    "line_index": 10,
+    "text": "Per Serve",
+    "confidence": 0.9627,
+    "bounding_box": {
+      "points": [
+        [
+          1715.85,
+          1626.65
+        ],
+        [
+          1931.1,
+          1630.77
+        ],
+        [
+          1931.1,
+          1694.52
+        ],
+        [
+          1715.85,
+          1690.4
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 11,
+    "line_index": 11,
+    "text": "Nutrients",
+    "confidence": 0.985,
+    "bounding_box": {
+      "points": [
+        [
+          653.95,
+          1651.33
+        ],
+        [
+          920.45,
+          1659.56
+        ],
+        [
+          918.4,
+          1729.48
+        ],
+        [
+          651.9,
+          1721.25
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 12,
+    "line_index": 12,
+    "text": "100gm",
+    "confidence": 0.9957,
+    "bounding_box": {
+      "points": [
+        [
+          1473.95,
+          1686.29
+        ],
+        [
+          1664.6,
+          1696.57
+        ],
+        [
+          1660.5,
+          1760.32
+        ],
+        [
+          1469.85,
+          1750.04
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 13,
+    "line_index": 13,
+    "text": "%RDA~",
+    "confidence": 0.8452,
+    "bounding_box": {
+      "points": [
+        [
+          1744.55,
+          1690.4
+        ],
+        [
+          1916.75,
+          1690.4
+        ],
+        [
+          1916.75,
+          1756.21
+        ],
+        [
+          1744.55,
+          1756.21
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 14,
+    "line_index": 14,
+    "text": "Energy",
+    "confidence": 0.9923,
+    "bounding_box": {
+      "points": [
+        [
+          664.2,
+          1785.0
+        ],
+        [
+          852.8,
+          1803.51
+        ],
+        [
+          846.65,
+          1875.48
+        ],
+        [
+          658.05,
+          1856.98
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 15,
+    "line_index": 15,
+    "text": "580kcal",
+    "confidence": 0.9947,
+    "bounding_box": {
+      "points": [
+        [
+          1443.2,
+          1799.4
+        ],
+        [
+          1683.05,
+          1799.4
+        ],
+        [
+          1683.05,
+          1863.15
+        ],
+        [
+          1443.2,
+          1863.15
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 16,
+    "line_index": 16,
+    "text": "%6",
+    "confidence": 0.997,
+    "bounding_box": {
+      "points": [
+        [
+          1810.15,
+          1791.17
+        ],
+        [
+          1908.55,
+          1791.17
+        ],
+        [
+          1908.55,
+          1863.15
+        ],
+        [
+          1810.15,
+          1863.15
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 17,
+    "line_index": 17,
+    "text": "Protein",
+    "confidence": 0.9831,
+    "bounding_box": {
+      "points": [
+        [
+          666.25,
+          1863.15
+        ],
+        [
+          869.2,
+          1875.48
+        ],
+        [
+          865.1,
+          1945.4
+        ],
+        [
+          662.15,
+          1933.06
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 18,
+    "line_index": 18,
+    "text": "19g",
+    "confidence": 0.9936,
+    "bounding_box": {
+      "points": [
+        [
+          1549.8,
+          1867.26
+        ],
+        [
+          1683.05,
+          1871.37
+        ],
+        [
+          1681.0,
+          1947.46
+        ],
+        [
+          1547.75,
+          1943.35
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 19,
+    "line_index": 19,
+    "text": "11%",
+    "confidence": 0.9786,
+    "bounding_box": {
+      "points": [
+        [
+          1783.5,
+          1873.43
+        ],
+        [
+          1904.45,
+          1873.43
+        ],
+        [
+          1904.45,
+          1941.29
+        ],
+        [
+          1783.5,
+          1941.29
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 20,
+    "line_index": 20,
+    "text": "Carbohydrate",
+    "confidence": 0.9789,
+    "bounding_box": {
+      "points": [
+        [
+          674.45,
+          1937.18
+        ],
+        [
+          1031.15,
+          1951.57
+        ],
+        [
+          1029.1,
+          2021.49
+        ],
+        [
+          672.4,
+          2007.1
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 21,
+    "line_index": 21,
+    "text": "37g",
+    "confidence": 0.9093,
+    "bounding_box": {
+      "points": [
+        [
+          1545.7,
+          1939.23
+        ],
+        [
+          1689.2,
+          1951.57
+        ],
+        [
+          1683.05,
+          2025.6
+        ],
+        [
+          1539.55,
+          2013.27
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 22,
+    "line_index": 22,
+    "text": "Total Sugar",
+    "confidence": 0.9831,
+    "bounding_box": {
+      "points": [
+        [
+          764.65,
+          2009.15
+        ],
+        [
+          1068.05,
+          2019.44
+        ],
+        [
+          1066.0,
+          2089.35
+        ],
+        [
+          762.6,
+          2079.07
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 23,
+    "line_index": 23,
+    "text": "22g",
+    "confidence": 0.9935,
+    "bounding_box": {
+      "points": [
+        [
+          1543.65,
+          2011.21
+        ],
+        [
+          1697.4,
+          2021.49
+        ],
+        [
+          1693.3,
+          2093.47
+        ],
+        [
+          1539.55,
+          2083.19
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 24,
+    "line_index": 24,
+    "text": "Added Sugar",
+    "confidence": 0.9801,
+    "bounding_box": {
+      "points": [
+        [
+          770.8,
+          2072.9
+        ],
+        [
+          1117.25,
+          2093.47
+        ],
+        [
+          1113.15,
+          2163.39
+        ],
+        [
+          766.7,
+          2142.82
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 25,
+    "line_index": 25,
+    "text": "19g",
+    "confidence": 0.9144,
+    "bounding_box": {
+      "points": [
+        [
+          1543.65,
+          2077.02
+        ],
+        [
+          1695.35,
+          2087.3
+        ],
+        [
+          1691.25,
+          2161.33
+        ],
+        [
+          1539.55,
+          2151.05
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 26,
+    "line_index": 26,
+    "text": "12%",
+    "confidence": 0.9882,
+    "bounding_box": {
+      "points": [
+        [
+          1771.2,
+          2074.96
+        ],
+        [
+          1888.05,
+          2070.85
+        ],
+        [
+          1890.1,
+          2140.77
+        ],
+        [
+          1773.25,
+          2144.88
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 27,
+    "line_index": 27,
+    "text": "Dietary Fibre",
+    "confidence": 0.9803,
+    "bounding_box": {
+      "points": [
+        [
+          774.9,
+          2148.99
+        ],
+        [
+          1123.4,
+          2161.33
+        ],
+        [
+          1121.35,
+          2229.19
+        ],
+        [
+          772.85,
+          2216.85
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 28,
+    "line_index": 28,
+    "text": "5g:",
+    "confidence": 0.7959,
+    "bounding_box": {
+      "points": [
+        [
+          1568.25,
+          2142.82
+        ],
+        [
+          1701.5,
+          2161.33
+        ],
+        [
+          1691.25,
+          2231.25
+        ],
+        [
+          1558.0,
+          2212.74
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 29,
+    "line_index": 29,
+    "text": "4%",
+    "confidence": 0.9971,
+    "bounding_box": {
+      "points": [
+        [
+          1783.5,
+          2142.82
+        ],
+        [
+          1886.0,
+          2142.82
+        ],
+        [
+          1886.0,
+          2212.74
+        ],
+        [
+          1783.5,
+          2212.74
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 30,
+    "line_index": 30,
+    "text": "Total Fat",
+    "confidence": 0.9604,
+    "bounding_box": {
+      "points": [
+        [
+          692.9,
+          2208.63
+        ],
+        [
+          926.6,
+          2225.08
+        ],
+        [
+          922.5,
+          2288.83
+        ],
+        [
+          688.8,
+          2272.38
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 31,
+    "line_index": 31,
+    "text": "40g:",
+    "confidence": 0.8397,
+    "bounding_box": {
+      "points": [
+        [
+          1533.4,
+          2212.74
+        ],
+        [
+          1691.25,
+          2227.14
+        ],
+        [
+          1685.1,
+          2295.0
+        ],
+        [
+          1527.25,
+          2280.6
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 32,
+    "line_index": 32,
+    "text": "19%",
+    "confidence": 0.9888,
+    "bounding_box": {
+      "points": [
+        [
+          1756.85,
+          2220.97
+        ],
+        [
+          1877.8,
+          2212.74
+        ],
+        [
+          1883.95,
+          2282.66
+        ],
+        [
+          1763.0,
+          2290.89
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 33,
+    "line_index": 33,
+    "text": "Saturated fat",
+    "confidence": 0.9679,
+    "bounding_box": {
+      "points": [
+        [
+          838.45,
+          2288.83
+        ],
+        [
+          1186.95,
+          2303.23
+        ],
+        [
+          1184.9,
+          2366.98
+        ],
+        [
+          836.4,
+          2352.58
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 34,
+    "line_index": 34,
+    "text": "8g:",
+    "confidence": 0.8545,
+    "bounding_box": {
+      "points": [
+        [
+          1555.95,
+          2278.55
+        ],
+        [
+          1689.2,
+          2297.06
+        ],
+        [
+          1681.0,
+          2364.92
+        ],
+        [
+          1547.75,
+          2348.47
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 35,
+    "line_index": 35,
+    "text": "12%",
+    "confidence": 0.9731,
+    "bounding_box": {
+      "points": [
+        [
+          1758.9,
+          2295.0
+        ],
+        [
+          1879.85,
+          2290.89
+        ],
+        [
+          1881.9,
+          2358.75
+        ],
+        [
+          1760.95,
+          2362.86
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 36,
+    "line_index": 36,
+    "text": "Monounsaturated fat",
+    "confidence": 0.9754,
+    "bounding_box": {
+      "points": [
+        [
+          797.45,
+          2350.52
+        ],
+        [
+          1350.95,
+          2371.09
+        ],
+        [
+          1348.9,
+          2438.95
+        ],
+        [
+          795.4,
+          2418.39
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 37,
+    "line_index": 37,
+    "text": "21g:",
+    "confidence": 0.8674,
+    "bounding_box": {
+      "points": [
+        [
+          1545.7,
+          2344.35
+        ],
+        [
+          1687.15,
+          2358.75
+        ],
+        [
+          1681.0,
+          2426.61
+        ],
+        [
+          1539.55,
+          2412.22
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 38,
+    "line_index": 38,
+    "text": "Polyunsaturated fat",
+    "confidence": 0.9702,
+    "bounding_box": {
+      "points": [
+        [
+          799.5,
+          2418.39
+        ],
+        [
+          1322.25,
+          2438.95
+        ],
+        [
+          1320.2,
+          2508.87
+        ],
+        [
+          797.45,
+          2488.31
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 39,
+    "line_index": 39,
+    "text": "11g",
+    "confidence": 0.9878,
+    "bounding_box": {
+      "points": [
+        [
+          1543.65,
+          2406.05
+        ],
+        [
+          1660.5,
+          2420.44
+        ],
+        [
+          1652.3,
+          2490.36
+        ],
+        [
+          1535.45,
+          2475.97
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 40,
+    "line_index": 40,
+    "text": "Cholesterol",
+    "confidence": 0.9838,
+    "bounding_box": {
+      "points": [
+        [
+          713.4,
+          2478.02
+        ],
+        [
+          1012.7,
+          2494.48
+        ],
+        [
+          1008.6,
+          2560.28
+        ],
+        [
+          709.3,
+          2543.83
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 41,
+    "line_index": 41,
+    "text": "0mg",
+    "confidence": 0.9903,
+    "bounding_box": {
+      "points": [
+        [
+          1502.65,
+          2478.02
+        ],
+        [
+          1650.25,
+          2490.36
+        ],
+        [
+          1644.1,
+          2556.17
+        ],
+        [
+          1496.5,
+          2543.83
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 42,
+    "line_index": 42,
+    "text": "Trans fat",
+    "confidence": 0.9747,
+    "bounding_box": {
+      "points": [
+        [
+          711.35,
+          2543.83
+        ],
+        [
+          953.25,
+          2560.28
+        ],
+        [
+          949.15,
+          2624.03
+        ],
+        [
+          707.25,
+          2607.58
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 43,
+    "line_index": 43,
+    "text": "og",
+    "confidence": 0.8927,
+    "bounding_box": {
+      "points": [
+        [
+          1547.75,
+          2545.89
+        ],
+        [
+          1652.3,
+          2558.23
+        ],
+        [
+          1644.1,
+          2621.98
+        ],
+        [
+          1539.55,
+          2609.64
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 44,
+    "line_index": 44,
+    "text": "0%",
+    "confidence": 0.9954,
+    "bounding_box": {
+      "points": [
+        [
+          1760.95,
+          2543.83
+        ],
+        [
+          1863.45,
+          2537.66
+        ],
+        [
+          1867.55,
+          2605.52
+        ],
+        [
+          1765.05,
+          2611.69
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 45,
+    "line_index": 45,
+    "text": "Sodium",
+    "confidence": 0.9914,
+    "bounding_box": {
+      "points": [
+        [
+          713.4,
+          2605.52
+        ],
+        [
+          916.35,
+          2624.03
+        ],
+        [
+          910.2,
+          2687.78
+        ],
+        [
+          707.25,
+          2669.27
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 46,
+    "line_index": 46,
+    "text": "46mg0.74%",
+    "confidence": 0.9939,
+    "bounding_box": {
+      "points": [
+        [
+          1457.55,
+          2615.81
+        ],
+        [
+          1865.5,
+          2611.69
+        ],
+        [
+          1865.5,
+          2693.95
+        ],
+        [
+          1457.55,
+          2698.06
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 47,
+    "line_index": 47,
+    "text": "Ingredients;Roasted Peanuts (65%), Chocolate Paste",
+    "confidence": 0.934,
+    "bounding_box": {
+      "points": [
+        [
+          684.7,
+          2858.47
+        ],
+        [
+          1695.35,
+          2903.71
+        ],
+        [
+          1693.3,
+          2969.52
+        ],
+        [
+          682.65,
+          2924.27
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 48,
+    "line_index": 48,
+    "text": "(BrownSugar,VegetableFat,Cocoa Solid,Cocoa Mass",
+    "confidence": 0.7752,
+    "bounding_box": {
+      "points": [
+        [
+          684.7,
+          2916.05
+        ],
+        [
+          1748.65,
+          2957.18
+        ],
+        [
+          1746.6,
+          3029.15
+        ],
+        [
+          682.65,
+          2988.02
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 49,
+    "line_index": 49,
+    "text": "NO",
+    "confidence": 0.9788,
+    "bounding_box": {
+      "points": [
+        [
+          1840.9,
+          2930.44
+        ],
+        [
+          1894.2,
+          2930.44
+        ],
+        [
+          1894.2,
+          2983.91
+        ],
+        [
+          1840.9,
+          2983.91
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 50,
+    "line_index": 50,
+    "text": "Emulsiner E471-100%PlantBased))",
+    "confidence": 0.9436,
+    "bounding_box": {
+      "points": [
+        [
+          686.75,
+          2979.8
+        ],
+        [
+          1365.3,
+          3016.81
+        ],
+        [
+          1361.2,
+          3074.4
+        ],
+        [
+          682.65,
+          3037.38
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 51,
+    "line_index": 51,
+    "text": "PALM",
+    "confidence": 0.9805,
+    "bounding_box": {
+      "points": [
+        [
+          1806.05,
+          2977.74
+        ],
+        [
+          1896.25,
+          2977.74
+        ],
+        [
+          1896.25,
+          3045.6
+        ],
+        [
+          1806.05,
+          3045.6
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 52,
+    "line_index": 52,
+    "text": "OIL",
+    "confidence": 0.982,
+    "bounding_box": {
+      "points": [
+        [
+          1810.15,
+          3035.32
+        ],
+        [
+          1867.55,
+          3035.32
+        ],
+        [
+          1867.55,
+          3092.9
+        ],
+        [
+          1810.15,
+          3092.9
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 53,
+    "line_index": 53,
+    "text": "Category:4.2.2.5(Proprietary Food-Peanut Butter)",
+    "confidence": 0.9472,
+    "bounding_box": {
+      "points": [
+        [
+          694.95,
+          3064.11
+        ],
+        [
+          1586.7,
+          3111.41
+        ],
+        [
+          1582.6,
+          3171.05
+        ],
+        [
+          690.85,
+          3123.75
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 54,
+    "line_index": 54,
+    "text": "Allergen Information: Contains Peanuts",
+    "confidence": 0.9653,
+    "bounding_box": {
+      "points": [
+        [
+          707.25,
+          3140.2
+        ],
+        [
+          1398.1,
+          3185.44
+        ],
+        [
+          1394.0,
+          3243.02
+        ],
+        [
+          703.15,
+          3197.78
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 55,
+    "line_index": 55,
+    "text": "90%LESS",
+    "confidence": 0.9452,
+    "bounding_box": {
+      "points": [
+        [
+          1742.5,
+          3173.1
+        ],
+        [
+          1892.15,
+          3134.03
+        ],
+        [
+          1906.5,
+          3191.61
+        ],
+        [
+          1756.85,
+          3230.69
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 56,
+    "line_index": 56,
+    "text": "SEPARATA",
+    "confidence": 0.8842,
+    "bounding_box": {
+      "points": [
+        [
+          1748.65,
+          3214.23
+        ],
+        [
+          1886.0,
+          3181.33
+        ],
+        [
+          1898.3,
+          3232.74
+        ],
+        [
+          1760.95,
+          3265.65
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 57,
+    "line_index": 57,
+    "text": "Store in cool & dry place,",
+    "confidence": 0.9328,
+    "bounding_box": {
+      "points": [
+        [
+          1373.5,
+          3321.17
+        ],
+        [
+          1799.9,
+          3310.89
+        ],
+        [
+          1799.9,
+          3366.41
+        ],
+        [
+          1373.5,
+          3376.69
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  },
+  {
+    "token_index": 58,
+    "line_index": 58,
+    "text": "away from direct suntight.",
+    "confidence": 0.9339,
+    "bounding_box": {
+      "points": [
+        [
+          1369.4,
+          3362.3
+        ],
+        [
+          1812.2,
+          3347.9
+        ],
+        [
+          1814.25,
+          3409.6
+        ],
+        [
+          1371.45,
+          3423.99
+        ]
+      ],
+      "coordinate_space": "original_image"
+    }
+  }
+]

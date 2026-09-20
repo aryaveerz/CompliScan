@@ -1,0 +1,8 @@
+field_name,observation_status,final_value,supporting_evidence_count,supporting_evidence_ids,rule_citation,statutory_result
+"manufacturer_identity","OBSERVED","{""status"": ""OBSERVED"", ""declaration_type"": ""MANUFACTURER"", ""name"": ""ITC Limited"", ""address"": ""Virginia House, 37 J.L. Nehru Road, Kolkata 700071"", ""marketer_name"": null, ""packer_name"": null, ""importer_name"": null, ""brand_owner_name"": null, ""raw_text"": null}",1,"EV-541DA7F6","Rule 6(1)(a)","PASS"
+"commodity_name","CONFLICTING","null",1,"EV-541DA7F6","Rule 6(1)(b)","REQUIRES_REVIEW"
+"net_quantity","OBSERVED","{""status"": ""OBSERVED"", ""quantity_value"": 1000.0, ""unit"": ""ml"", ""unit_raw"": null, ""raw_text"": null}",1,"EV-E8B27BFC","Rule 6(1)(c)","PASS"
+"manufacture_packing_date","OBSERVED","{""status"": ""OBSERVED"", ""date_type"": ""MANUFACTURE"", ""month"": 7, ""year"": 2026, ""raw_date_string"": ""07/2026"", ""raw_text"": null}",1,"EV-C5739344","Rule 6(1)(d)","PASS"
+"mrp","OBSERVED","{""status"": ""OBSERVED"", ""currency"": ""INR"", ""amount"": 140.0, ""includes_all_taxes_stated"": true, ""raw_text"": ""MRP Rs. 140.00 (Incl. of all taxes)""}",1,"EV-C5739344","Rule 6(1)(e)","PASS"
+"consumer_care","OBSERVED","{""status"": ""OBSERVED"", ""contact_name"": ""ITC Consumer Care"", ""phone"": ""1800 425 4444"", ""email"": ""itccares@itc.in"", ""address"": ""P.O. Box 592, Bengaluru 560005"", ""website"": null, ""qr_status"": null, ""raw_text"": null}",1,"EV-541DA7F6","Rule 6(1)(f)","PASS"
+"country_of_origin","OBSERVED","{""status"": ""OBSERVED"", ""country_name"": ""India"", ""raw_text"": null}",4,"EV-541DA7F6;EV-E8B27BFC;EV-8689307D;EV-C5739344","Rule 6(1)(da)","NOT_APPLICABLE"

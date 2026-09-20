@@ -20,11 +20,22 @@ settings.SUPABASE_JWT_SECRET = "compliscan_test_secret_key_for_offline_validatio
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.pool import NullPool
 from backend.app.db import session as db_session
 
-# Ensure session engines use test SQLite database
-test_sync_engine = create_engine(settings.SYNC_DATABASE_URL, echo=False, future=True)
-test_async_engine = create_async_engine(settings.DATABASE_URL, echo=False, future=True)
+# Ensure session engines use test SQLite database with timeout to avoid lock contention
+test_sync_engine = create_engine(
+    settings.SYNC_DATABASE_URL,
+    echo=False,
+    future=True,
+    connect_args={"timeout": 30},
+)
+test_async_engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,
+    future=True,
+    connect_args={"timeout": 30},
+)
 
 db_session.sync_engine = test_sync_engine
 db_session.async_engine = test_async_engine
@@ -47,13 +58,21 @@ from shared.domain.constants import ErrorCode
 from backend.app.db.base import Base
 import backend.app.models  # ensure all models registered on Base.metadata
 
+
 @pytest.fixture(autouse=True)
 def setup_test_database():
-    """Create clean isolated schema for every test synchronously."""
-    Base.metadata.drop_all(bind=test_sync_engine)
+    """Create isolated schema and clean tables between tests."""
     Base.metadata.create_all(bind=test_sync_engine)
     yield
-    Base.metadata.drop_all(bind=test_sync_engine)
+    try:
+        with test_sync_engine.begin() as conn:
+            for table in reversed(Base.metadata.sorted_tables):
+                conn.execute(table.delete())
+    except Exception:
+        pass
+
+
+
 
 
 def create_test_supabase_token(user_id: str, email: str = "test@example.com") -> str:

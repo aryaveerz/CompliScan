@@ -65,19 +65,11 @@ class ApiClient {
   }
 
   // Auth
-  async login(emailOrFormData: string | FormData, password?: string): Promise<AuthResponse> {
-    let body: FormData;
-    if (typeof emailOrFormData === 'string') {
-      body = new FormData();
-      body.append('username', emailOrFormData);
-      body.append('password', password || '');
-    } else {
-      body = emailOrFormData;
-    }
-
+  async login(email: string, password: string): Promise<AuthResponse> {
     const response = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
-      body,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
     });
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Login failed' }));
@@ -185,7 +177,8 @@ class ApiClient {
   }
 
   getEvidenceDownloadUrl(evidenceId: string): string {
-    return `${API_BASE}/evidence/${evidenceId}/download`;
+    const token = this.getToken();
+    return `${API_BASE}/evidence/${evidenceId}/download${token ? `?token=${encodeURIComponent(token)}` : ''}`;
   }
 
   // Phase 4 — Verification, Reviewer Governance & Finalization

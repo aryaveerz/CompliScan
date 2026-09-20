@@ -1,0 +1,40 @@
+{
+  "inspection_id": "INS-UNI-D84AE3",
+  "validation_engine_version": "v1.0",
+  "evaluated_at": "2026-09-20T11:19:40.421961+00:00",
+  "inspection_date_used": "2026-09-20",
+  "date_observations": [
+    {
+      "field_name": "best_before_duration",
+      "raw_text": "BEST BEFORE 18 MONTHS",
+      "normalized_date": null,
+      "date_type": "BEST_BEFORE_DURATION",
+      "observation_status": "OBSERVED",
+      "evidence_id": "EV-UNI-8F245923",
+      "ocr_result_id": null,
+      "ocr_token_ids": [],
+      "confidence": null,
+      "extraction_method": "DETERMINISTIC_REGEX_PARSER",
+      "extraction_version": "v1.0",
+      "derivation_method": null,
+      "source_observations": []
+    }
+  ],
+  "derived_dates": [],
+  "conflicts": [],
+  "temporal_validations": [],
+  "scope_integrity": {
+    "inspection_id": "INS-UNI-D84AE3",
+    "is_isolated": true,
+    "violating_evidence_ids": [],
+    "violating_token_maps": {},
+    "notes": [
+      "Scope isolation verified. Zero cross-inspection contamination detected."
+    ]
+  },
+  "overall_validation_status": "VALID",
+  "statutory_finding_recommendation": null,
+  "notes": [
+    "All observed date declarations and scope validations passed deterministically."
+  ]
+}

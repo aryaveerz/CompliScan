@@ -1,0 +1,10 @@
+{
+  "commodity_name": {
+    "status": "OBSERVED",
+    "name": "Natural",
+    "raw_text": "Natural",
+    "source_token_ids": [
+      1
+    ]
+  }
+}

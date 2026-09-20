@@ -1,0 +1,20 @@
+{
+  "net_quantity": {
+    "status": "OBSERVED",
+    "quantity_value": 1.0,
+    "unit": "kg",
+    "unit_raw": "1kg",
+    "raw_text": "1kg",
+    "source_token_ids": [
+      10
+    ]
+  },
+  "commodity_name": {
+    "status": "OBSERVED",
+    "name": "CRUNCH",
+    "raw_text": "BUTTER\nCRUNCH",
+    "source_token_ids": [
+      6
+    ]
+  }
+}

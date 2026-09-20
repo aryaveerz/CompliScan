@@ -1,0 +1,89 @@
+[
+  {
+    "id": "FND-C8B96BF928C0",
+    "requirement_name": "manufacturer_identity",
+    "rule_citation": "Rule 6(1)(a)",
+    "result": "PASS",
+    "reason": "Responsible entity identity ('ITC Limited') and complete address ('Virginia House, 37 J.L. Nehru Road, Kolkata 700071') observed under Rule 6(1)(a).",
+    "applicability_status": "APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-541DA7F6"
+    ],
+    "corroborating_count": 1
+  },
+  {
+    "id": "FND-962F61A1DFE6",
+    "requirement_name": "commodity_name",
+    "rule_citation": "Rule 6(1)(b)",
+    "result": "REQUIRES_REVIEW",
+    "reason": "Conflicting declarations observed on package for Common or Generic Commodity Name under Rule 6(1)(b). Officer review required.",
+    "applicability_status": "APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-541DA7F6"
+    ],
+    "corroborating_count": 1
+  },
+  {
+    "id": "FND-B46CCD43BC0C",
+    "requirement_name": "net_quantity",
+    "rule_citation": "Rule 6(1)(c)",
+    "result": "PASS",
+    "reason": "Net quantity (1000.0 ml) declared with standard legal metrology unit under Rule 6(1)(c).",
+    "applicability_status": "APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-E8B27BFC"
+    ],
+    "corroborating_count": 1
+  },
+  {
+    "id": "FND-4EF0556B2206",
+    "requirement_name": "manufacture_packing_date",
+    "rule_citation": "Rule 6(1)(d)",
+    "result": "PASS",
+    "reason": "Month and year of manufacture/packing (07/2026) declared under Rule 6(1)(d).",
+    "applicability_status": "APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-C5739344"
+    ],
+    "corroborating_count": 1
+  },
+  {
+    "id": "FND-500B6BBFE8CB",
+    "requirement_name": "mrp",
+    "rule_citation": "Rule 6(1)(e)",
+    "result": "PASS",
+    "reason": "MRP of \u20b9140 declared with mandatory 'inclusive of all taxes' statement under Rule 6(1)(e).",
+    "applicability_status": "APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-C5739344"
+    ],
+    "corroborating_count": 1
+  },
+  {
+    "id": "FND-79251534ED52",
+    "requirement_name": "consumer_care",
+    "rule_citation": "Rule 6(1)(f)",
+    "result": "PASS",
+    "reason": "Consumer care grievance redressal details observed with contact channels under Rule 6(1)(f).",
+    "applicability_status": "APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-541DA7F6"
+    ],
+    "corroborating_count": 1
+  },
+  {
+    "id": "FND-DF4A4006B28C",
+    "requirement_name": "country_of_origin",
+    "rule_citation": "Rule 6(1)(da)",
+    "result": "NOT_APPLICABLE",
+    "reason": "Statutory requirement is NOT APPLICABLE under Rule 6(1)(da): Domestically manufactured/packed commodity is exempt from mandatory Country of Origin declaration under Rule 6(1)(da).",
+    "applicability_status": "NOT_APPLICABLE",
+    "supporting_evidence_ids": [
+      "EV-541DA7F6",
+      "EV-E8B27BFC",
+      "EV-8689307D",
+      "EV-C5739344"
+    ],
+    "corroborating_count": 4
+  }
+]

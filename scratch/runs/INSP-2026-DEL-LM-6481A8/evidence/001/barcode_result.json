@@ -1,0 +1,16 @@
+{
+  "evidence_id": "EV-UNI-6273D497",
+  "has_barcode": true,
+  "total_barcodes": 1,
+  "barcodes": [
+    {
+      "symbology": "EAN-13",
+      "decoded_value": "8901725100117",
+      "bounding_box_points": [],
+      "confidence": 1.0
+    }
+  ],
+  "detection_engine": "OpenCV BarcodeDetector",
+  "detection_engine_version": "5.0.0",
+  "detected_at": "2026-09-20T11:11:07.656830+00:00"
+}

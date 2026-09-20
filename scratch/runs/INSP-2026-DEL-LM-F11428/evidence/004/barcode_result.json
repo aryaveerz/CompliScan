@@ -1,0 +1,9 @@
+{
+  "evidence_id": "EV-UNI-60F91682",
+  "has_barcode": false,
+  "total_barcodes": 0,
+  "barcodes": [],
+  "detection_engine": "OpenCV BarcodeDetector",
+  "detection_engine_version": "5.0.0",
+  "detected_at": "2026-09-20T11:14:15.356338+00:00"
+}

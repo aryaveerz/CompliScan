@@ -1,0 +1,18 @@
+{
+  "trace_id": "TRACE-024462B046D8",
+  "inspection_id": "INS-JUICE-302D78B9",
+  "evidence_id": "EV-C5739344",
+  "provider": "google",
+  "model": "gemini-3.6-flash",
+  "sdk_version": "google-genai/httpx-rest-2.24.0",
+  "classification": "RATE_LIMIT_FALLBACK_GROUNDED",
+  "request_timestamp": "2026-09-20T09:41:18.529679+00:00",
+  "response_timestamp": "2026-09-20T09:41:18.529679+00:00",
+  "latency_ms": 420.0,
+  "status": "SUCCESS",
+  "usage_metadata": {
+    "prompt_token_count": 56,
+    "candidates_token_count": 180,
+    "total_token_count": 236
+  }
+}

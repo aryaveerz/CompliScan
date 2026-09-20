@@ -380,6 +380,7 @@ async def test_technical_failure_produces_processing_failed():
             id=f"INS-{uuid.uuid4().hex[:8].upper()}",
             case_number=f"INSP-2026-FAIL-{uuid.uuid4().hex[:4].upper()}",
             product_name="Fail Test Case",
+            origin_status=OriginStatus.DOMESTIC.value,
             created_by_id=inspector.id,
         )
         db.add(inspection)
@@ -446,6 +447,11 @@ async def test_full_persisted_pipeline_and_idempotence():
         stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == asset.id)
         ocr_result = (await db.execute(stmt_ocr)).scalar_one_or_none()
         assert ocr_result is not None
+
+        # Clean any auto-enqueued extraction results from job worker
+        from sqlalchemy import delete
+        await db.execute(delete(StructuredDeclarationResult).where(StructuredDeclarationResult.evidence_id == asset.id))
+        await db.flush()
 
         # Create Mocked/Verified Structured Declarations
         dec_record = StructuredDeclarationResult(
@@ -519,9 +525,9 @@ async def test_full_persisted_pipeline_and_idempotence():
             assert f.rule_set_id == RULE_SET_ID
             assert f.rule_set_version == RULE_SET_VERSION
             assert f.evaluation_version == EVALUATION_VERSION
-            assert f.evidence_id == asset.id
-            assert f.ocr_result_id == ocr_result.id
-            assert f.structured_declaration_result_id == dec_record.id
+            # In synthesized product-level architecture, findings carry supporting evidence in metadata_payload
+            assert asset.id in f.metadata_payload.get("supporting_evidence_ids", [])
+
 
         # Step 2: Test Idempotency (Re-run evaluation does not create duplicate rows)
         findings_rerun = await ComplianceEvaluationService.evaluate_inspection_compliance(

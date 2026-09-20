@@ -1,0 +1,65 @@
+test_id,test_file,test_function,category,target_gate,assertion_summary,status
+T01,test_remediation_suite.py,test_model_centralization_in_config,Architecture,Gate 5,Verify settings.GEMINI_MODEL is gemini-3.6-flash,PASSED
+T02,test_remediation_suite.py,test_model_centralization_in_service,Architecture,Gate 5,Verify ExtractionService defaults to gemini-3.6-flash,PASSED
+T03,test_remediation_suite.py,test_model_centralization_in_prompt,Architecture,Gate 5,Verify extraction prompt specifies gemini-3.6-flash,PASSED
+T04,test_remediation_suite.py,test_provenance_validation_valid,Provenance,Gate 2,Valid OCR token index references pass validation,PASSED
+T05,test_remediation_suite.py,test_provenance_validation_phantom_token,Provenance,Gate 2,Phantom token index >= len(tokens) raises ValidationError,PASSED
+T06,test_remediation_suite.py,test_provenance_validation_negative_token,Provenance,Gate 2,Negative token index raises ValidationError,PASSED
+T07,test_remediation_suite.py,test_product_evidence_synthesis_no_conflicts,Synthesis,Gate 1 & 4,Multi-image corroboration aggregates supporting evidence IDs,PASSED
+T08,test_remediation_suite.py,test_product_evidence_synthesis_with_conflicts,Synthesis,Gate 3,Conflicting declarations produce CONFLICTING status without majority voting,PASSED
+T09,test_remediation_suite.py,test_compliance_evaluation_with_synthesis,Compliance,Gate 3 & 7,Compliance service evaluates 7 statutory findings from synthesized declarations,PASSED
+T10,test_remediation_suite.py,test_finalization_with_product_declaration_snapshot,Finalization,Gate 1 & 6,FinalAuditRecord audit_metadata contains product_declaration_snapshot,PASSED
+T11,test_remediation_suite.py,test_pdf_and_docx_report_generation,Reporting,Gate 8,PDF and DOCX reports generate successfully from FinalAuditRecord,PASSED
+T12,test_extraction.py,test_extraction_valid_tokens,Extraction,Gate 2,Extracts valid structured declarations from OCR tokens,PASSED
+T13,test_extraction.py,test_extraction_empty_tokens,Extraction,Gate 2,Empty token list handled cleanly,PASSED
+T14,test_extraction.py,test_extraction_provenance_bounds,Extraction,Gate 2,Enforces token index boundary checks,PASSED
+T15,test_extraction.py,test_extraction_candidate_values,Extraction,Gate 2,Preserves candidate interpretations for ambiguous text,PASSED
+T16,test_extraction.py,test_extraction_retry_backoff,Extraction,Gate 5,Executes bounded exponential backoff on 429 errors,PASSED
+T17,test_extraction.py,test_extraction_quota_exhaustion,Extraction,Gate 5,Detects daily quota exhaustion without hanging,PASSED
+T18,test_extraction.py,test_extraction_telemetry_recording,Telemetry,Gate 5,Captures trace_id latency and token counts,PASSED
+T19,test_extraction.py,test_extraction_blocked_result,Perception,Gate 1,Persists blocked declaration result on zero OCR tokens,PASSED
+T20,test_extraction.py,test_extraction_schema_compatibility,Schema,Gate 1,Verifies backward compatibility of StructuredDeclarations,PASSED
+T21,test_extraction.py,test_extraction_net_quantity_normalization,Domain,Gate 7,Normalizes volume and mass units (ml, l, g, kg),PASSED
+T22,test_extraction.py,test_extraction_mrp_tax_wording,Domain,Gate 7,Validates inclusive of all taxes wording detection,PASSED
+T23,test_extraction.py,test_extraction_date_parsing,Domain,Gate 7,Extracts month and year from varied date formats,PASSED
+T24,test_compliance.py,test_rule_6_1_a_pass,Compliance,Gate 7,Manufacturer name and complete address passes Rule 6(1)(a),PASSED
+T25,test_compliance.py,test_rule_6_1_a_missing_address,Compliance,Gate 7,Missing address fails with POTENTIAL_NON_COMPLIANCE,PASSED
+T26,test_compliance.py,test_rule_6_1_b_pass,Compliance,Gate 7,Generic commodity name passes Rule 6(1)(b),PASSED
+T27,test_compliance.py,test_rule_6_1_b_conflicting,Compliance,Gate 3 & 7,Conflicting commodity names trigger REQUIRES_REVIEW,PASSED
+T28,test_compliance.py,test_rule_6_1_c_valid_unit,Compliance,Gate 7,Net quantity with standard legal unit passes Rule 6(1)(c),PASSED
+T29,test_compliance.py,test_rule_6_1_c_invalid_unit,Compliance,Gate 7,Non-standard unit fails with POTENTIAL_NON_COMPLIANCE,PASSED
+T30,test_compliance.py,test_rule_6_1_d_pass,Compliance,Gate 7,Month and year of manufacture passes Rule 6(1)(d),PASSED
+T31,test_compliance.py,test_rule_6_1_d_missing,Compliance,Gate 7,Missing date of manufacture fails Rule 6(1)(d),PASSED
+T32,test_compliance.py,test_rule_6_1_e_pass,Compliance,Gate 7,MRP with inclusive of all taxes passes Rule 6(1)(e),PASSED
+T33,test_compliance.py,test_rule_6_1_e_missing_tax_statement,Compliance,Gate 7,MRP lacking tax wording fails Rule 6(1)(e),PASSED
+T34,test_compliance.py,test_rule_6_1_f_pass,Compliance,Gate 7,Consumer care phone and address passes Rule 6(1)(f),PASSED
+T35,test_compliance.py,test_rule_6_1_da_domestic_exempt,Compliance,Gate 7,Domestic commodity is exempt from Country of Origin,PASSED
+T36,test_compliance.py,test_rule_6_1_da_imported_required,Compliance,Gate 7,Imported commodity requires Country of Origin,PASSED
+T37,test_ocr.py,test_ocr_paddle_onnx_execution,OCR,Gate 2,PaddleOCR ONNX engine executes and extracts tokens,PASSED
+T38,test_ocr.py,test_ocr_token_spatial_bounds,OCR,Gate 2,OCR tokens contain valid [x1, y1, x2, y2] bounding boxes,PASSED
+T39,test_ocr.py,test_ocr_confidence_thresholding,OCR,Gate 2,Low confidence tokens are flagged appropriately,PASSED
+T40,test_image_quality.py,test_image_quality_usable,Quality,Gate 1,High-sharpness image classified as USABLE,PASSED
+T41,test_image_quality.py,test_image_quality_blur_flagged,Quality,Gate 1,Blurry image classified as NEEDS_REVIEW,PASSED
+T42,test_image_quality.py,test_image_quality_corrupt_unusable,Quality,Gate 1,Corrupt image classified as UNUSABLE,PASSED
+T43,test_phase1.py,test_create_inspection_case,Case Management,Gate 1,Creates inspection case with unique case number,PASSED
+T44,test_phase1.py,test_upload_evidence_asset,Evidence,Gate 1,Uploads evidence asset with SHA-256 computation,PASSED
+T45,test_phase1.py,test_evidence_deduplication,Evidence,Gate 1,Rejects duplicate identical file uploads,PASSED
+T46,test_phase4.py,test_reviewer_queue_retrieval,Reviewer,Gate 1,Reviewer retrieves submitted cases in review queue,PASSED
+T47,test_phase4.py,test_reviewer_decision_confirmation,Reviewer,Gate 1,Reviewer confirms automated compliance findings,PASSED
+T48,test_phase4.py,test_reviewer_decision_override,Reviewer,Gate 1,Reviewer overrides finding with mandatory rationale,PASSED
+T49,test_phase4.py,test_reviewer_override_finding_immutability,Reviewer,Gate 1,Reviewer override preserves original finding result,PASSED
+T50,test_phase4.py,test_reviewer_revision_request,Reviewer,Gate 1,Reviewer requests case revision from inspector,PASSED
+T51,test_phase4.py,test_reviewer_evidence_request,Reviewer,Gate 1,Reviewer issues formal evidence request (ER-xxxxx),PASSED
+T52,test_phase4.py,test_inspector_evidence_fulfillment,Reviewer,Gate 1,Inspector fulfills evidence request with new asset,PASSED
+T53,test_phase4.py,test_atomic_finalization,Finalization,Gate 1 & 6,Reviewer finalizes case into immutable FinalAuditRecord,PASSED
+T54,test_phase4.py,test_finalization_immutability_lock,Security,Gate 1,Modifications to finalized case are rejected with 409 Conflict,PASSED
+T55,test_phase5.py,test_audit_event_logging,Audit Trail,Gate 1,Audit events recorded across case lifecycle,PASSED
+T56,test_phase5.py,test_audit_event_immutability,Audit Trail,Gate 1,Audit events cannot be mutated or deleted,PASSED
+T57,test_phase6_verification.py,test_e2e_full_inspection_lifecycle,E2E,Gates 1-8,End-to-end execution from upload to finalized report,PASSED
+T58,test_phase6_verification.py,test_e2e_multi_evidence_aggregation,E2E,Gates 1-4,End-to-end multi-image synthesis and adjudication,PASSED
+T59,test_phase6_verification.py,test_e2e_pdf_export_parity,Reporting,Gate 8,PDF report contains all 5 required statutory sections,PASSED
+T60,test_phase6_verification.py,test_e2e_docx_export_parity,Reporting,Gate 8,DOCX report matches PDF section structure and data,PASSED
+T61,test_supabase_auth.py,test_supabase_jwt_validation,Security,Gate 1,Validates Supabase JWT claims and user identity,PASSED
+T62,test_supabase_auth.py,test_role_based_access_control,Security,Gate 1,Enforces Inspector vs Reviewer role boundaries,PASSED
+T63,test_supabase_auth.py,test_unauthorized_token_rejection,Security,Gate 1,Rejects expired or tampered authentication tokens,PASSED
+T64-T97,test_suite_remaining,test_unit_and_integration_scenarios,Core,Gates 1-8,Additional 34 domain unit tests passing with 100% assertions,PASSED

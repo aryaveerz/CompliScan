@@ -3,8 +3,8 @@ CompliScan LM — FastAPI Dependencies.
 Provides database sessions, authenticated current user, and RBAC role guards.
 """
 
-from typing import Callable
-from fastapi import Depends
+from typing import Callable, Optional
+from fastapi import Depends, Query
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.db.session import get_db
@@ -19,14 +19,16 @@ security_scheme = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security_scheme),
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
+    token: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_db),
 ) -> User:
-    """Extract and validate JWT token; return active User entity."""
-    if not credentials or not credentials.credentials:
-        raise UnauthorizedError("Missing or invalid Authorization header")
+    """Extract and validate JWT token from Bearer header or token query param; return active User entity."""
+    raw_token = credentials.credentials if credentials and credentials.credentials else token
+    if not raw_token:
+        raise UnauthorizedError("Missing or invalid Authorization header or token parameter")
 
-    payload = decode_token(credentials.credentials)
+    payload = decode_token(raw_token)
     user_id = payload.get("sub")
     if not user_id:
         raise UnauthorizedError("Invalid token payload")

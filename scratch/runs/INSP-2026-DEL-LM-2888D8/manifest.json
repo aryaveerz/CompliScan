@@ -1,0 +1,12 @@
+{
+  "case_number": "INSP-2026-DEL-LM-2888D8",
+  "inspection_id": "INS-UNI-2888D8",
+  "far_id": "FAR-UNI-72D97C807D",
+  "dataset_input_dir": "G:\\CompliScan\\Test_Images\\Juice",
+  "run_output_dir": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-2888D8",
+  "total_evidence_assets": 4,
+  "pdf_report": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-2888D8\\CompliScan_Inspection_Report_INSP-2026-DEL-LM-2888D8.pdf",
+  "docx_report": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-2888D8\\CompliScan_Inspection_Report_INSP-2026-DEL-LM-2888D8.docx",
+  "execution_timestamp": "2026-09-20T11:37:24.282090+00:00",
+  "record_integrity_hash": "c6de53914f6d0fa515eb002c61e566d844131f302289263693795101defc90e5"
+}

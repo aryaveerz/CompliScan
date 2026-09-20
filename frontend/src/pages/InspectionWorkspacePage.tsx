@@ -10,6 +10,7 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
+  RotateCw,
   Trash2,
   ExternalLink,
   Shield,
@@ -74,92 +75,165 @@ import { CameraCapture } from '../components/CameraCapture';
 
 // Initial statutory declarations under Legal Metrology (Packaged Commodities) Rules, 2011
 // Separates the Six Core Universal MVP Checks (Rule 6(1)(a)-(f)) from the Conditional Check (Rule 6(1)(da))
-const buildUniversalDeclarations = (primaryEvidenceId?: string): ExtractedDeclarationItem[] => [
-  {
-    id: 'dec-1',
-    rule_citation: 'Rule 6(1)(a)',
-    declaration_name: 'Name & Address of Manufacturer / Packer / Importer',
-    extracted_value: 'Apex Consumer Goods Ltd., Plot 42, Industrial Area Phase II, Bengaluru 560058',
-    result: 'PASS',
-    applicability: 'Universal — Mandatory for all pre-packaged commodities',
-    is_applicable: true,
-    evidence_id: primaryEvidenceId,
-    bounding_box: { x: 14, y: 18, width: 72, height: 11 },
-    verified_value: 'Apex Consumer Goods Ltd., Plot 42, Industrial Area Phase II, Bengaluru 560058',
-    inspector_notes: 'Full manufacturer postal address verified against factory registration.',
-    reviewer_override: false,
-  },
-  {
-    id: 'dec-2',
-    rule_citation: 'Rule 6(1)(b)',
-    declaration_name: 'Generic or Common Name of Commodity',
-    extracted_value: 'Refined Sunflower Cooking Oil',
-    result: 'PASS',
-    applicability: 'Universal — Mandatory for all pre-packaged commodities',
-    is_applicable: true,
-    evidence_id: primaryEvidenceId,
-    bounding_box: { x: 20, y: 32, width: 60, height: 8 },
-    verified_value: 'Refined Sunflower Cooking Oil',
-    inspector_notes: 'Standard generic nomenclature used on principal display panel.',
-    reviewer_override: false,
-  },
-  {
-    id: 'dec-3',
-    rule_citation: 'Rule 6(1)(c)',
-    declaration_name: 'Net Quantity in Standard Units of Weight / Measure',
-    extracted_value: '1 L (910 g at 30°C)',
-    result: 'PASS',
-    applicability: 'Universal — Mandatory for all pre-packaged commodities (Rule 11/12 compliant units)',
-    is_applicable: true,
-    evidence_id: primaryEvidenceId,
-    bounding_box: { x: 24, y: 44, width: 52, height: 7 },
-    verified_value: '1 L',
-    inspector_notes: 'Unit symbol complies with Second Schedule; font height exceeds minimum 4mm.',
-    reviewer_override: false,
-  },
-  {
-    id: 'dec-4',
-    rule_citation: 'Rule 6(1)(d)',
-    declaration_name: 'Month & Year of Manufacture / Pre-packing / Import',
-    extracted_value: 'PKD 08/2026',
-    result: 'PASS',
-    applicability: 'Universal — Mandatory for all pre-packaged commodities',
-    is_applicable: true,
-    evidence_id: primaryEvidenceId,
-    bounding_box: { x: 28, y: 54, width: 44, height: 6 },
-    verified_value: '08/2026',
-    inspector_notes: 'Legible month and year format.',
-    reviewer_override: false,
-  },
-  {
-    id: 'dec-5',
-    rule_citation: 'Rule 6(1)(e)',
-    declaration_name: 'Maximum Retail Price (MRP inclusive of all taxes)',
-    extracted_value: 'MRP Rs 185.00 (Incl. of all taxes)',
-    result: 'POTENTIAL_NON_COMPLIANCE', // Automated warning: Rarity of Red Rule - warm ochre/amber, never red
-    applicability: 'Universal — Mandatory for all retail pre-packaged commodities',
-    is_applicable: true,
-    evidence_id: primaryEvidenceId,
-    bounding_box: { x: 22, y: 63, width: 56, height: 8 },
-    verified_value: 'MRP Rs 185.00 (Incl. of all taxes)',
-    inspector_notes: 'Currency symbol formatting requires inspection for mandatory Indian Rupee symbol adherence.',
-    reviewer_override: false,
-  },
-  {
-    id: 'dec-6',
-    rule_citation: 'Rule 6(1)(f)',
-    declaration_name: 'Consumer Care Contact Details (Name, Tel, Email)',
-    extracted_value: 'Consumer Support: apexcare@apexconsumer.in | Toll-Free: 1800-425-0199',
-    result: 'PASS',
-    applicability: 'Universal — Mandatory for all pre-packaged commodities',
-    is_applicable: true,
-    evidence_id: primaryEvidenceId,
-    bounding_box: { x: 16, y: 74, width: 68, height: 9 },
-    verified_value: 'apexcare@apexconsumer.in | 1800-425-0199',
-    inspector_notes: 'Designated helpline and electronic mail address functional.',
-    reviewer_override: false,
-  },
-];
+const buildUniversalDeclarations = (primaryEvidenceId?: string): ExtractedDeclarationItem[] => {
+  if (!primaryEvidenceId) {
+    return [
+      {
+        id: 'dec-1',
+        rule_citation: 'Rule 6(1)(a)',
+        declaration_name: 'Name & Address of Manufacturer / Packer / Importer',
+        extracted_value: 'Awaiting packaging evidence upload…',
+        result: 'INCOMPLETE',
+        applicability: 'Universal — Mandatory for all pre-packaged commodities',
+        is_applicable: true,
+        inspector_notes: 'Upload packaging image to perform statutory extraction.',
+        reviewer_override: false,
+      },
+      {
+        id: 'dec-2',
+        rule_citation: 'Rule 6(1)(b)',
+        declaration_name: 'Generic or Common Name of Commodity',
+        extracted_value: 'Awaiting packaging evidence upload…',
+        result: 'INCOMPLETE',
+        applicability: 'Universal — Mandatory for all pre-packaged commodities',
+        is_applicable: true,
+        inspector_notes: 'Upload packaging image to perform statutory extraction.',
+        reviewer_override: false,
+      },
+      {
+        id: 'dec-3',
+        rule_citation: 'Rule 6(1)(c)',
+        declaration_name: 'Net Quantity in Standard Units of Weight / Measure',
+        extracted_value: 'Awaiting packaging evidence upload…',
+        result: 'INCOMPLETE',
+        applicability: 'Universal — Mandatory for all pre-packaged commodities (Rule 11/12 compliant units)',
+        is_applicable: true,
+        inspector_notes: 'Upload packaging image to perform statutory extraction.',
+        reviewer_override: false,
+      },
+      {
+        id: 'dec-4',
+        rule_citation: 'Rule 6(1)(d)',
+        declaration_name: 'Month & Year of Manufacture / Pre-packing / Import',
+        extracted_value: 'Awaiting packaging evidence upload…',
+        result: 'INCOMPLETE',
+        applicability: 'Universal — Mandatory for all pre-packaged commodities',
+        is_applicable: true,
+        inspector_notes: 'Upload packaging image to perform statutory extraction.',
+        reviewer_override: false,
+      },
+      {
+        id: 'dec-5',
+        rule_citation: 'Rule 6(1)(e)',
+        declaration_name: 'Maximum Retail Price (MRP inclusive of all taxes)',
+        extracted_value: 'Awaiting packaging evidence upload…',
+        result: 'INCOMPLETE',
+        applicability: 'Universal — Mandatory for all retail pre-packaged commodities',
+        is_applicable: true,
+        inspector_notes: 'Upload packaging image to perform statutory extraction.',
+        reviewer_override: false,
+      },
+      {
+        id: 'dec-6',
+        rule_citation: 'Rule 6(1)(f)',
+        declaration_name: 'Consumer Care Contact Details (Name, Tel, Email)',
+        extracted_value: 'Awaiting packaging evidence upload…',
+        result: 'INCOMPLETE',
+        applicability: 'Universal — Mandatory for all pre-packaged commodities',
+        is_applicable: true,
+        inspector_notes: 'Upload packaging image to perform statutory extraction.',
+        reviewer_override: false,
+      },
+    ];
+  }
+
+  return [
+    {
+      id: 'dec-1',
+      rule_citation: 'Rule 6(1)(a)',
+      declaration_name: 'Name & Address of Manufacturer / Packer / Importer',
+      extracted_value: 'Apex Consumer Goods Ltd., Plot 42, Industrial Area Phase II, Bengaluru 560058',
+      result: 'PASS',
+      applicability: 'Universal — Mandatory for all pre-packaged commodities',
+      is_applicable: true,
+      evidence_id: primaryEvidenceId,
+      bounding_box: { x: 14, y: 18, width: 72, height: 11 },
+      verified_value: 'Apex Consumer Goods Ltd., Plot 42, Industrial Area Phase II, Bengaluru 560058',
+      inspector_notes: 'Full manufacturer postal address verified against factory registration.',
+      reviewer_override: false,
+    },
+    {
+      id: 'dec-2',
+      rule_citation: 'Rule 6(1)(b)',
+      declaration_name: 'Generic or Common Name of Commodity',
+      extracted_value: 'Refined Sunflower Cooking Oil',
+      result: 'PASS',
+      applicability: 'Universal — Mandatory for all pre-packaged commodities',
+      is_applicable: true,
+      evidence_id: primaryEvidenceId,
+      bounding_box: { x: 20, y: 32, width: 60, height: 8 },
+      verified_value: 'Refined Sunflower Cooking Oil',
+      inspector_notes: 'Standard generic nomenclature used on principal display panel.',
+      reviewer_override: false,
+    },
+    {
+      id: 'dec-3',
+      rule_citation: 'Rule 6(1)(c)',
+      declaration_name: 'Net Quantity in Standard Units of Weight / Measure',
+      extracted_value: '1 L (910 g at 30°C)',
+      result: 'PASS',
+      applicability: 'Universal — Mandatory for all pre-packaged commodities (Rule 11/12 compliant units)',
+      is_applicable: true,
+      evidence_id: primaryEvidenceId,
+      bounding_box: { x: 24, y: 44, width: 52, height: 7 },
+      verified_value: '1 L',
+      inspector_notes: 'Unit symbol complies with Second Schedule; font height exceeds minimum 4mm.',
+      reviewer_override: false,
+    },
+    {
+      id: 'dec-4',
+      rule_citation: 'Rule 6(1)(d)',
+      declaration_name: 'Month & Year of Manufacture / Pre-packing / Import',
+      extracted_value: 'PKD 08/2026',
+      result: 'PASS',
+      applicability: 'Universal — Mandatory for all pre-packaged commodities',
+      is_applicable: true,
+      evidence_id: primaryEvidenceId,
+      bounding_box: { x: 28, y: 54, width: 44, height: 6 },
+      verified_value: '08/2026',
+      inspector_notes: 'Legible month and year format.',
+      reviewer_override: false,
+    },
+    {
+      id: 'dec-5',
+      rule_citation: 'Rule 6(1)(e)',
+      declaration_name: 'Maximum Retail Price (MRP inclusive of all taxes)',
+      extracted_value: 'MRP Rs 185.00 (Incl. of all taxes)',
+      result: 'POTENTIAL_NON_COMPLIANCE',
+      applicability: 'Universal — Mandatory for all retail pre-packaged commodities',
+      is_applicable: true,
+      evidence_id: primaryEvidenceId,
+      bounding_box: { x: 22, y: 63, width: 56, height: 8 },
+      verified_value: 'MRP Rs 185.00 (Incl. of all taxes)',
+      inspector_notes: 'Currency symbol formatting requires inspection for mandatory Indian Rupee symbol adherence.',
+      reviewer_override: false,
+    },
+    {
+      id: 'dec-6',
+      rule_citation: 'Rule 6(1)(f)',
+      declaration_name: 'Consumer Care Contact Details (Name, Tel, Email)',
+      extracted_value: 'Consumer Support: apexcare@apexconsumer.in | Toll-Free: 1800-425-0199',
+      result: 'PASS',
+      applicability: 'Universal — Mandatory for all pre-packaged commodities',
+      is_applicable: true,
+      evidence_id: primaryEvidenceId,
+      bounding_box: { x: 16, y: 74, width: 68, height: 9 },
+      verified_value: 'apexcare@apexconsumer.in | 1800-425-0199',
+      inspector_notes: 'Designated helpline and electronic mail address functional.',
+      reviewer_override: false,
+    },
+  ];
+};
 
 // Country of Origin under Rule 6(1)(da) (inserted via G.S.R. 629(E) in 2017)
 // Strictly applicability-driven: applies ONLY to imported commodities.
@@ -354,8 +428,9 @@ export const InspectionWorkspacePage: React.FC = () => {
   const [showRevisionModal, setShowRevisionModal] = useState(false);
   const [showFinalizeModal, setShowFinalizeModal] = useState(false);
 
-  // Canvas zoom & pan state
+  // Canvas zoom, pan & rotation state
   const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [rotationDegree, setRotationDegree] = useState<number>(0);
   const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -595,12 +670,13 @@ export const InspectionWorkspacePage: React.FC = () => {
       fetchPhase4Data(data.id);
 
       // Set initial active asset
-      if (data.evidence_assets.length > 0) {
-        setActiveAssetId(data.evidence_assets[0].id);
+      const assets = data.evidence_assets || [];
+      if (assets.length > 0) {
+        setActiveAssetId(assets[0].id);
       }
 
       // Initialize the Six Core Universal Declarations
-      const primaryAsset = data.evidence_assets[0];
+      const primaryAsset = assets[0];
       setUniversalDeclarations(buildUniversalDeclarations(primaryAsset?.id));
 
       // Initialize the Applicability-Driven Conditional Rule 6(1)(da) Country of Origin
@@ -623,7 +699,7 @@ export const InspectionWorkspacePage: React.FC = () => {
         },
       ];
 
-      data.evidence_assets.forEach((asset, idx) => {
+      assets.forEach((asset, idx) => {
         initialAuditLogs.push({
           id: `AUD-EV-${asset.id.slice(-6)}-${idx}`,
           inspection_id: data.id,
@@ -729,7 +805,8 @@ export const InspectionWorkspacePage: React.FC = () => {
   // Active asset object
   const activeAsset = useMemo(() => {
     if (!inspection || !activeAssetId) return null;
-    return inspection.evidence_assets.find((a) => a.id === activeAssetId) || inspection.evidence_assets[0] || null;
+    const assets = inspection.evidence_assets || [];
+    return assets.find((a) => a.id === activeAssetId) || assets[0] || null;
   }, [inspection, activeAssetId]);
 
   // Fetch or sync Image Quality Assessment, OCR Result, and Declarations when active asset changes
@@ -846,6 +923,8 @@ export const InspectionWorkspacePage: React.FC = () => {
           };
         });
         setActiveAssetId(newAsset.id);
+        setUniversalDeclarations(buildUniversalDeclarations(newAsset.id));
+        setCooDeclaration(buildConditionalCOO(inspection.origin_status, newAsset.id));
 
         // Record audit event
         const newAuditItem: AuditEventItem = {
@@ -1033,11 +1112,13 @@ export const InspectionWorkspacePage: React.FC = () => {
     setExpandedDeclarationId((prev) => (prev === decId ? null : decId));
   };
 
-  // Pan and zoom canvas handlers
+  // Pan, zoom & rotation canvas handlers
   const handleZoomIn = () => setZoomLevel((z) => Math.min(z + 0.25, 4));
   const handleZoomOut = () => setZoomLevel((z) => Math.max(z - 0.25, 0.5));
+  const handleRotateCw = () => setRotationDegree((r) => (r + 90) % 360);
   const handleResetZoom = () => {
     setZoomLevel(1);
+    setRotationDegree(0);
     setPanOffset({ x: 0, y: 0 });
   };
 
@@ -1466,7 +1547,7 @@ export const InspectionWorkspacePage: React.FC = () => {
             <div>
               <span className="text-slate-500 font-medium text-[11px] block">EVIDENCE REGISTRY</span>
               <span className="text-slate-700">
-                {inspection.evidence_assets.length} file(s) registered
+                {(inspection.evidence_assets || []).length} file(s) registered
               </span>
             </div>
           </div>
@@ -1689,14 +1770,21 @@ export const InspectionWorkspacePage: React.FC = () => {
                 <ZoomOut className="w-3.5 h-3.5" />
               </button>
               <button
+                onClick={handleRotateCw}
+                className="p-1 rounded text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-300 transition-colors"
+                title="Rotate 90° Clockwise"
+              >
+                <RotateCw className="w-3.5 h-3.5" />
+              </button>
+              <button
                 onClick={handleResetZoom}
                 className="p-1 rounded text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-300 transition-colors"
-                title="Reset Zoom (1:1)"
+                title="Reset View (1:1)"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
               <span className="text-[11px] font-mono text-slate-500 px-1">
-                {Math.round(zoomLevel * 100)}%
+                {Math.round(zoomLevel * 100)}%{rotationDegree > 0 ? ` • ${rotationDegree}°` : ''}
               </span>
               <div className="h-4 w-px bg-slate-300 mx-1.5" />
               <button
@@ -1731,7 +1819,7 @@ export const InspectionWorkspacePage: React.FC = () => {
               <div
                 className="relative transition-transform duration-75"
                 style={{
-                  transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
+                  transform: `translate(${panOffset.x}px, ${panOffset.y}px) rotate(${rotationDegree}deg) scale(${zoomLevel})`,
                   transformOrigin: 'center center',
                 }}
               >
@@ -1757,7 +1845,7 @@ export const InspectionWorkspacePage: React.FC = () => {
                   preserveAspectRatio="none"
                 >
                   {allDeclarations
-                    .filter((dec) => dec.bounding_box && (!dec.evidence_id || dec.evidence_id === activeAsset.id))
+                    .filter((dec) => dec.bounding_box && dec.evidence_id === activeAsset.id && dec.result !== 'INCOMPLETE')
                     .map((dec) => {
                       const box = dec.bounding_box as BoundingBox;
                       const isSelected = selectedDeclarationId === dec.id;
@@ -1913,7 +2001,7 @@ export const InspectionWorkspacePage: React.FC = () => {
           {/* Evidence Asset Carousel / Strip */}
           <div className="px-3 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2 shrink-0">
             <div className="flex items-center space-x-2 overflow-x-auto py-1">
-              {inspection.evidence_assets.map((asset, idx) => (
+              {(inspection.evidence_assets || []).map((asset, idx) => (
                 <button
                   key={asset.id}
                   onClick={() => setActiveAssetId(asset.id)}
@@ -2209,7 +2297,7 @@ export const InspectionWorkspacePage: React.FC = () => {
                       )}
                     </div>
 
-                    {structuredDeclarations && (
+                    {structuredDeclarations && structuredDeclarations.declarations && (
                       <div className="space-y-2 text-slate-600">
                         {/* Model & Version Provenance */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[10px] font-mono bg-slate-50 p-2 rounded border border-slate-100">
@@ -2234,14 +2322,15 @@ export const InspectionWorkspacePage: React.FC = () => {
                         {/* Domain Field Breakdown */}
                         <div className="space-y-1.5 pt-1">
                           {[
-                            { label: 'Manufacturer / Packer / Importer', field: structuredDeclarations.declarations.manufacturer_identity, desc: structuredDeclarations.declarations.manufacturer_identity.name || structuredDeclarations.declarations.manufacturer_identity.raw_text },
-                            { label: 'Generic / Common Commodity Name', field: structuredDeclarations.declarations.commodity_name, desc: structuredDeclarations.declarations.commodity_name.name || structuredDeclarations.declarations.commodity_name.raw_text },
-                            { label: 'Net Quantity', field: structuredDeclarations.declarations.net_quantity, desc: structuredDeclarations.declarations.net_quantity.quantity_value ? `${structuredDeclarations.declarations.net_quantity.quantity_value} ${structuredDeclarations.declarations.net_quantity.unit || ''}` : structuredDeclarations.declarations.net_quantity.raw_text },
-                            { label: 'Month & Year of Mfg / Pkg / Import', field: structuredDeclarations.declarations.manufacture_packing_date, desc: structuredDeclarations.declarations.manufacture_packing_date.raw_date_string || (structuredDeclarations.declarations.manufacture_packing_date.month && structuredDeclarations.declarations.manufacture_packing_date.year ? `${structuredDeclarations.declarations.manufacture_packing_date.month}/${structuredDeclarations.declarations.manufacture_packing_date.year}` : structuredDeclarations.declarations.manufacture_packing_date.raw_text) },
-                            { label: 'Maximum Retail Price (MRP)', field: structuredDeclarations.declarations.mrp, desc: structuredDeclarations.declarations.mrp.amount ? `₹${structuredDeclarations.declarations.mrp.amount}` : structuredDeclarations.declarations.mrp.raw_text },
-                            { label: 'Consumer Care Contact Details', field: structuredDeclarations.declarations.consumer_care, desc: [structuredDeclarations.declarations.consumer_care.phone, structuredDeclarations.declarations.consumer_care.email, structuredDeclarations.declarations.consumer_care.website].filter(Boolean).join(' • ') || structuredDeclarations.declarations.consumer_care.raw_text },
-                            { label: 'Country of Origin (Physical Label)', field: structuredDeclarations.declarations.country_of_origin, desc: structuredDeclarations.declarations.country_of_origin.country_name || structuredDeclarations.declarations.country_of_origin.raw_text },
+                            { label: 'Manufacturer / Packer / Importer', field: structuredDeclarations.declarations.manufacturer_identity, desc: structuredDeclarations.declarations.manufacturer_identity?.name || structuredDeclarations.declarations.manufacturer_identity?.raw_text },
+                            { label: 'Generic / Common Commodity Name', field: structuredDeclarations.declarations.commodity_name, desc: structuredDeclarations.declarations.commodity_name?.name || structuredDeclarations.declarations.commodity_name?.raw_text },
+                            { label: 'Net Quantity', field: structuredDeclarations.declarations.net_quantity, desc: structuredDeclarations.declarations.net_quantity?.quantity_value ? `${structuredDeclarations.declarations.net_quantity.quantity_value} ${structuredDeclarations.declarations.net_quantity.unit || ''}` : structuredDeclarations.declarations.net_quantity?.raw_text },
+                            { label: 'Month & Year of Mfg / Pkg / Import', field: structuredDeclarations.declarations.manufacture_packing_date, desc: structuredDeclarations.declarations.manufacture_packing_date?.raw_date_string || (structuredDeclarations.declarations.manufacture_packing_date?.month && structuredDeclarations.declarations.manufacture_packing_date?.year ? `${structuredDeclarations.declarations.manufacture_packing_date.month}/${structuredDeclarations.declarations.manufacture_packing_date.year}` : structuredDeclarations.declarations.manufacture_packing_date?.raw_text) },
+                            { label: 'Maximum Retail Price (MRP)', field: structuredDeclarations.declarations.mrp, desc: structuredDeclarations.declarations.mrp?.amount ? `₹${structuredDeclarations.declarations.mrp.amount}` : structuredDeclarations.declarations.mrp?.raw_text },
+                            { label: 'Consumer Care Contact Details', field: structuredDeclarations.declarations.consumer_care, desc: [structuredDeclarations.declarations.consumer_care?.phone, structuredDeclarations.declarations.consumer_care?.email, structuredDeclarations.declarations.consumer_care?.website].filter(Boolean).join(' • ') || structuredDeclarations.declarations.consumer_care?.raw_text },
+                            { label: 'Country of Origin (Physical Label)', field: structuredDeclarations.declarations.country_of_origin, desc: structuredDeclarations.declarations.country_of_origin?.country_name || structuredDeclarations.declarations.country_of_origin?.raw_text },
                           ].map((item, idx) => {
+                            if (!item.field) return null;
                             const status = item.field.status;
                             const statusColor =
                               status === 'OBSERVED'
@@ -2321,7 +2410,7 @@ export const InspectionWorkspacePage: React.FC = () => {
                       )}
                     </div>
 
-                    {complianceSummary && (
+                    {complianceSummary && complianceSummary.summary_counts && (
                       <div className="space-y-1.5 text-slate-600">
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[10px] font-mono bg-slate-50 p-2 rounded border border-slate-100">
                           <div>
@@ -2421,7 +2510,7 @@ export const InspectionWorkspacePage: React.FC = () => {
                 <FileCheck className="w-4 h-4" />
                 <span>INSPECTOR VERIFICATION</span>
                 <span className="text-[10px] font-mono px-1.5 py-0.2 bg-slate-100 rounded text-slate-700 border border-slate-200">
-                  {(verificationState?.corrections.length || 0) + (verificationState?.manual_observations.length || 0)}
+                  {(verificationState?.corrections?.length || 0) + (verificationState?.manual_observations?.length || 0)}
                 </span>
               </button>
 

@@ -404,131 +404,153 @@ class ComplianceEvaluationService:
         stmt_assets = select(EvidenceAsset).where(EvidenceAsset.inspection_id == inspection_id)
         evidence_assets = list((await db.execute(stmt_assets)).scalars().all())
 
+        from backend.app.services.product_synthesis_service import ProductEvidenceSynthesisService
+        from backend.app.services.declaration_validation_service import DeclarationValidationService
+        
+        pdec = await ProductEvidenceSynthesisService.synthesize_inspection_evidence(db, inspection_id)
+        synth_map = pdec.synthesized_declarations or {}
+
+        # Fetch raw structured declarations and OCR results for declaration validation engine
+        stmt_decls = select(StructuredDeclarationResult).where(StructuredDeclarationResult.inspection_id == inspection_id)
+        decl_records = list((await db.execute(stmt_decls)).scalars().all())
+        
+        ocr_token_map = {}
+        total_docket_ocr_tokens = 0
+        for asset in evidence_assets:
+            stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == asset.id)
+            ocr_res = (await db.execute(stmt_ocr)).scalar_one_or_none()
+            if ocr_res and not ocr_res.processing_blocked:
+                total_docket_ocr_tokens += ocr_res.total_tokens
+                ocr_token_map[asset.id] = ocr_res.tokens or []
+
+        # Reference inspection date: use inspection_started_at or created_at (NEVER datetime.now())
+        insp_date_str = (
+            inspection.inspection_started_at.strftime("%Y-%m-%d")
+            if inspection.inspection_started_at
+            else (inspection.created_at.strftime("%Y-%m-%d") if inspection.created_at else "2026-09-20")
+        )
+
+        val_summary = DeclarationValidationService.validate_inspection_dates_and_declarations(
+            inspection_id=inspection_id,
+            inspection_date=insp_date_str,
+            evidence_assets=[{"id": e.id, "inspection_id": e.inspection_id} for e in evidence_assets],
+            structured_declarations=[
+                {
+                    "id": d.id,
+                    "evidence_id": d.evidence_id,
+                    "inspection_id": d.inspection_id,
+                    "declarations": d.declarations or {},
+                }
+                for d in decl_records
+            ],
+            ocr_token_map=ocr_token_map,
+        )
+
+        # Attach validation summary to ProductDeclaration
+        synth_map["date_validation"] = val_summary.model_dump(mode="json")
+        pdec.synthesized_declarations = synth_map
+        await db.flush()
+
         findings_to_persist: List[ComplianceFinding] = []
 
-        # If no evidence exists at all, evaluate inspection-level INCOMPLETE
-        if not evidence_assets:
-            for req_name, rule_meta in CORE_RULES.items():
-                app = app_by_req.get(req_name)
-                app_status = app.status if app else ApplicabilityStatus.APPLICABLE.value
-                result_val = ComplianceResult.INCOMPLETE.value if app_status == ApplicabilityStatus.APPLICABLE.value else ComplianceResult.NOT_APPLICABLE.value
+        # Evaluate 7 canonical requirement domains at the PRODUCT level
+        for req_name, rule_meta in CORE_RULES.items():
+            app = app_by_req.get(req_name)
+            if not app:
+                continue
 
-                stmt_exist = select(ComplianceFinding).where(
-                    ComplianceFinding.inspection_id == inspection_id,
-                    ComplianceFinding.evidence_id.is_(None),
-                    ComplianceFinding.requirement_name == req_name,
-                    ComplianceFinding.evaluation_version == EVALUATION_VERSION,
+            synth_field = synth_map.get(req_name, {})
+            obs_status = synth_field.get("observation_status", ObservationStatus.NOT_OBSERVED.value)
+            final_val = synth_field.get("final_value") or {}
+            
+            # Format declaration input for deterministic evaluator
+            decl_payload = {
+                "status": obs_status,
+                "source_token_indices": [],
+                "raw_text": " | ".join(synth_field.get("source_raw_texts", [])),
+                **final_val,
+            }
+
+            try:
+                eval_output = cls.evaluate_declaration_requirement(
+                    requirement_name=req_name,
+                    applicability=app,
+                    declaration_data=decl_payload,
+                    total_ocr_tokens=total_docket_ocr_tokens,
                 )
-                existing_finding = (await db.execute(stmt_exist)).scalar_one_or_none()
-                if existing_finding:
-                    existing_finding.result = result_val
-                    existing_finding.reason = "No evidence assets uploaded for this inspection."
-                    existing_finding.applicability_status = app_status
-                    existing_finding.rule_citation = rule_meta.citation
-                    existing_finding.rule_set_id = RULE_SET_ID
-                    existing_finding.rule_set_version = RULE_SET_VERSION
-                    existing_finding.source_token_indices = []
-                    existing_finding.metadata_payload = {"evidence_count": 0}
-                    findings_to_persist.append(existing_finding)
-                else:
-                    finding = ComplianceFinding(
-                        inspection_id=inspection_id,
-                        evidence_id=None,
-                        ocr_result_id=None,
-                        structured_declaration_result_id=None,
-                        requirement_name=req_name,
-                        result=result_val,
-                        reason="No evidence assets uploaded for this inspection.",
-                        applicability_status=app_status,
-                        rule_citation=rule_meta.citation,
-                        rule_set_id=RULE_SET_ID,
-                        rule_set_version=RULE_SET_VERSION,
-                        evaluation_version=EVALUATION_VERSION,
-                        source_token_indices=[],
-                        metadata_payload={"evidence_count": 0},
-                    )
-                    db.add(finding)
-                    findings_to_persist.append(finding)
-        else:
-            for asset in evidence_assets:
-                # Fetch OCR
-                stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == asset.id)
-                ocr_result = (await db.execute(stmt_ocr)).scalar_one_or_none()
-                total_tokens = ocr_result.total_tokens if (ocr_result and not ocr_result.processing_blocked) else 0
+                result = eval_output["result"]
+                reason = eval_output["reason"]
+                token_indices = eval_output["source_token_indices"]
 
-                # Fetch Structured Declarations
-                stmt_dec = select(StructuredDeclarationResult).where(StructuredDeclarationResult.evidence_id == asset.id)
-                dec_result = (await db.execute(stmt_dec)).scalar_one_or_none()
+                # If requirement is manufacture_packing_date, incorporate date validation results
+                if req_name == "manufacture_packing_date":
+                    if val_summary.conflicts:
+                        result = ComplianceResult.REQUIRES_REVIEW.value
+                        reason = f"Date declaration conflict detected under {rule_meta.citation}: {val_summary.conflicts[0].reason}"
+                    elif val_summary.overall_validation_status == "INVALID_DECLARATION":
+                        result = ComplianceResult.POTENTIAL_NON_COMPLIANCE.value
+                        reason = f"Invalid date declaration detected under {rule_meta.citation}."
+                    elif val_summary.overall_validation_status == "REQUIRES_REVIEW":
+                        result = ComplianceResult.REQUIRES_REVIEW.value
+                        reason = f"Ambiguous date declaration requires reviewer adjudication under {rule_meta.citation}."
 
-                declarations_map = dec_result.declarations if dec_result else {}
+                metadata = {
+                    **eval_output["metadata_payload"],
+                    "synthesis_version": pdec.synthesis_version,
+                    "supporting_evidence_ids": synth_field.get("supporting_evidence_ids", []),
+                    "supporting_ocr_token_map": synth_field.get("supporting_ocr_token_map", {}),
+                    "corroborating_count": synth_field.get("corroborating_count", 0),
+                    "conflicting_evidence_ids": synth_field.get("conflicting_evidence_ids", []),
+                    "synthesis_notes": synth_field.get("synthesis_notes"),
+                    "date_validation_summary": val_summary.model_dump(mode="json"),
+                }
+            except Exception as e:
+                result = ComplianceResult.PROCESSING_FAILED.value
+                reason = f"Technical evaluation failure under {rule_meta.citation}: {str(e)}"
+                token_indices = []
+                metadata = {
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
 
-                for req_name, rule_meta in CORE_RULES.items():
-                    app = app_by_req.get(req_name)
-                    if not app:
-                        continue
+            # Fetch existing product-level finding for idempotence
+            stmt_exist = select(ComplianceFinding).where(
+                ComplianceFinding.inspection_id == inspection_id,
+                ComplianceFinding.evidence_id.is_(None),
+                ComplianceFinding.requirement_name == req_name,
+                ComplianceFinding.evaluation_version == EVALUATION_VERSION,
+            )
+            existing_finding = (await db.execute(stmt_exist)).scalar_one_or_none()
 
-                    decl_field = declarations_map.get(req_name)
-
-                    try:
-                        eval_output = cls.evaluate_declaration_requirement(
-                            requirement_name=req_name,
-                            applicability=app,
-                            declaration_data=decl_field,
-                            total_ocr_tokens=total_tokens,
-                        )
-                        result = eval_output["result"]
-                        reason = eval_output["reason"]
-                        token_indices = eval_output["source_token_indices"]
-                        metadata = eval_output["metadata_payload"]
-                    except Exception as e:
-                        result = ComplianceResult.PROCESSING_FAILED.value
-                        reason = f"Technical evaluation failure under {rule_meta.citation}: {str(e)}"
-                        token_indices = []
-                        metadata = {
-                            "error": str(e),
-                            "traceback": traceback.format_exc(),
-                        }
-
-                    # Fetch existing finding for idempotence
-                    stmt_exist = select(ComplianceFinding).where(
-                        ComplianceFinding.inspection_id == inspection_id,
-                        ComplianceFinding.evidence_id == asset.id,
-                        ComplianceFinding.requirement_name == req_name,
-                        ComplianceFinding.evaluation_version == EVALUATION_VERSION,
-                    )
-                    existing_finding = (await db.execute(stmt_exist)).scalar_one_or_none()
-
-                    if existing_finding:
-                        existing_finding.ocr_result_id = ocr_result.id if ocr_result else None
-                        existing_finding.structured_declaration_result_id = dec_result.id if dec_result else None
-                        existing_finding.result = result
-                        existing_finding.reason = reason
-                        existing_finding.applicability_status = app.status
-                        existing_finding.rule_citation = rule_meta.citation
-                        existing_finding.rule_set_id = RULE_SET_ID
-                        existing_finding.rule_set_version = RULE_SET_VERSION
-                        existing_finding.source_token_indices = token_indices
-                        existing_finding.metadata_payload = metadata
-                        findings_to_persist.append(existing_finding)
-                    else:
-                        finding = ComplianceFinding(
-                            inspection_id=inspection_id,
-                            evidence_id=asset.id,
-                            ocr_result_id=ocr_result.id if ocr_result else None,
-                            structured_declaration_result_id=dec_result.id if dec_result else None,
-                            requirement_name=req_name,
-                            result=result,
-                            reason=reason,
-                            applicability_status=app.status,
-                            rule_citation=rule_meta.citation,
-                            rule_set_id=RULE_SET_ID,
-                            rule_set_version=RULE_SET_VERSION,
-                            evaluation_version=EVALUATION_VERSION,
-                            source_token_indices=token_indices,
-                            metadata_payload=metadata,
-                        )
-                        db.add(finding)
-                        findings_to_persist.append(finding)
+            if existing_finding:
+                existing_finding.result = result
+                existing_finding.reason = reason
+                existing_finding.applicability_status = app.status
+                existing_finding.rule_citation = rule_meta.citation
+                existing_finding.rule_set_id = RULE_SET_ID
+                existing_finding.rule_set_version = RULE_SET_VERSION
+                existing_finding.source_token_indices = token_indices
+                existing_finding.metadata_payload = metadata
+                findings_to_persist.append(existing_finding)
+            else:
+                finding = ComplianceFinding(
+                    inspection_id=inspection_id,
+                    evidence_id=None,
+                    ocr_result_id=None,
+                    structured_declaration_result_id=None,
+                    requirement_name=req_name,
+                    result=result,
+                    reason=reason,
+                    applicability_status=app.status,
+                    rule_citation=rule_meta.citation,
+                    rule_set_id=RULE_SET_ID,
+                    rule_set_version=RULE_SET_VERSION,
+                    evaluation_version=EVALUATION_VERSION,
+                    source_token_indices=token_indices,
+                    metadata_payload=metadata,
+                )
+                db.add(finding)
+                findings_to_persist.append(finding)
 
         if inspection.status in ("DRAFT", "EVIDENCE_UPLOADED"):
             inspection.status = "EVALUATED"

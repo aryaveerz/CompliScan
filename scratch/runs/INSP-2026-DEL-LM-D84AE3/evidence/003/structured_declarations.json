@@ -1,0 +1,51 @@
+{
+  "manufacturer_identity": {
+    "status": "OBSERVED",
+    "declaration_type": "MANUFACTURER_AND_MARKETER",
+    "name": "Alpino Health Foods Pvt Ltd.\nBungalow No.7",
+    "address": "NO HEALTH FOODS PVT LTD.",
+    "raw_text": "Marketed By:ALPINO HEALTH FOODS PVT LTD.\nBungalow no.7",
+    "source_token_ids": [
+      4,
+      8,
+      24
+    ]
+  },
+  "commodity_name": {
+    "status": "OBSERVED",
+    "name": "fssat",
+    "raw_text": "fssat",
+    "source_token_ids": [
+      0
+    ]
+  },
+  "best_before": {
+    "status": "OBSERVED",
+    "raw_text": "BEST BEFORE 18 MONTHS",
+    "source_token_ids": [
+      23
+    ]
+  },
+  "mrp": {
+    "status": "OBSERVED",
+    "currency": "INR",
+    "amount": 559.0,
+    "includes_all_taxes_stated": false,
+    "raw_text": "MRP\n559.00",
+    "source_token_ids": [
+      31
+    ]
+  },
+  "consumer_care": {
+    "status": "OBSERVED",
+    "contact_name": "Consumer Care Cell",
+    "phone": "NOT RECORDED",
+    "email": "support@alpinohealthfoods.com",
+    "raw_text": "Consumer Support Desk,",
+    "source_token_ids": [
+      12,
+      15,
+      16
+    ]
+  }
+}

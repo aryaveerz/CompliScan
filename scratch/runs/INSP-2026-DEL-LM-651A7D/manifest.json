@@ -1,0 +1,12 @@
+{
+  "case_number": "INSP-2026-DEL-LM-651A7D",
+  "inspection_id": "INS-UNI-651A7D",
+  "far_id": "FAR-UNI-51908C4452",
+  "dataset_input_dir": "G:\\CompliScan\\Test_Images\\Juice",
+  "run_output_dir": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-651A7D",
+  "total_evidence_assets": 4,
+  "pdf_report": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-651A7D\\CompliScan_Inspection_Report_INSP-2026-DEL-LM-651A7D.pdf",
+  "docx_report": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-651A7D\\CompliScan_Inspection_Report_INSP-2026-DEL-LM-651A7D.docx",
+  "execution_timestamp": "2026-09-20T11:47:18.851886+00:00",
+  "record_integrity_hash": "31fc27adcfb910216afcd1b65f8c166ba4ebdb690668f6172b52c99dd25c2f64"
+}

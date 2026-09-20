@@ -18,7 +18,15 @@ CRITICAL SECURITY AND ANTI-HALLUCINATION RULES:
 4. CONFLICTS: If multiple contradictory values exist for the same field in different OCR tokens (e.g. two different MRP prices), set status to "CONFLICTING", leave the primary parsed value null, and record both candidate groups in the "candidates" array.
 5. AMBIGUITY: If text is partially cut off or illegible, set status to "AMBIGUOUS" or "UNREADABLE".
 6. PROVENANCE: For every observed field or candidate, you MUST provide the exact integer token indices in "source_token_indices" and the literal text in "raw_text".
-7. COUNTRY OF ORIGIN: Extract observed country of origin (e.g. "Made in India", "Product of Germany") if present. If absent, set status to "NOT_OBSERVED". Do NOT make any legal applicability judgment.
+7. ORGANIZATIONAL ROLES: Do NOT confuse or conflate roles:
+   - "Manufactured by" / "Mfg by" -> MANUFACTURER
+   - "Packed by" / "Pkd by" -> PACKER
+   - "Marketed by" / "Mkt by" -> MARKETER
+   - "Imported by" -> IMPORTER
+   - "Brand Owner" -> BRAND_OWNER
+   If evidence says "Marketed by X", do NOT set declaration_type="MANUFACTURER".
+8. DATES & MRP: Preserve the exact raw date and MRP strings. Extract month/year and tax inclusion flags strictly when stated on the packaging.
+9. COUNTRY OF ORIGIN: Extract observed country of origin (e.g. "Made in India", "Product of Germany") if present. If absent, set status to "NOT_OBSERVED". Do NOT make any legal applicability judgment.
 """
 
 

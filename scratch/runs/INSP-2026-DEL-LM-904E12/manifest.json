@@ -1,0 +1,12 @@
+{
+  "case_number": "INSP-2026-DEL-LM-904E12",
+  "inspection_id": "INS-UNI-904E12",
+  "far_id": "FAR-UNI-A0CBFACFEA",
+  "dataset_input_dir": "G:\\CompliScan\\Test_Images\\Peanut_Butter",
+  "run_output_dir": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-904E12",
+  "total_evidence_assets": 4,
+  "pdf_report": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-904E12\\CompliScan_Inspection_Report_INSP-2026-DEL-LM-904E12.pdf",
+  "docx_report": "G:\\CompliScan\\scratch\\runs\\INSP-2026-DEL-LM-904E12\\CompliScan_Inspection_Report_INSP-2026-DEL-LM-904E12.docx",
+  "execution_timestamp": "2026-09-20T11:38:33.896041+00:00",
+  "record_integrity_hash": "ca73c2f9f9e866485bf6af4b4ce7d8900332dfe1bcebd84d1dff362952823e8f"
+}

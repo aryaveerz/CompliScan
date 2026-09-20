@@ -5,7 +5,7 @@ CompliScan LM — InspectionCase Aggregate Root Model.
 from datetime import datetime, timezone
 import uuid
 from typing import List, Optional, TYPE_CHECKING
-from sqlalchemy import String, Text, DateTime, ForeignKey
+from sqlalchemy import String, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.db.base import Base
 from shared.domain.states import InspectionLifecycleState, ProcessingState, FinalizationStatus
@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from backend.app.models.reviewer import ReviewerDecision
     from backend.app.models.evidence_request import EvidenceRequest
     from backend.app.models.final_audit import FinalAuditRecord
+    from backend.app.models.product_declaration import ProductDeclaration
 
 
 class InspectionCase(Base):
@@ -38,6 +39,9 @@ class InspectionCase(Base):
     reference_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
+    # Location Details
+    location_data: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+
     # Ownership & Reviewer
     created_by_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False)
     reviewer_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("users.id"), nullable=True)
@@ -45,6 +49,8 @@ class InspectionCase(Base):
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+    inspection_started_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    inspection_completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     submitted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     finalized_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
@@ -59,4 +65,5 @@ class InspectionCase(Base):
     manual_observations: Mapped[List["ManualObservation"]] = relationship("ManualObservation", back_populates="inspection", cascade="all, delete-orphan")
     reviewer_decisions: Mapped[List["ReviewerDecision"]] = relationship("ReviewerDecision", back_populates="inspection", cascade="all, delete-orphan")
     evidence_requests: Mapped[List["EvidenceRequest"]] = relationship("EvidenceRequest", back_populates="inspection", cascade="all, delete-orphan")
+    product_declarations: Mapped[List["ProductDeclaration"]] = relationship("ProductDeclaration", back_populates="inspection", cascade="all, delete-orphan")
     final_audit_record: Mapped[Optional["FinalAuditRecord"]] = relationship("FinalAuditRecord", back_populates="inspection", uselist=False, cascade="all, delete-orphan")

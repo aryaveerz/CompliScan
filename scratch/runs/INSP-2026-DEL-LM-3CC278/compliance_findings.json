@@ -1,0 +1,139 @@
+[
+  {
+    "id": "FND-UNI-A8EDB7385E",
+    "evidence_id": "EV-UNI-27336E44",
+    "requirement_name": "manufacturer_identity",
+    "result": "PASS",
+    "reason": "Responsible entity identity ('Alpino Health Foods Pvt Ltd.\nBungalow No.7') and complete address ('NO HEALTH FOODS PVT LTD.') observed under Rule 6(1)(a).",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(a)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-27336E44",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-3281FD7CDD",
+    "evidence_id": "EV-UNI-4084D7C2",
+    "requirement_name": "commodity_name",
+    "result": "REQUIRES_REVIEW",
+    "reason": "Conflicting declarations observed across panel evidence for commodity_name under Rule 6(1)(b). Reviewer adjudication required.",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(b)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-4084D7C2",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-CF23CC0237",
+    "evidence_id": "EV-UNI-4084D7C2",
+    "requirement_name": "net_quantity",
+    "result": "REQUIRES_REVIEW",
+    "reason": "Conflicting declarations observed across panel evidence for net_quantity under Rule 6(1)(c). Reviewer adjudication required.",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(c)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-4084D7C2",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-FF2A47D27D",
+    "evidence_id": "EV-UNI-4084D7C2",
+    "requirement_name": "manufacture_packing_date",
+    "result": "POTENTIAL_NON_COMPLIANCE",
+    "reason": "Mandatory statutory declaration under Rule 6(1)(d) was not observed on scanned panels.",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(d)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-4084D7C2",
+      "date_validation_summary": {
+        "inspection_id": "INS-UNI-3CC278",
+        "validation_engine_version": "v1.0",
+        "evaluated_at": "2026-09-20T11:49:28.050449+00:00",
+        "inspection_date_used": "2026-09-20",
+        "date_observations": [
+          {
+            "field_name": "best_before_duration",
+            "raw_text": "BEST BEFORE 18 MONTHS",
+            "normalized_date": null,
+            "date_type": "BEST_BEFORE_DURATION",
+            "observation_status": "OBSERVED",
+            "evidence_id": "EV-UNI-27336E44",
+            "ocr_result_id": null,
+            "ocr_token_ids": [],
+            "confidence": null,
+            "extraction_method": "DETERMINISTIC_REGEX_PARSER",
+            "extraction_version": "v1.0",
+            "derivation_method": null,
+            "source_observations": []
+          }
+        ],
+        "derived_dates": [],
+        "conflicts": [],
+        "temporal_validations": [],
+        "scope_integrity": {
+          "inspection_id": "INS-UNI-3CC278",
+          "is_isolated": true,
+          "violating_evidence_ids": [],
+          "violating_token_maps": {},
+          "notes": [
+            "Scope isolation verified. Zero cross-inspection contamination detected."
+          ]
+        },
+        "overall_validation_status": "VALID",
+        "statutory_finding_recommendation": null,
+        "notes": [
+          "All observed date declarations and scope validations passed deterministically."
+        ]
+      }
+    }
+  },
+  {
+    "id": "FND-UNI-34B0612300",
+    "evidence_id": "EV-UNI-27336E44",
+    "requirement_name": "mrp",
+    "result": "POTENTIAL_NON_COMPLIANCE",
+    "reason": "MRP of \u20b9559 declared without mandatory 'inclusive of all taxes' statement under Rule 6(1)(e).",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(e)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-27336E44",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-CF3B57BBD8",
+    "evidence_id": "EV-UNI-27336E44",
+    "requirement_name": "consumer_care",
+    "result": "PASS",
+    "reason": "Consumer care grievance redressal details observed with contact channels under Rule 6(1)(f).",
+    "applicability_status": "APPLICABLE",
+    "rule_citation": "Rule 6(1)(f)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-27336E44",
+      "date_validation_summary": null
+    }
+  },
+  {
+    "id": "FND-UNI-FD6D227316",
+    "evidence_id": "EV-UNI-4084D7C2",
+    "requirement_name": "country_of_origin",
+    "result": "NOT_APPLICABLE",
+    "reason": "Statutory requirement under Rule 6(1)(da) is Not Applicable for domestic commodity.",
+    "applicability_status": "NOT_APPLICABLE",
+    "rule_citation": "Rule 6(1)(da)",
+    "source_token_indices": [],
+    "metadata_payload": {
+      "evidence_id": "EV-UNI-4084D7C2",
+      "date_validation_summary": null
+    }
+  }
+]
