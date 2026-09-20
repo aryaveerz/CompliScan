@@ -30,9 +30,13 @@ pnpm-debug.log*
 *.sqlite
 *.sqlite3
 *.db
+*.db-journal
 backend/uploads/
 storage/
 uploads/
+scratch/runs/
+archive/databases/
+archive/validation_runs/
 
 # IDE & Editor
 .vscode/
