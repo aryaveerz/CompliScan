@@ -126,18 +126,18 @@ class FinalizationService:
             "user_id": insp_user.id if insp_user else inspection.created_by_id,
             "full_name": getattr(insp_user, "full_name", None) or "NOT RECORDED",
             "officer_id": getattr(insp_user, "officer_id", None) or getattr(insp_user, "id", "NOT RECORDED"),
-            "designation": getattr(insp_user, "designation", None) or "Legal Metrology Inspector",
-            "department": getattr(insp_user, "department", None) or "Department of Consumer Affairs",
-            "unit_office": getattr(insp_user, "unit_office", None) or "Regional Inspection Office",
+            "designation": getattr(insp_user, "designation", None) or "NOT RECORDED",
+            "department": getattr(insp_user, "department", None) or "NOT RECORDED",
+            "unit_office": getattr(insp_user, "unit_office", None) or "NOT RECORDED",
         }
 
         reviewer_identity = {
             "user_id": rev_user.id if rev_user else reviewer_id,
             "full_name": getattr(rev_user, "full_name", None) or "NOT RECORDED",
             "officer_id": getattr(rev_user, "officer_id", None) or getattr(rev_user, "id", "NOT RECORDED"),
-            "designation": getattr(rev_user, "designation", None) or "Assistant Controller / Reviewing Officer",
-            "department": getattr(rev_user, "department", None) or "Department of Consumer Affairs",
-            "unit_office": getattr(rev_user, "unit_office", None) or "Enforcement & Adjudication Division",
+            "designation": getattr(rev_user, "designation", None) or "NOT RECORDED",
+            "department": getattr(rev_user, "department", None) or "NOT RECORDED",
+            "unit_office": getattr(rev_user, "unit_office", None) or "NOT RECORDED",
         }
 
         # Build Immutable JSON Snapshots

@@ -16,11 +16,13 @@ from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 
+from pathlib import Path
 from backend.app.models.final_audit import FinalAuditRecord
 from backend.app.services.report_data_builder import ReportDataBuilder, ReportViewModel
+from backend.app.services.storage_service import get_storage_service
 from backend.app.core.errors import ValidationError
 
-EMBLEM_PNG_PATH = r"G:\CompliScan\static\assets\emblem_of_india.png"
+EMBLEM_PNG_PATH = str(Path(__file__).resolve().parents[3] / "static" / "assets" / "emblem_of_india.png")
 
 
 class DOCXReportService:
@@ -299,7 +301,7 @@ class DOCXReportService:
         cls._set_cell(t_rev.cell(0, 0), f"FINAL MASTER ADJUDICATION: {s9.master_decision}", bold=True, bg_hex="ECFDF5" if s9.master_decision in ("COMPLIANT", "PASS") else "FEF2F2")
         cls._set_cell(t_rev.cell(1, 0), f"Reviewing Officer: {s9.reviewer_name} ({s9.reviewer_id}) — {s9.reviewer_designation}, {s9.reviewer_department} | Finalized: {s9.finalized_at}")
         cls._set_cell(t_rev.cell(2, 0), f"Statutory Adjudication Rationale: {s9.master_rationale}")
-        cls._set_cell(t_rev.cell(3, 0), "Digital Signature / Authentication Status: VERIFIED & CRYPTOGRAPHICALLY SEALED", bold=True)
+        cls._set_cell(t_rev.cell(3, 0), "Evidence Integrity Status: SHA-256 FINGERPRINT RECORDED", bold=True)
         cls._style_table_borders(t_rev)
 
         # ── 10.0 FINAL COMPLIANCE SUMMARY ────────────────────────────────────
@@ -361,6 +363,12 @@ class DOCXReportService:
         # ── ANNEXURE A: PHOTOGRAPHIC EVIDENCE REGISTER ───────────────────────
         doc.add_page_break()
         cls._add_section_heading(doc, "ANNEXURE A — PHOTOGRAPHIC EVIDENCE REGISTER (EMBEDDED IMAGES)")
+        storage_svc = None
+        try:
+            storage_svc = get_storage_service()
+        except Exception:
+            pass
+
         for ev_img in vm.annexure_a_images:
             p_fig = doc.add_paragraph()
             r_fig = p_fig.add_run(f"Figure {ev_img.sl_no} — Evidence Asset ID: {ev_img.evidence_id} ({ev_img.original_filename})")
@@ -369,20 +377,38 @@ class DOCXReportService:
             p_hash.runs[0].font.name = "Courier"
             p_hash.runs[0].font.size = Pt(7.5)
 
-            img_path = ev_img.file_path if ev_img.file_path and os.path.exists(ev_img.file_path) else None
-
-            if img_path and os.path.exists(img_path):
+            img_bytes = None
+            if ev_img.file_path and os.path.exists(ev_img.file_path):
                 try:
-                    doc.add_picture(img_path, width=Inches(4.5))
+                    with open(ev_img.file_path, "rb") as f:
+                        img_bytes = f.read()
+                except Exception:
+                    img_bytes = None
+            elif storage_svc and ev_img.file_path:
+                try:
+                    import asyncio
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        import concurrent.futures
+                        with concurrent.futures.ThreadPoolExecutor() as pool:
+                            img_bytes = pool.submit(asyncio.run, storage_svc.download_file("compliscan-evidence", ev_img.file_path)).result(timeout=5.0)
+                    else:
+                        img_bytes = asyncio.run(storage_svc.download_file("compliscan-evidence", ev_img.file_path))
+                except Exception:
+                    img_bytes = None
+
+            if img_bytes:
+                try:
+                    doc.add_picture(io.BytesIO(img_bytes), width=Inches(4.5))
                 except Exception:
                     doc.add_paragraph(
                         f"[Evidence Image Asset Preserved: {ev_img.original_filename} "
-                        f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In This Environment]"
+                        f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In Report Environment]"
                     )
             else:
                 doc.add_paragraph(
                     f"[Evidence Image Asset Preserved: {ev_img.original_filename} "
-                    f"(SHA-256: {ev_img.sha256_hash}) — NOT AVAILABLE]"
+                    f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In Report Environment]"
                 )
 
 
@@ -426,10 +452,13 @@ class DOCXReportService:
             cls._set_cell(t_ac.cell(r_idx, 5), f.rationale)
         cls._style_table_borders(t_ac)
 
-        # ── ANNEXURE D: RAW FINALAUDITRECORD SNAPSHOT ────────────────────────
+        # ── ANNEXURE D: ABRIDGED FINALAUDITRECORD SNAPSHOT ──────────────────
         doc.add_page_break()
-        cls._add_section_heading(doc, "ANNEXURE D — RAW STRUCTURED FINALAUDITRECORD SNAPSHOT")
-        p_d_sub = doc.add_paragraph("Deterministic Serialized JSON Representation of the Immutable FinalAuditRecord:")
+        cls._add_section_heading(doc, "ANNEXURE D — ABRIDGED FINALAUDITRECORD SNAPSHOT")
+        p_d_sub = doc.add_paragraph(
+            "This annexure contains an abridged serialized representation for human reference. "
+            "The complete immutable FinalAuditRecord remains preserved in the system of record."
+        )
         p_d_sub.runs[0].font.size = Pt(7.5)
         p_d_sub.runs[0].font.color.rgb = cls.COLOR_MUTED
 

@@ -288,20 +288,20 @@ class ReportDataBuilder:
         insp_ctx = ctx.get("inspector") or {}
         inspecting_officer = OfficerIdentityViewModel(
             full_name=insp_ctx.get("full_name") or "NOT RECORDED",
-            officer_id=insp_ctx.get("officer_id") or ctx.get("created_by_id", "NOT RECORDED"),
-            designation=insp_ctx.get("designation") or "Legal Metrology Inspector",
-            department=insp_ctx.get("department") or "Department of Consumer Affairs",
-            unit_office=insp_ctx.get("unit_office") or "Field Enforcement Unit",
-            user_id=insp_ctx.get("user_id") or ctx.get("created_by_id", "NOT RECORDED"),
+            officer_id=insp_ctx.get("officer_id") or ctx.get("created_by_id") or "NOT RECORDED",
+            designation=insp_ctx.get("designation") or "NOT RECORDED",
+            department=insp_ctx.get("department") or "NOT RECORDED",
+            unit_office=insp_ctx.get("unit_office") or "NOT RECORDED",
+            user_id=insp_ctx.get("user_id") or ctx.get("created_by_id") or "NOT RECORDED",
         )
 
         rev_ctx = ctx.get("reviewer") or {}
         reviewing_officer = OfficerIdentityViewModel(
             full_name=rev_ctx.get("full_name") or "NOT RECORDED",
             officer_id=rev_ctx.get("officer_id") or final_record.finalized_by_id or "NOT RECORDED",
-            designation=rev_ctx.get("designation") or "Assistant Controller / Reviewing Officer",
-            department=rev_ctx.get("department") or "Department of Consumer Affairs",
-            unit_office=rev_ctx.get("unit_office") or "Adjudication & Legal Metrology Cell",
+            designation=rev_ctx.get("designation") or "NOT RECORDED",
+            department=rev_ctx.get("department") or "NOT RECORDED",
+            unit_office=rev_ctx.get("unit_office") or "NOT RECORDED",
             user_id=rev_ctx.get("user_id") or final_record.finalized_by_id or "NOT RECORDED",
         )
 
@@ -312,9 +312,9 @@ class ReportDataBuilder:
                 premises_name=loc_data.get("premises_name") or "NOT RECORDED",
                 address=f"{loc_data.get('address_line_1', '')} {loc_data.get('address_line_2', '')}".strip() or "NOT RECORDED",
                 city_district_state=f"{loc_data.get('city', '')}, {loc_data.get('district', '')}, {loc_data.get('state', '')}".strip(" ,") or "NOT RECORDED",
-                pin_code=str(loc_data.get("pin_code", "NOT RECORDED")),
+                pin_code=str(loc_data.get("pin_code") or "NOT RECORDED"),
                 geo_coordinates=f"{loc_data.get('latitude', '')}, {loc_data.get('longitude', '')}".strip(" ,") or "NOT RECORDED",
-                capture_method=loc_data.get("capture_method", "MANUAL"),
+                capture_method=loc_data.get("capture_method") or "NOT RECORDED",
                 is_recorded=True,
             )
         else:
@@ -324,7 +324,7 @@ class ReportDataBuilder:
                 city_district_state="NOT RECORDED",
                 pin_code="NOT RECORDED",
                 geo_coordinates="NOT RECORDED",
-                capture_method="NOT_RECORDED",
+                capture_method="NOT RECORDED",
                 is_recorded=False,
             )
 
@@ -335,35 +335,36 @@ class ReportDataBuilder:
             document_type="STATUTORY INSPECTION & COMPLIANCE ASSESSMENT DOSSIER",
             inspection_id=final_record.inspection_id,
             final_audit_record_id=final_record.id,
-            case_number=ctx.get("case_number", "NOT RECORDED"),
+            case_number=ctx.get("case_number") or "NOT RECORDED",
             report_version="1.0",
             report_generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
             evidence_asset_count=len(evidence_list),
             evidence_hashes_algo="SHA-256",
-            rule_set_id=final_record.rule_set_id or "LMPC-2011-STATUTORY-RULES",
-            rule_set_version=final_record.rule_set_version or "v1.0",
-            evaluation_version=final_record.evaluation_version or "v1.0",
-            ocr_engine="PaddleOCR PP-OCRv4 (rapidocr-onnxruntime==1.2.3)",
-            ocr_engine_version="ONNX Runtime v1.30.0",
-            ai_model="Google Gemini 3.6 Flash (gemini-3.6-flash)",
+            rule_set_id=final_record.rule_set_id or "NOT RECORDED",
+            rule_set_version=final_record.rule_set_version or "NOT RECORDED",
+            evaluation_version=final_record.evaluation_version or "NOT RECORDED",
+            ocr_engine=audit_meta.get("ocr_engine") or "NOT RECORDED",
+            ocr_engine_version=audit_meta.get("ocr_engine_version") or "NOT RECORDED",
+            ai_model=audit_meta.get("ai_model") or "NOT RECORDED",
             finalization_status="FINALIZED",
             record_status="READ-ONLY",
         )
 
         # 4. Section 1 — Inspection Details
+        raw_date = ctx.get("inspection_started_at") or ctx.get("created_at")
         sec1 = InspectionDetailsViewModel(
             inspection_id=final_record.inspection_id,
-            case_number=ctx.get("case_number", "NOT RECORDED"),
-            inspection_date=ctx.get("inspection_started_at", ctx.get("created_at", "NOT RECORDED"))[:10] if ctx.get("created_at") else "NOT RECORDED",
-            inspection_started_at=ctx.get("inspection_started_at", ctx.get("created_at", "NOT RECORDED")),
-            inspection_completed_at=ctx.get("inspection_completed_at", ctx.get("submitted_at", "NOT RECORDED")),
+            case_number=ctx.get("case_number") or "NOT RECORDED",
+            inspection_date=raw_date[:10] if raw_date else "NOT RECORDED",
+            inspection_started_at=ctx.get("inspection_started_at") or ctx.get("created_at") or "NOT RECORDED",
+            inspection_completed_at=ctx.get("inspection_completed_at") or ctx.get("submitted_at") or "NOT RECORDED",
             inspection_type="Statutory Legal Metrology Packaging Inspection",
             location=location_vm,
             inspecting_officer=inspecting_officer,
             reviewing_officer=reviewing_officer,
             status="FINALIZED & SEALED",
-            created_at=ctx.get("created_at", "NOT RECORDED"),
-            submitted_at=ctx.get("submitted_at", "NOT RECORDED"),
+            created_at=ctx.get("created_at") or "NOT RECORDED",
+            submitted_at=ctx.get("submitted_at") or "NOT RECORDED",
             finalized_at=final_record.finalized_at.strftime("%Y-%m-%d %H:%M:%S UTC") if final_record.finalized_at else "NOT RECORDED",
         )
 
@@ -377,7 +378,7 @@ class ReportDataBuilder:
 
         batch_field = pdec_snapshot.get("manufacture_packing_date") or {}
         batch_dict = batch_field.get("final_value") or {} if isinstance(batch_field, dict) else {}
-        batch_str = batch_dict.get("batch_number") or batch_dict.get("lot_number") or "NOT OBSERVED ON INSPECTED PANELS"
+        batch_str = batch_dict.get("batch_number") or batch_dict.get("lot_number") or "NOT RECORDED"
 
         origin_field = pdec_snapshot.get("country_of_origin") or {}
         origin_dict = origin_field.get("final_value") or {} if isinstance(origin_field, dict) else {}
@@ -385,7 +386,7 @@ class ReportDataBuilder:
 
         commodity_field = pdec_snapshot.get("commodity_name") or {}
         commodity_dict = commodity_field.get("final_value") or {} if isinstance(commodity_field, dict) else {}
-        commodity_str = commodity_dict.get("declared_name") or commodity_dict.get("name") or ctx.get("product_name") or "Packaged Commodity"
+        commodity_str = commodity_dict.get("declared_name") or commodity_dict.get("name") or ctx.get("product_name") or "NOT RECORDED"
 
         sec2 = ProductParticularsViewModel(
             product_name=commodity_str,
@@ -394,11 +395,11 @@ class ReportDataBuilder:
             variant=mfg_dict.get("variant") or "NOT RECORDED",
             net_quantity=net_qty_str,
             batch_lot_number=batch_str,
-            manufacturer=mfg_dict.get("name") or mfg_dict.get("manufacturer_name") or "NOT OBSERVED",
-            packer=mfg_dict.get("packer_name") or mfg_dict.get("name") or "NOT OBSERVED",
+            manufacturer=mfg_dict.get("name") or mfg_dict.get("manufacturer_name") or "NOT RECORDED",
+            packer=mfg_dict.get("packer_name") or mfg_dict.get("name") or "NOT RECORDED",
             importer=mfg_dict.get("importer_name") or ("NOT APPLICABLE (DOMESTIC MANUFACTURE)" if ctx.get("origin_status") == "DOMESTIC" else "NOT RECORDED"),
             country_of_origin=origin_country_str,
-            origin_status=ctx.get("origin_status", "DOMESTIC"),
+            origin_status=ctx.get("origin_status") or "NOT RECORDED",
             total_evidence_assets=len(evidence_list),
         )
 
@@ -427,7 +428,8 @@ class ReportDataBuilder:
             supp_ev = s_field.get("supporting_evidence_ids", []) if isinstance(s_field, dict) else []
             tokens = s_field.get("supporting_ocr_token_ids", []) if isinstance(s_field, dict) else []
             raw_text = s_field.get("source_raw_text") or (val_dict.get("raw_text") if isinstance(val_dict, dict) else "NOT RECORDED")
-            notes = s_field.get("synthesis_notes", "Synthesized across panel evidence assets.") if isinstance(s_field, dict) else "N/A"
+            notes = s_field.get("synthesis_notes", "NOT RECORDED") if isinstance(s_field, dict) else "NOT RECORDED"
+            recorded_conf = s_field.get("confidence") if isinstance(s_field, dict) else None
 
             sec4.append(DeclarationItemViewModel(
                 sl_no=idx,
@@ -439,7 +441,7 @@ class ReportDataBuilder:
                 supporting_token_indices=tokens,
                 source_raw_text=raw_text or "NOT RECORDED",
                 synthesis_notes=notes,
-                confidence=0.98 if obs_stat == "VERIFIED" or obs_stat == "OBSERVED" else 0.85,
+                confidence=float(recorded_conf) if recorded_conf is not None else None,
             ))
 
         # 8. Section 5 — Applicability & Rule-Wise Checks
@@ -453,11 +455,11 @@ class ReportDataBuilder:
             d = decisions_map.get(req, {})
 
             sys_res = f.get("result", "NOT_EVALUATED")
-            rev_det = d.get("determination", "CONFIRMED")
-            adj_res = d.get("adjudicated_result", sys_res)
-            is_over = d.get("is_override", False)
-            rat = d.get("rationale") or f.get("reason") or "Statutory requirement verified against packaging evidence."
-            citation = f.get("rule_citation", "LMPC Rules, 2011")
+            rev_det = d.get("determination") if d else "NOT RECORDED"
+            adj_res = d.get("adjudicated_result") if d else sys_res
+            is_over = d.get("is_override", False) if d else False
+            rat = (d.get("rationale") if d else None) or f.get("reason") or "NOT RECORDED"
+            citation = f.get("rule_citation") or "Rule 6(1)"
             app_status = f.get("applicability_status", "APPLICABLE")
             supp_ev = [f.get("evidence_id")] if f.get("evidence_id") else []
 
@@ -467,12 +469,12 @@ class ReportDataBuilder:
                 rule_citation=citation,
                 applicability_status=app_status,
                 system_result=sys_res,
-                reviewer_determination=rev_det,
-                adjudicated_result=adj_res,
+                reviewer_determination=rev_det or "NOT RECORDED",
+                adjudicated_result=adj_res or "NOT RECORDED",
                 is_override=is_over,
                 rationale=rat,
                 supporting_evidence_ids=supp_ev,
-                reason=f.get("reason", "N/A"),
+                reason=f.get("reason") or "NOT RECORDED",
             ))
 
         # 9. Section 6 — Observations / Potential Non-Compliance
@@ -517,8 +519,8 @@ class ReportDataBuilder:
                 sec8.append(InspectorVerificationItem(
                     sl_no=idx,
                     requirement_name=cor.get("requirement_name", "NOT RECORDED"),
-                    system_observation=str(cor.get("previous_value", "Automated Extraction")),
-                    inspector_observation=str(cor.get("corrected_value", "Inspector Verified")),
+                    system_observation=str(cor.get("previous_value", "NOT RECORDED")),
+                    inspector_observation=str(cor.get("corrected_value", "NOT RECORDED")),
                     inspector_remarks=cor.get("reason", "NOT RECORDED"),
                     verification_status="CONFIRMED_WITH_CORRECTION",
                     inspector_name=inspecting_officer.full_name,
@@ -531,12 +533,12 @@ class ReportDataBuilder:
                     sl_no=idx,
                     requirement_name=f.requirement_name,
                     system_observation=f.system_result,
-                    inspector_observation=f.adjudicated_result,
-                    inspector_remarks="Physical package panel verified against automated perception.",
-                    verification_status="CONFIRMED",
+                    inspector_observation="NOT RECORDED",
+                    inspector_remarks="NOT RECORDED",
+                    verification_status="NOT RECORDED",
                     inspector_name=inspecting_officer.full_name,
                     inspector_id=inspecting_officer.officer_id,
-                    timestamp=ctx.get("submitted_at") or ctx.get("created_at", "NOT RECORDED"),
+                    timestamp="NOT RECORDED",
                 ))
 
         # 12. Section 9 — Reviewing Officer's Determination
@@ -569,6 +571,27 @@ class ReportDataBuilder:
         )
 
         # 14. Section 11 — Evidence Integrity & Anti-Tampering Record
+        # Deterministic non-circular canonical payload for report-layer integrity hash (Correction 2)
+        canonical_integrity_payload = {
+            "id": final_record.id,
+            "inspection_id": final_record.inspection_id,
+            "final_decision": final_record.final_decision,
+            "final_rationale": final_record.final_rationale,
+            "finalized_by_id": final_record.finalized_by_id,
+            "finalized_at": final_record.finalized_at.isoformat() if final_record.finalized_at else None,
+            "rule_set_id": final_record.rule_set_id,
+            "rule_set_version": final_record.rule_set_version,
+            "evaluation_version": final_record.evaluation_version,
+            "source_evidence_hashes": final_record.source_evidence_hashes,
+            "inspection_context_snapshot": final_record.inspection_context_snapshot,
+            "evidence_snapshot": final_record.evidence_snapshot,
+            "declaration_snapshot": final_record.declaration_snapshot,
+            "applicability_snapshot": final_record.applicability_snapshot,
+            "compliance_findings_snapshot": final_record.compliance_findings_snapshot,
+            "reviewer_decisions_snapshot": final_record.reviewer_decisions_snapshot,
+        }
+        composite_hash = hashlib.sha256(json.dumps(canonical_integrity_payload, sort_keys=True).encode("utf-8")).hexdigest()
+
         sec11 = {
             "disclaimer": (
                 "A SHA-256 cryptographic fingerprint is calculated and recorded for each evidence asset at the time of "
@@ -579,7 +602,7 @@ class ReportDataBuilder:
                 {"id": ev.evidence_id, "filename": ev.original_filename, "hash": ev.sha256_hash, "status": "SEALED_IMMUTABLE"}
                 for ev in sec3
             ],
-            "composite_record_hash": hashlib.sha256(json.dumps(ctx, sort_keys=True).encode()).hexdigest(),
+            "composite_record_hash": composite_hash,
         }
 
         # 15. Section 12 — Complete Chronological Audit Trail

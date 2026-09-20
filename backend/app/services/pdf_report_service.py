@@ -26,11 +26,13 @@ from reportlab.platypus import (
 )
 from reportlab.pdfgen import canvas
 
+from pathlib import Path
 from backend.app.models.final_audit import FinalAuditRecord
 from backend.app.services.report_data_builder import ReportDataBuilder, ReportViewModel
+from backend.app.services.storage_service import get_storage_service
 from backend.app.core.errors import ValidationError
 
-EMBLEM_PNG_PATH = r"G:\CompliScan\static\assets\emblem_of_india.png"
+EMBLEM_PNG_PATH = str(Path(__file__).resolve().parents[3] / "static" / "assets" / "emblem_of_india.png")
 
 
 class GovernmentDossierCanvas(canvas.Canvas):
@@ -214,7 +216,7 @@ class PDFReportService:
         story.append(Paragraph("GOVERNMENT OF INDIA", style_gov_head))
         story.append(Paragraph("MINISTRY OF CONSUMER AFFAIRS, FOOD & PUBLIC DISTRIBUTION", style_sub))
         story.append(Paragraph("DEPARTMENT OF CONSUMER AFFAIRS — LEGAL METROLOGY DIVISION", style_sub))
-        story.append(Paragraph("STATUTORY INSPECTION & COMPLIANCE ASSESSMENT DOSSIER", style_title))
+        story.append(Paragraph("LEGAL METROLOGY PACKAGED COMMODITIES STATUTORY INSPECTION REPORT", style_title))
         story.append(Paragraph("PACKAGED COMMODITIES REGULATORY ENFORCEMENT RECORD", style_sub))
         story.append(HRFlowable(width="100%", thickness=1.2, color=NAVY, spaceBefore=2, spaceAfter=8))
 
@@ -484,7 +486,7 @@ class PDFReportService:
             [Paragraph(f"<b>FINAL MASTER ADJUDICATION: {s9.master_decision}</b>", ParagraphStyle("RevH", parent=style_body_bold, fontSize=8.5, textColor=NAVY))],
             [Paragraph(f"<b>Reviewing Officer:</b> {s9.reviewer_name} ({s9.reviewer_id}) — {s9.reviewer_designation}, {s9.reviewer_department} &nbsp;|&nbsp; <b>Finalized:</b> {s9.finalized_at}", style_body)],
             [Paragraph(f"<b>Statutory Adjudication Rationale:</b> {s9.master_rationale}", style_body)],
-            [Paragraph("<b>Digital Signature / Authentication Status:</b> VERIFIED & CRYPTOGRAPHICALLY SEALED", style_body_bold)],
+            [Paragraph("<b>Evidence Integrity Status:</b> SHA-256 FINGERPRINT RECORDED", style_body_bold)],
         ]
         t_rev = Table(rev_data, colWidths=[505])
         t_rev.setStyle(TableStyle([
@@ -581,31 +583,54 @@ class PDFReportService:
         # ── ANNEXURE A: PHOTOGRAPHIC EVIDENCE REGISTER ───────────────────────
         story.append(PageBreak())
         story.append(Paragraph("ANNEXURE A — PHOTOGRAPHIC EVIDENCE REGISTER (EMBEDDED IMAGES)", style_h1))
+        storage_svc = None
+        try:
+            storage_svc = get_storage_service()
+        except Exception:
+            pass
+
         for ev_img in vm.annexure_a_images:
             story.append(Paragraph(f"<b>Figure {ev_img.sl_no} — Evidence Asset ID: {ev_img.evidence_id} ({ev_img.original_filename})</b>", style_body_bold))
             story.append(Paragraph(f"SHA-256: {ev_img.sha256_hash} &nbsp;|&nbsp; Size: {ev_img.file_size_kb} KB &nbsp;|&nbsp; Status: {ev_img.status}", style_mono))
             story.append(Spacer(1, 3))
 
-            img_path = ev_img.file_path if ev_img.file_path and os.path.exists(ev_img.file_path) else None
-
-            if img_path and os.path.exists(img_path):
+            img_bytes = None
+            if ev_img.file_path and os.path.exists(ev_img.file_path):
                 try:
-                    img_flowable = RLImage(img_path, width=310, height=230)
+                    with open(ev_img.file_path, "rb") as f:
+                        img_bytes = f.read()
+                except Exception:
+                    img_bytes = None
+            elif storage_svc and ev_img.file_path:
+                try:
+                    import asyncio
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        import concurrent.futures
+                        with concurrent.futures.ThreadPoolExecutor() as pool:
+                            img_bytes = pool.submit(asyncio.run, storage_svc.download_file("compliscan-evidence", ev_img.file_path)).result(timeout=5.0)
+                    else:
+                        img_bytes = asyncio.run(storage_svc.download_file("compliscan-evidence", ev_img.file_path))
+                except Exception:
+                    img_bytes = None
+
+            if img_bytes:
+                try:
+                    img_flowable = RLImage(io.BytesIO(img_bytes), width=310, height=230)
                     story.append(img_flowable)
                 except Exception:
                     story.append(Paragraph(
                         f"<i>[Evidence Image Asset Preserved: {ev_img.original_filename} "
-                        f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In This Environment]</i>",
+                        f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In Report Environment]</i>",
                         style_body
                     ))
             else:
                 story.append(Paragraph(
                     f"<i>[Evidence Image Asset Preserved: {ev_img.original_filename} "
-                    f"(SHA-256: {ev_img.sha256_hash}) — NOT AVAILABLE]</i>",
+                    f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In Report Environment]</i>",
                     style_body
                 ))
             story.append(Spacer(1, 8))
-
 
         # ── ANNEXURE B: OCR TOKEN AND BOUNDING BOX REGISTER ──────────────────
         story.append(PageBreak())
@@ -663,10 +688,14 @@ class PDFReportService:
         ]))
         story.append(t_ac)
 
-        # ── ANNEXURE D: RAW FINALAUDITRECORD SNAPSHOT ────────────────────────
+        # ── ANNEXURE D: ABRIDGED FINALAUDITRECORD SNAPSHOT ──────────────────
         story.append(PageBreak())
-        story.append(Paragraph("ANNEXURE D — RAW STRUCTURED FINALAUDITRECORD SNAPSHOT", style_h1))
-        story.append(Paragraph("Deterministic Serialized JSON Representation of the Immutable FinalAuditRecord:", style_sub))
+        story.append(Paragraph("ANNEXURE D — ABRIDGED FINALAUDITRECORD SNAPSHOT", style_h1))
+        story.append(Paragraph(
+            "This annexure contains an abridged serialized representation for human reference. "
+            "The complete immutable FinalAuditRecord remains preserved in the system of record.",
+            style_sub
+        ))
         story.append(Paragraph(vm.annexure_d_raw_snapshot_json[:3500].replace("\n", "<br/>&nbsp;&nbsp;").replace(" ", "&nbsp;"), style_mono))
 
         # Build PDF with GovernmentDossierCanvas

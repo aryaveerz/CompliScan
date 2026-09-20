@@ -338,3 +338,108 @@ def test_report_services_reject_none():
 
     with pytest.raises(ValidationError):
         DOCXReportService.generate_docx_report(None)
+
+
+def test_report_builder_unrecorded_fallbacks_and_no_fabrication():
+    """Verify ReportDataBuilder renders 'NOT RECORDED' for absent values without fabricating facts."""
+    now = datetime.now(timezone.utc)
+    empty_far = FinalAuditRecord(
+        id="FAR-EMPTY-001",
+        inspection_id="INS-EMPTY-001",
+        finalized_by_id=None,
+        finalized_at=None,
+        final_decision="PENDING",
+        final_rationale=None,
+        rule_set_id=None,
+        rule_set_version=None,
+        evaluation_version=None,
+        source_evidence_hashes={},
+        inspection_context_snapshot={"inspection_started_at": "2026-09-20T10:00:00Z"},
+        evidence_snapshot=[],
+        declaration_snapshot={},
+        applicability_snapshot=[],
+        compliance_findings_snapshot=[],
+        reviewer_decisions_snapshot=[],
+        audit_metadata={},
+    )
+
+    vm = ReportDataBuilder.build(empty_far)
+
+    # Date extraction (Fix 11: inspection_started_at present, created_at absent)
+    assert vm.section_1_inspection_details.inspection_date == "2026-09-20"
+
+    # Officer identity non-fabrication (Fix 4)
+    assert vm.section_1_inspection_details.inspecting_officer.designation == "NOT RECORDED"
+    assert vm.section_1_inspection_details.inspecting_officer.department == "NOT RECORDED"
+    assert vm.section_1_inspection_details.reviewing_officer.designation == "NOT RECORDED"
+
+    # AI / OCR Metadata non-fabrication (Fix 5)
+    assert vm.doc_control.ocr_engine == "NOT RECORDED"
+    assert vm.doc_control.ai_model == "NOT RECORDED"
+
+    # Inspector verification non-fabrication (Fix 1)
+    for v_item in vm.section_8_inspector_verifications:
+        assert v_item.verification_status == "NOT RECORDED"
+        assert v_item.inspector_observation == "NOT RECORDED"
+
+    # Reviewer determination non-fabrication (Fix 2)
+    for f_item in vm.section_5_applicability_and_rules:
+        assert f_item.reviewer_determination == "NOT RECORDED"
+
+    # Confidence score non-fabrication (Fix 3)
+    for d_item in vm.section_4_declaration_extraction:
+        assert d_item.confidence is None
+
+
+def test_deterministic_integrity_hash(mock_final_audit_record):
+    """Verify deterministic composite record hash changes when underlying record changes (Fix 10)."""
+    vm1 = ReportDataBuilder.build(mock_final_audit_record)
+    hash1 = vm1.section_11_evidence_integrity["composite_record_hash"]
+    assert len(hash1) == 64
+
+    # Mutate context copy
+    mod_far = FinalAuditRecord(
+        id=mock_final_audit_record.id,
+        inspection_id=mock_final_audit_record.inspection_id,
+        finalized_by_id=mock_final_audit_record.finalized_by_id,
+        finalized_at=mock_final_audit_record.finalized_at,
+        final_decision="REJECTED",  # Modified decision
+        final_rationale=mock_final_audit_record.final_rationale,
+        rule_set_id=mock_final_audit_record.rule_set_id,
+        rule_set_version=mock_final_audit_record.rule_set_version,
+        evaluation_version=mock_final_audit_record.evaluation_version,
+        source_evidence_hashes=mock_final_audit_record.source_evidence_hashes,
+        inspection_context_snapshot=mock_final_audit_record.inspection_context_snapshot,
+        evidence_snapshot=mock_final_audit_record.evidence_snapshot,
+        declaration_snapshot=mock_final_audit_record.declaration_snapshot,
+        applicability_snapshot=mock_final_audit_record.applicability_snapshot,
+        compliance_findings_snapshot=mock_final_audit_record.compliance_findings_snapshot,
+        reviewer_decisions_snapshot=mock_final_audit_record.reviewer_decisions_snapshot,
+        audit_metadata=mock_final_audit_record.audit_metadata,
+    )
+    vm2 = ReportDataBuilder.build(mod_far)
+    hash2 = vm2.section_11_evidence_integrity["composite_record_hash"]
+    assert hash2 != hash1
+
+
+def test_pdf_and_docx_non_misleading_signature_and_annexure_d(mock_final_audit_record):
+    """Verify PDF and DOCX use non-misleading signature text and abridged Annexure D title (Fix 6 & 9)."""
+    pdf_bytes = PDFReportService.generate_pdf_report(mock_final_audit_record)
+    docx_bytes = DOCXReportService.generate_docx_report(mock_final_audit_record)
+
+    # Check PDF
+    reader = PdfReader(io.BytesIO(pdf_bytes))
+    full_pdf_text = "\n".join([page.extract_text() for page in reader.pages])
+    assert "Digital Signature / Authentication Status" not in full_pdf_text
+    assert "Evidence Integrity Status" in full_pdf_text
+    assert "ANNEXURE D — ABRIDGED FINALAUDITRECORD SNAPSHOT" in full_pdf_text
+
+    # Check DOCX
+    doc = Document(io.BytesIO(docx_bytes))
+    paragraph_text = "\n".join([p.text for p in doc.paragraphs])
+    table_text = "\n".join([cell.text for t in doc.tables for row in t.rows for cell in row.cells])
+    full_docx_text = paragraph_text + "\n" + table_text
+    assert "Digital Signature / Authentication Status" not in full_docx_text
+    assert "Evidence Integrity Status" in full_docx_text
+    assert "ABRIDGED FINALAUDITRECORD SNAPSHOT" in full_docx_text
+
