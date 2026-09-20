@@ -16,7 +16,8 @@ import {
   User,
 } from '../types';
 
-const API_BASE = '/api/v1';
+const VITE_URL = (import.meta as any).env?.VITE_API_BASE_URL;
+const API_BASE = VITE_URL ? `${VITE_URL.replace(/\/$/, '')}/api/v1` : '/api/v1';
 
 class ApiClient {
   private getToken(): string | null {
