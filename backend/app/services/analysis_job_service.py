@@ -22,6 +22,9 @@ from backend.app.services.image_quality_service import ImageQualityService
 from backend.app.services.ocr_service import OCRService
 from backend.app.services.extraction_service import ExtractionService
 from backend.app.services.audit_service import AuditService
+from backend.app.core.security import compute_sha256
+from backend.app.services.storage_service import get_storage_service
+from shared.domain.constants import ErrorCode
 from shared.domain.enums import JobType, JobStatus, AuditEventType, ImageQualityStatus
 from shared.domain.states import ProcessingState
 
@@ -32,7 +35,63 @@ class AnalysisJobService:
     """
 
     @classmethod
+    async def _get_and_verify_evidence_binary(
+        cls,
+        db: AsyncSession,
+        evidence: EvidenceAsset,
+        job_id: str,
+    ) -> bytes:
+        """
+        Download evidence binary through StorageService and verify SHA-256 integrity against EvidenceAsset.sha256_hash.
+        If SHA-256 mismatches:
+            - logs AuditEventType.INTEGRITY_MISMATCH_ERROR
+            - raises AnalysisError with code INTEGRITY_MISMATCH_ERROR
+        """
+        storage_service = get_storage_service()
+        bucket = "compliscan-evidence"
+        path = evidence.storage_path
+        if path.startswith("compliscan-evidence/"):
+            path = path[len("compliscan-evidence/"):]
+
+        try:
+            content = await storage_service.download_file(bucket=bucket, path=path)
+        except NotFoundError:
+            if os.path.exists(evidence.storage_path):
+                with open(evidence.storage_path, "rb") as f:
+                    content = f.read()
+            else:
+                raise FileNotFoundError(f"Evidence binary missing at storage path: {evidence.storage_path}")
+
+        # Compute SHA-256
+        computed_sha256 = compute_sha256(content)
+
+        # Compare with EvidenceAsset.sha256_hash
+        if computed_sha256 != evidence.sha256_hash:
+            # Audit log security event
+            await AuditService.log_event(
+                db=db,
+                event_type=AuditEventType.INTEGRITY_MISMATCH_ERROR,
+                inspection_id=evidence.inspection_id,
+                actor_id=job_id,
+                actor_role="SYSTEM_WORKER",
+                details={
+                    "evidence_id": evidence.id,
+                    "expected_sha256": evidence.sha256_hash,
+                    "computed_sha256": computed_sha256,
+                    "message": "CRITICAL: Cryptographic SHA-256 mismatch detected during worker evidence retrieval.",
+                },
+            )
+            raise AnalysisError(
+                code=ErrorCode.INTEGRITY_MISMATCH_ERROR,
+                message=f"INTEGRITY_MISMATCH_ERROR: Evidence {evidence.id} binary payload corrupted or modified. Expected {evidence.sha256_hash}, computed {computed_sha256}",
+                status_code=400,
+            )
+
+        return content
+
+    @classmethod
     async def enqueue_job(
+
         cls,
         db: AsyncSession,
         inspection_id: str,
@@ -191,12 +250,9 @@ class AnalysisJobService:
         if not evidence:
             raise NotFoundError(f"Evidence asset {job.evidence_id} not found")
 
-        # Read original evidence binary (read-only)
-        if not os.path.exists(evidence.storage_path):
-            raise FileNotFoundError(f"Evidence file missing at storage path: {evidence.storage_path}")
+        # Read original evidence binary with SHA-256 integrity verification
+        content = await cls._get_and_verify_evidence_binary(db, evidence, job.id)
 
-        with open(evidence.storage_path, "rb") as f:
-            content = f.read()
 
         # Perform deterministic assessment
         result = ImageQualityService.assess_image_bytes(
@@ -293,12 +349,9 @@ class AnalysisJobService:
             )
             return
 
-        # 2. Read original evidence binary (read-only)
-        if not os.path.exists(evidence.storage_path):
-            raise FileNotFoundError(f"Evidence file missing at storage path: {evidence.storage_path}")
+        # 2. Read original evidence binary with SHA-256 integrity verification
+        content = await cls._get_and_verify_evidence_binary(db, evidence, job.id)
 
-        with open(evidence.storage_path, "rb") as f:
-            content = f.read()
 
         # 3. Execute OCR perception pipeline
         raw_result = OCRService.process_image_bytes(

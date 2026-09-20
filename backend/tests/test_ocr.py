@@ -350,8 +350,7 @@ class TestOCRPersistenceAndGating:
 
 
             # Step 4: Verify Evidence Immutability
-            with open(asset.storage_path, "rb") as f:
-                disk_bytes = f.read()
+            disk_bytes, _ = await EvidenceService.get_evidence_binary(db=db, evidence_id=asset.id, current_user=inspector)
             assert disk_bytes == img_bytes
             assert compute_sha256(disk_bytes) == original_sha
 

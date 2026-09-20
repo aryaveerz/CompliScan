@@ -63,6 +63,8 @@ async def delete_evidence(
     return None
 
 
+from fastapi.responses import Response
+
 @router.get("/evidence/{evidence_id}/download")
 async def download_evidence(
     evidence_id: str,
@@ -73,15 +75,16 @@ async def download_evidence(
     Download / view the stored original evidence file.
     Enforces authorization check against owning inspection case.
     """
-    asset = await EvidenceService.get_evidence_by_id(db, evidence_id, current_user=current_user)
-    if not os.path.exists(asset.storage_path):
-        raise NotFoundError("Evidence binary file not found on storage")
+    content, asset = await EvidenceService.get_evidence_binary(db, evidence_id, current_user=current_user)
 
-    return FileResponse(
-        path=asset.storage_path,
+    return Response(
+        content=content,
         media_type=asset.mime_type,
-        filename=asset.original_filename,
+        headers={
+            "Content-Disposition": f'inline; filename="{asset.original_filename}"'
+        },
     )
+
 
 
 @router.get("/evidence/{evidence_id}/quality", response_model=ImageQualityAssessmentResponse)

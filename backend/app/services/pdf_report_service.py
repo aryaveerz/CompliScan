@@ -587,25 +587,25 @@ class PDFReportService:
             story.append(Spacer(1, 3))
 
             img_path = ev_img.file_path if ev_img.file_path and os.path.exists(ev_img.file_path) else None
-            if not img_path:
-                for candidate_dir in [
-                    os.path.join("tests", "fixtures", "images", "packaged_products", "Peanut_Butter"),
-                    os.path.join("tests", "fixtures", "images", "packaged_products", "Juice"),
-                ]:
-                    cand = os.path.join(candidate_dir, ev_img.original_filename)
-                    if os.path.exists(cand):
-                        img_path = cand
-                        break
 
             if img_path and os.path.exists(img_path):
                 try:
                     img_flowable = RLImage(img_path, width=310, height=230)
                     story.append(img_flowable)
                 except Exception:
-                    story.append(Paragraph(f"<i>[Evidence Image File Preserved: {ev_img.original_filename}]</i>", style_body))
+                    story.append(Paragraph(
+                        f"<i>[Evidence Image Asset Preserved: {ev_img.original_filename} "
+                        f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In This Environment]</i>",
+                        style_body
+                    ))
             else:
-                story.append(Paragraph(f"<i>[Evidence Image File Preserved: {ev_img.original_filename}]</i>", style_body))
+                story.append(Paragraph(
+                    f"<i>[Evidence Image Asset Preserved: {ev_img.original_filename} "
+                    f"(SHA-256: {ev_img.sha256_hash}) — NOT AVAILABLE]</i>",
+                    style_body
+                ))
             story.append(Spacer(1, 8))
+
 
         # ── ANNEXURE B: OCR TOKEN AND BOUNDING BOX REGISTER ──────────────────
         story.append(PageBreak())

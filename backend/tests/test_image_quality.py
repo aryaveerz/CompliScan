@@ -301,9 +301,7 @@ class TestImageQualityIntegration:
             assert assessment.evidence_id == asset.id
             assert assessment.inspection_id == inspection.id
 
-            # 8. Immutability verification: check original file and SHA-256
-            with open(asset.storage_path, "rb") as f:
-                disk_bytes = f.read()
+            disk_bytes, _ = await EvidenceService.get_evidence_binary(db=db, evidence_id=asset.id, current_user=inspector)
             assert disk_bytes == image_content
             assert compute_sha256(disk_bytes) == original_sha
 

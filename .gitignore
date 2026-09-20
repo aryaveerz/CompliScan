@@ -73,3 +73,7 @@ wheels/
 # Local AI/agent tooling
 .agent/
 .impeccable/
+
+# Pytest temp folders
+temp_pytest/
+backend/temp_pytest/

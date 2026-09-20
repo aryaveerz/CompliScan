@@ -35,6 +35,8 @@ from shared.domain.enums import EvidenceType, AuditEventType, UserRole, JobType
 from shared.domain.states import InspectionLifecycleState, FinalizationStatus
 
 
+from backend.app.services.storage_service import get_storage_service, BaseStorageService
+
 class EvidenceService:
     @staticmethod
     def validate_file_metadata(filename: str, content_type: str, file_size: int) -> None:
@@ -65,21 +67,6 @@ class EvidenceService:
                 message=f"Invalid or corrupted image payload: {str(e)}",
                 status_code=422,
             )
-
-    @staticmethod
-    async def save_evidence_file(inspection_id: str, evidence_id: str, filename: str, content: bytes) -> str:
-        """Save evidence binary to persistent storage directory."""
-        target_dir = os.path.join(settings.LOCAL_STORAGE_DIR, inspection_id)
-        os.makedirs(target_dir, exist_ok=True)
-
-        # Sanitize filename
-        safe_filename = "".join(c for c in filename if c.isalnum() or c in "._-")
-        storage_path = os.path.join(target_dir, f"{evidence_id}_{safe_filename}")
-
-        with open(storage_path, "wb") as f:
-            f.write(content)
-
-        return storage_path
 
     @classmethod
     async def upload_evidence(
@@ -124,13 +111,25 @@ class EvidenceService:
         # 6. Generate server-side Evidence ID
         evidence_id = f"EV-{uuid.uuid4().hex[:12].upper()}"
 
-        # 7. Persist file binary
-        storage_path = await cls.save_evidence_file(
-            inspection_id=inspection_id,
-            evidence_id=evidence_id,
-            filename=file.filename or "evidence.jpg",
-            content=content,
-        )
+        # 7. Canonical Pathing & Upload via StorageService
+        safe_filename = "".join(c for c in (file.filename or "evidence.jpg") if c.isalnum() or c in "._-")
+        bucket = "compliscan-evidence"
+        rel_path = f"inspections/{inspection_id}/{evidence_id}/original/{safe_filename}"
+
+        storage_service = get_storage_service()
+        try:
+            canonical_path = await storage_service.upload_file(
+                bucket=bucket,
+                path=rel_path,
+                content=content,
+                content_type=file.content_type or "image/jpeg",
+            )
+        except Exception as e:
+            raise EvidenceError(
+                code=ErrorCode.INTERNAL_SERVER_ERROR,
+                message=f"Failed to persist evidence binary to storage: {str(e)}",
+                status_code=500,
+            )
 
         # 8. Create DB Asset
         asset = EvidenceAsset(
@@ -141,41 +140,48 @@ class EvidenceService:
             mime_type=file.content_type or "image/jpeg",
             file_size_bytes=file_size,
             sha256_hash=sha256_hash,
-            storage_path=storage_path,
+            storage_path=canonical_path,
             is_immutable=True,
             uploaded_by_id=current_user.id,
         )
         db.add(asset)
 
-        # 9. Auto-enqueue Image Quality Assessment job
-        await AnalysisJobService.enqueue_job(
-            db=db,
-            inspection_id=inspection_id,
-            evidence_id=evidence_id,
-            job_type=JobType.IMAGE_QUALITY,
-        )
-
-        # 10. Update inspection lifecycle state if it was in DRAFT
-        if inspection.status == InspectionLifecycleState.DRAFT.value:
-            inspection.status = InspectionLifecycleState.EVIDENCE_UPLOADED.value
-            await AuditService.log_event(
+        try:
+            # 9. Auto-enqueue Image Quality Assessment job
+            await AnalysisJobService.enqueue_job(
                 db=db,
-                event_type=AuditEventType.EVIDENCE_UPLOADED,
                 inspection_id=inspection_id,
-                actor_id=current_user.id,
-                actor_role=current_user.role,
-                details={
-                    "evidence_id": evidence_id,
-                    "evidence_type": str(evidence_type),
-                    "original_filename": file.filename,
-                    "file_size_bytes": file_size,
-                    "sha256_hash": sha256_hash,
-                },
+                evidence_id=evidence_id,
+                job_type=JobType.IMAGE_QUALITY,
             )
 
-        await db.commit()
-        await db.refresh(asset)
-        return asset
+            # 10. Update inspection lifecycle state if it was in DRAFT
+            if inspection.status == InspectionLifecycleState.DRAFT.value:
+                inspection.status = InspectionLifecycleState.EVIDENCE_UPLOADED.value
+                await AuditService.log_event(
+                    db=db,
+                    event_type=AuditEventType.EVIDENCE_UPLOADED,
+                    inspection_id=inspection_id,
+                    actor_id=current_user.id,
+                    actor_role=current_user.role,
+                    details={
+                        "evidence_id": evidence_id,
+                        "evidence_type": str(evidence_type),
+                        "original_filename": file.filename,
+                        "file_size_bytes": file_size,
+                        "sha256_hash": sha256_hash,
+                    },
+                )
+
+            await db.commit()
+            await db.refresh(asset)
+            return asset
+        except Exception:
+            await db.rollback()
+            # Partial failure cleanup: remove uploaded binary from storage
+            await storage_service.delete_file(bucket=bucket, path=rel_path)
+            raise
+
 
     @staticmethod
     async def get_evidence_by_id(
@@ -201,6 +207,32 @@ class EvidenceService:
                 raise ForbiddenError("Access denied: You are not authorized to download evidence for another inspector's case")
 
         return asset
+
+    @classmethod
+    async def get_evidence_binary(
+        cls,
+        db: AsyncSession,
+        evidence_id: str,
+        current_user: Optional[User] = None,
+    ) -> tuple[bytes, EvidenceAsset]:
+        """Retrieve evidence binary content and asset metadata with authorization check."""
+        asset = await cls.get_evidence_by_id(db, evidence_id, current_user=current_user)
+        storage_service = get_storage_service()
+
+        bucket = "compliscan-evidence"
+        path = asset.storage_path
+        if path.startswith("compliscan-evidence/"):
+            path = path[len("compliscan-evidence/"):]
+
+        try:
+            content = await storage_service.download_file(bucket=bucket, path=path)
+            return content, asset
+        except NotFoundError:
+            # Check legacy local disk fallback if storage path was saved before Phase 7.3
+            if os.path.exists(asset.storage_path):
+                with open(asset.storage_path, "rb") as f:
+                    return f.read(), asset
+            raise NotFoundError(f"Evidence binary object not found in storage for {evidence_id}")
 
     @staticmethod
     async def get_evidence_quality(db: AsyncSession, evidence_id: str) -> ImageQualityAssessment:
@@ -281,7 +313,15 @@ class EvidenceService:
         if current_user.role == UserRole.INSPECTOR.value and asset.uploaded_by_id != current_user.id:
             raise ForbiddenError("Cannot delete evidence uploaded by another user")
 
-        # Delete physical file if exists
+        # Delete object via storage abstraction
+        storage_service = get_storage_service()
+        bucket = "compliscan-evidence"
+        path = asset.storage_path
+        if path.startswith("compliscan-evidence/"):
+            path = path[len("compliscan-evidence/"):]
+        await storage_service.delete_file(bucket=bucket, path=path)
+
+        # Legacy local file cleanup fallback if path is local absolute path
         if os.path.exists(asset.storage_path):
             try:
                 os.remove(asset.storage_path)
@@ -289,6 +329,7 @@ class EvidenceService:
                 pass
 
         await db.delete(asset)
+
 
         # Audit event
         await AuditService.log_event(

@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     SUPABASE_JWT_SECRET: str = ""
     SUPABASE_AUTH_AUDIENCE: str = "authenticated"
     SUPABASE_STORAGE_BUCKET: str = "compliscan-evidence"
+    STORAGE_BACKEND: str = "local"  # "local" or "supabase"
 
     # Local storage fallback
     LOCAL_STORAGE_DIR: str = "backend/uploads"

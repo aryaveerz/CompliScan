@@ -370,23 +370,21 @@ class DOCXReportService:
             p_hash.runs[0].font.size = Pt(7.5)
 
             img_path = ev_img.file_path if ev_img.file_path and os.path.exists(ev_img.file_path) else None
-            if not img_path:
-                for candidate_dir in [
-                    os.path.join("tests", "fixtures", "images", "packaged_products", "Peanut_Butter"),
-                    os.path.join("tests", "fixtures", "images", "packaged_products", "Juice"),
-                ]:
-                    cand = os.path.join(candidate_dir, ev_img.original_filename)
-                    if os.path.exists(cand):
-                        img_path = cand
-                        break
 
             if img_path and os.path.exists(img_path):
                 try:
                     doc.add_picture(img_path, width=Inches(4.5))
                 except Exception:
-                    doc.add_paragraph(f"[Evidence Image Preserved: {ev_img.original_filename}]")
+                    doc.add_paragraph(
+                        f"[Evidence Image Asset Preserved: {ev_img.original_filename} "
+                        f"(SHA-256: {ev_img.sha256_hash}) — Binary Not Available In This Environment]"
+                    )
             else:
-                doc.add_paragraph(f"[Evidence Image Preserved: {ev_img.original_filename}]")
+                doc.add_paragraph(
+                    f"[Evidence Image Asset Preserved: {ev_img.original_filename} "
+                    f"(SHA-256: {ev_img.sha256_hash}) — NOT AVAILABLE]"
+                )
+
 
         # ── ANNEXURE B: OCR TOKEN AND BOUNDING BOX REGISTER ──────────────────
         doc.add_page_break()
