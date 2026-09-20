@@ -402,3 +402,144 @@ async def test_cors_and_health_endpoint():
         )
         assert res_cors.status_code == 200
         assert res_cors.headers.get("access-control-allow-origin") == "http://localhost:5173"
+
+
+@pytest.mark.asyncio
+async def test_inspection_workspace_data_scoping_and_cross_inspection_isolation():
+    """
+    Verify Inspection Workspace Data Scoping & Cross-Inspection Isolation:
+      - A declaration from Inspection B CANNOT appear in Inspection A's payload.
+      - Evidence from Inspection B CANNOT appear in Inspection A's payload.
+      - Sequential retrieval of Inspection A -> B -> A remains strictly isolated.
+    """
+    async with AsyncSessionLocal() as db_session:
+        inspector = User(
+            id=str(uuid.uuid4()),
+            email=f"inspector_iso_{uuid.uuid4().hex[:6]}@compliscan.gov.in",
+            role=UserRole.INSPECTOR.value,
+            full_name="Inspector Isolation Tester",
+        )
+        db_session.add(inspector)
+
+        # 1. Create Inspection A (e.g. Real Juice)
+        case_a_id = str(uuid.uuid4())
+        case_a = InspectionCase(
+            id=case_a_id,
+            case_number=f"CN-A-{uuid.uuid4().hex[:6].upper()}",
+            product_name="Real Fruit Juice Mixed 1L",
+            origin_status="DOMESTIC",
+            created_by_id=inspector.id,
+            status=InspectionLifecycleState.DRAFT.value,
+        )
+        evidence_a = EvidenceAsset(
+            id=str(uuid.uuid4()),
+            inspection_id=case_a_id,
+            uploaded_by_id=inspector.id,
+            original_filename="juice_front.jpg",
+            mime_type="image/jpeg",
+            file_size_bytes=2048,
+            sha256_hash="a" * 64,
+            storage_path="/storage/evidence/juice_front.jpg",
+        )
+        finding_a = ComplianceFinding(
+            id=str(uuid.uuid4()),
+            inspection_id=case_a_id,
+            evidence_id=evidence_a.id,
+            requirement_name="MANUFACTURER_NAME_ADDRESS",
+            result=ComplianceResult.PASS.value,
+            applicability_status=ApplicabilityStatus.APPLICABLE.value,
+            rule_citation="Rule 6(1)(a)",
+            reason="Verified on label",
+            metadata_payload={"extracted_value": "Dabur India Ltd, 8/3 Asaf Ali Road, New Delhi", "confidence": 0.98},
+        )
+
+        # 2. Create Inspection B (e.g. Peanut Butter)
+        case_b_id = str(uuid.uuid4())
+        case_b = InspectionCase(
+            id=case_b_id,
+            case_number=f"CN-B-{uuid.uuid4().hex[:6].upper()}",
+            product_name="Crunchy Peanut Butter 500g",
+            origin_status="DOMESTIC",
+            created_by_id=inspector.id,
+            status=InspectionLifecycleState.DRAFT.value,
+        )
+        evidence_b = EvidenceAsset(
+            id=str(uuid.uuid4()),
+            inspection_id=case_b_id,
+            uploaded_by_id=inspector.id,
+            original_filename="peanut_butter_label.jpg",
+            mime_type="image/jpeg",
+            file_size_bytes=2048,
+            sha256_hash="b" * 64,
+            storage_path="/storage/evidence/peanut_butter_label.jpg",
+        )
+        finding_b = ComplianceFinding(
+            id=str(uuid.uuid4()),
+            inspection_id=case_b_id,
+            evidence_id=evidence_b.id,
+            requirement_name="MANUFACTURER_NAME_ADDRESS",
+            result=ComplianceResult.PASS.value,
+            applicability_status=ApplicabilityStatus.APPLICABLE.value,
+            rule_citation="Rule 6(1)(a)",
+            reason="Verified on label",
+            metadata_payload={"extracted_value": "Sundrop Foods, Plot 99 Industrial Zone, Gujarat", "confidence": 0.95},
+        )
+
+        db_session.add_all([case_a, evidence_a, finding_a, case_b, evidence_b, finding_b])
+        await db_session.commit()
+
+        from backend.tests.conftest import create_test_supabase_token
+        token = create_test_supabase_token(user_id=inspector.id, email=inspector.email)
+        headers = {"Authorization": f"Bearer {token}"}
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        # Step 1: Query Inspection A details & findings
+        res_a1 = await client.get(f"/api/v1/inspections/{case_a_id}", headers=headers)
+        assert res_a1.status_code == 200
+        data_a1 = res_a1.json()
+        assert data_a1["id"] == case_a_id
+        assert data_a1["product_name"] == "Real Fruit Juice Mixed 1L"
+        # Evidence isolation
+        ev_ids_a = [e["id"] for e in data_a1.get("evidence_assets", [])]
+        assert evidence_a.id in ev_ids_a
+        assert evidence_b.id not in ev_ids_a
+
+        res_findings_a = await client.get(f"/api/v1/inspections/{case_a_id}/findings", headers=headers)
+        assert res_findings_a.status_code == 200
+        findings_a = res_findings_a.json().get("findings", [])
+        assert any("Dabur India Ltd" in str(f.get("metadata_payload") or f.get("reason") or "") for f in findings_a)
+        assert not any("Sundrop Foods" in str(f.get("metadata_payload") or f.get("reason") or "") for f in findings_a)
+        assert not any("Apex Consumer Goods" in str(f) for f in findings_a)
+
+        # Step 2: Query Inspection B details & findings
+        res_b = await client.get(f"/api/v1/inspections/{case_b_id}", headers=headers)
+        assert res_b.status_code == 200
+        data_b = res_b.json()
+        assert data_b["id"] == case_b_id
+        assert data_b["product_name"] == "Crunchy Peanut Butter 500g"
+        # Evidence isolation
+        ev_ids_b = [e["id"] for e in data_b.get("evidence_assets", [])]
+        assert evidence_b.id in ev_ids_b
+        assert evidence_a.id not in ev_ids_b
+
+        res_findings_b = await client.get(f"/api/v1/inspections/{case_b_id}/findings", headers=headers)
+        assert res_findings_b.status_code == 200
+        findings_b = res_findings_b.json().get("findings", [])
+        assert any("Sundrop Foods" in str(f.get("metadata_payload") or f.get("reason") or "") for f in findings_b)
+        assert not any("Dabur India Ltd" in str(f.get("metadata_payload") or f.get("reason") or "") for f in findings_b)
+        assert not any("Apex Consumer Goods" in str(f) for f in findings_b)
+
+        # Step 3: Query Inspection A AGAIN (Verify no caching or cross-contamination across requests)
+        res_a2 = await client.get(f"/api/v1/inspections/{case_a_id}", headers=headers)
+        assert res_a2.status_code == 200
+        data_a2 = res_a2.json()
+        assert data_a2["id"] == case_a_id
+        ev_ids_a2 = [e["id"] for e in data_a2.get("evidence_assets", [])]
+        assert evidence_a.id in ev_ids_a2
+        assert evidence_b.id not in ev_ids_a2
+
+        res_findings_a2 = await client.get(f"/api/v1/inspections/{case_a_id}/findings", headers=headers)
+        assert res_findings_a2.status_code == 200
+        findings_a2 = res_findings_a2.json().get("findings", [])
+        assert not any("Sundrop Foods" in str(f.get("metadata_payload") or f.get("reason") or "") for f in findings_a2)
+

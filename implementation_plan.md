@@ -1,80 +1,93 @@
-# CompliScan LM — Forensic Remediation & Hardening Master Implementation Plan
+# Phase 7.1 Implementation Plan — Cloud Deployment Foundation (Vercel + Render + Supabase)
 
-This plan implements comprehensive architectural remediation and hardening for CompliScan LM based on real-runtime forensic audit findings on the Juice dataset (`G:\CompliScan\Test_Images\Juice`).
+Prepare CompliScan LM for cloud deployment across **Vercel** (Frontend SPA), **Render** (FastAPI Web Service & Background Worker), and **Supabase** (PostgreSQL Database, Auth, and Object Storage), while strictly preserving all existing statutory invariants, deterministic evaluation rules, and the 86-test verification suite.
+
+---
 
 ## User Review Required
 
 > [!IMPORTANT]
-> **Key Architecture Decisions**:
-> 1. **Centralized AI Model**: Strictly using `gemini-3.6-flash` across all backend services and configuration files.
-> 2. **Product Evidence Synthesis**: Refactoring compliance evaluation to evaluate one synthesized `ProductDeclaration` per docket (7 findings) while preserving all per-image immutable evidence records.
-> 3. **Database Migration**: Updating `structured_declaration_results.block_reason` to `TEXT` and adding `block_code VARCHAR(50)`.
-> 4. **Departmental Report Design**: Updating PDF and DOCX reports to follow an Indian Legal Metrology departmental inspection format with clear separation of AI, deterministic rules, inspector verification, reviewer adjudication, and annexures.
+> **Key Architecture Decisions for Phase 7.1**:
+> 1. **Supabase Object Storage Layer**: Evidence uploads will stream directly to Supabase Storage bucket (`compliscan-evidence`) in production (`ENVIRONMENT=production` or `STORAGE_BACKEND=supabase`) with zero dependence on ephemeral Render disk storage. Local filesystem storage remains available for local offline development and automated test isolation.
+> 2. **Removal of Test Directory Fallbacks in Reports**: Remove all hardcoded `Test_Images/Peanut_Butter` and `Test_Images/Juice` search loops in `pdf_report_service.py` and `docx_report_service.py`. If evidence is missing or cannot be retrieved, the report will truthfully format `[Evidence Asset Preserved: {filename} (SHA-256: {hash})]`.
+> 3. **Unified Evidence Byte Retrieval**: Refactor `AnalysisJobService` and `EvidenceService` to retrieve evidence bytes through an async `EvidenceService.get_evidence_bytes(evidence)` abstraction rather than direct POSIX `open(evidence.storage_path)`.
+> 4. **Render & Vercel Manifests**: Provide `render.yaml` (FastAPI Web Service on `$PORT` + Background Worker running `python -m worker.runner`) and `frontend/vercel.json` (SPA history rewrites) with environment-driven `VITE_API_BASE_URL`.
 
 ---
 
 ## Proposed Changes
 
-### 1. Configuration & AI Model Centralization
+### 1. Storage Abstraction & Supabase Storage Client
+#### [NEW] [storage_service.py](file:///g:/CompliScan/backend/app/services/storage_service.py)
+- Create `StorageService` interface with `LocalStorageBackend` and `SupabaseStorageBackend`.
+- `SupabaseStorageBackend` uses async `httpx` to communicate with `{SUPABASE_URL}/storage/v1/object/{SUPABASE_STORAGE_BUCKET}`.
+- Support `upload_file(path, bytes, content_type)`, `download_file(path) -> bytes`, `delete_file(path)`.
+
 #### [MODIFY] [config.py](file:///g:/CompliScan/backend/app/core/config.py)
-#### [MODIFY] [.env](file:///g:/CompliScan/.env)
-- Set `GEMINI_MODEL = "gemini-3.6-flash"` as default and authoritative setting.
-- Ensure all extraction callers read from `settings.GEMINI_MODEL`.
+- Add `STORAGE_BACKEND: str = "local"` (defaults to `"supabase"` if `ENVIRONMENT == "production"` and `SUPABASE_URL` is set).
+- Fix `assemble_cors_origins` validator to avoid falling back to wildcard `["*"]` when invalid.
 
-### 2. Database Schema & Migration
-#### [NEW] [alembic migration](file:///g:/CompliScan/backend/alembic/versions/)
-- Alter `structured_declaration_results.block_reason` to `TEXT`.
-- Add `block_code` (`VARCHAR(50)`) to `structured_declaration_results`.
-- Add `telemetry` (`JSONB` / `JSON`) column to `structured_declaration_results` for Gemini latency, token counts, and trace metadata.
+#### [MODIFY] [evidence_service.py](file:///g:/CompliScan/backend/app/services/evidence_service.py)
+- Update `save_evidence_file` to delegate to `StorageService`.
+- Add `get_evidence_bytes(evidence: EvidenceAsset) -> bytes` to safely retrieve image bytes from the active storage backend.
 
-### 3. Extraction Schema & Provenance Hardening
-#### [MODIFY] [structured_declaration.py](file:///g:/CompliScan/backend/app/schemas/structured_declaration.py)
-#### [MODIFY] [extraction_service.py](file:///g:/CompliScan/backend/app/services/extraction_service.py)
-#### [MODIFY] [extraction_v1.py](file:///g:/CompliScan/backend/app/services/prompts/extraction_v1.py)
-- Support observation statuses: `OBSERVED`, `NOT_OBSERVED`, `AMBIGUOUS`, `CONFLICTING`, `UNREADABLE`.
-- Support distinct organizational roles: `manufacturer`, `packer`, `importer`, `marketer`, `brand_owner`.
-- Support explicit QR status: `QR_PRESENT`, `QR_DECODED`, `QR_NOT_DECODED`, `QR_CONTENT_NOT_VERIFIED`.
-- Enforce strict token-level provenance validation (verify index in OCRResult, asset match, raw text correspondence).
-- Bounded HTTP retry logic (distinguish 429/5xx transient from 400/401/403 permanent).
-- Set state to `PROCESSING_FAILED` with `GEMINI_MODEL_UNAVAILABLE` or `GEMINI_API_ERROR` on failure—never `POTENTIAL_NON_COMPLIANCE`.
+#### [MODIFY] [analysis_job_service.py](file:///g:/CompliScan/backend/app/services/analysis_job_service.py)
+- Replace direct `open(evidence.storage_path, "rb")` calls with `await EvidenceService.get_evidence_bytes(evidence)`.
 
-### 4. Product Evidence Synthesis Engine
-#### [NEW] [product_synthesis_service.py](file:///g:/CompliScan/backend/app/services/product_synthesis_service.py)
-#### [NEW] [product_synthesis.py](file:///g:/CompliScan/backend/app/schemas/product_synthesis.py)
-#### [MODIFY] [compliance_service.py](file:///g:/CompliScan/backend/app/services/compliance_service.py)
-- Create `ProductEvidenceSynthesisService` to aggregate multi-image declarations into a single unified `ProductDeclaration`.
-- Track corroborations across images and detect field-level conflicts (`CONFLICTING` / `REQUIRES_REVIEW`).
-- Point `ComplianceEvaluationService` to evaluate the synthesized `ProductDeclaration`, producing **1 finding per applicable statutory domain** (7 findings total for the docket) with references to supporting evidence assets.
+---
 
-### 5. Report Generation Hardening (PDF & DOCX)
+### 2. Report Generation Hardening (Eliminate Test Directory Fallbacks)
 #### [MODIFY] [pdf_report_service.py](file:///g:/CompliScan/backend/app/services/pdf_report_service.py)
+- Remove lines 591–596 (`for candidate_dir in [os.path.join("Test_Images", "Peanut_Butter"), os.path.join("Test_Images", "Juice")]:`).
+- Handle missing image files cleanly without hardcoded test folder traversal.
+
 #### [MODIFY] [docx_report_service.py](file:///g:/CompliScan/backend/app/services/docx_report_service.py)
-- Structure reports according to Indian Legal Metrology departmental inspection format:
-  - Header & Docket Particulars
-  - Section A: Packaged Commodity Particulars
-  - Section B: Evidence Register (with SHA-256 hashes)
-  - Section C: Synthesized Declarations & Verification Matrix
-  - Section D: Technical System Processing Record (IQA, OCR, Gemini Telemetry)
-  - Section E: Inspecting Officer Verification
-  - Section F: Reviewing Officer Adjudication
-  - Section G: Final Audit Record & Conclusion
-  - Section H: Annexures
-- Maintain 1:1 strict data parity between PDF and DOCX generated from `FinalAuditRecord`.
+- Remove lines 374–378 (same `Test_Images` fallback loop).
+- Handle missing image files cleanly with standard placeholder text.
 
-### 6. Automated Testing & Verification
-#### [NEW] [test_remediation_suite.py](file:///g:/CompliScan/backend/tests/test_remediation_suite.py)
-- Unit & integration tests for:
-  - Model config & startup availability.
-  - OCR bounding box and zero-token safety.
-  - Provenance validation & phantom token rejection.
-  - Multi-image synthesis and conflict resolution.
-  - Deterministic Legal Metrology evaluation.
-  - FinalAuditRecord immutability & report parity.
-  - Failure injection (Gemini 400, 404, 429, timeout -> PROCESSING_FAILED).
+---
 
-### 7. Real Juice E2E Golden Path & Forensic Artifact Generation
-- Execute all 4 Juice images through the remediated pipeline.
-- Write structured forensic reports and matrices under `G:\CompliScan\docs\remediation\juice\`.
+### 3. Frontend Vercel Deployment Configuration
+#### [MODIFY] [client.ts](file:///g:/CompliScan/frontend/src/api/client.ts)
+- Update `API_BASE` resolution to:
+  `const API_BASE = (import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')}/api/v1` : '/api/v1');`
+
+#### [NEW] [vercel.json](file:///g:/CompliScan/frontend/vercel.json)
+- SPA routing rewrite rule:
+  ```json
+  {
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
+    ]
+  }
+  ```
+
+---
+
+### 4. Render Web Service & Worker Configuration
+#### [NEW] [render.yaml](file:///g:/CompliScan/render.yaml)
+- Define Render Blueprint:
+  1. `type: web`, `name: compliscan-api`, `env: python`, `buildCommand: pip install -r requirements.txt`, `startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`, `healthCheckPath: /api/v1/health`
+  2. `type: worker`, `name: compliscan-worker`, `env: python`, `buildCommand: pip install -r requirements.txt`, `startCommand: python -m worker.runner`
+
+#### [NEW] [Dockerfile](file:///g:/CompliScan/Dockerfile) (Optional standard multi-stage container specification)
+- Standard Debian/Python 3.11 container with Tesseract OCR, Poppler, and Uvicorn.
+
+---
+
+### 5. Deployment & Storage Tests
+#### [NEW] [test_storage_and_deployment.py](file:///g:/CompliScan/backend/tests/test_storage_and_deployment.py)
+- Test `StorageService` local and mock Supabase storage behavior.
+- Test evidence byte retrieval through `EvidenceService.get_evidence_bytes`.
+- Test report generation when evidence storage is remote or local.
+- Verify CORS environment variable assembly.
+- Verify `/api/v1/health` endpoint structure.
+
+---
+
+### 6. Phase 7.1 Cloud Deployment Readiness Report
+#### [NEW] [phase7_cloud_deployment_readiness.md](file:///g:/CompliScan/docs/phase7_cloud_deployment_readiness.md)
+- Complete 22-section audit and readiness report detailing configuration, storage migration, test results, and deployment procedures.
 
 ---
 
@@ -83,14 +96,15 @@ This plan implements comprehensive architectural remediation and hardening for C
 ### Automated Tests
 - Run full backend test suite:
   ```powershell
-  C:\Users\singh\AppData\Local\Programs\Python\Python314\python.exe -m pytest backend/tests/ -q
+  python -m pytest backend/tests/ -q
   ```
+  *(Expected: All 86 existing tests + new storage/deployment tests passing)*
+
+### Frontend Build
 - Run frontend build:
   ```powershell
   cd frontend; npm run build
   ```
 
-### Real-World Dataset Validation
-- Run end-to-end Juice audit script with `gemini-3.6-flash`.
-- Verify generated PDF and DOCX reports.
-- Verify SHA-256 and lineage logs.
+### Local E2E Flow Validation
+- Validate evidence upload -> storage -> hash calculation -> report generation without local test directory fallbacks.

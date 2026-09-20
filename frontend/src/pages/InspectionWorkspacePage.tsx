@@ -73,190 +73,208 @@ import {
 } from '../components/Phase4Modals';
 import { CameraCapture } from '../components/CameraCapture';
 
-// Initial statutory declarations under Legal Metrology (Packaged Commodities) Rules, 2011
-// Separates the Six Core Universal MVP Checks (Rule 6(1)(a)-(f)) from the Conditional Check (Rule 6(1)(da))
-const buildUniversalDeclarations = (primaryEvidenceId?: string): ExtractedDeclarationItem[] => {
-  if (!primaryEvidenceId) {
-    return [
-      {
-        id: 'dec-1',
-        rule_citation: 'Rule 6(1)(a)',
-        declaration_name: 'Name & Address of Manufacturer / Packer / Importer',
-        extracted_value: 'Awaiting packaging evidence upload…',
-        result: 'INCOMPLETE',
-        applicability: 'Universal — Mandatory for all pre-packaged commodities',
-        is_applicable: true,
-        inspector_notes: 'Upload packaging image to perform statutory extraction.',
-        reviewer_override: false,
-      },
-      {
-        id: 'dec-2',
-        rule_citation: 'Rule 6(1)(b)',
-        declaration_name: 'Generic or Common Name of Commodity',
-        extracted_value: 'Awaiting packaging evidence upload…',
-        result: 'INCOMPLETE',
-        applicability: 'Universal — Mandatory for all pre-packaged commodities',
-        is_applicable: true,
-        inspector_notes: 'Upload packaging image to perform statutory extraction.',
-        reviewer_override: false,
-      },
-      {
-        id: 'dec-3',
-        rule_citation: 'Rule 6(1)(c)',
-        declaration_name: 'Net Quantity in Standard Units of Weight / Measure',
-        extracted_value: 'Awaiting packaging evidence upload…',
-        result: 'INCOMPLETE',
-        applicability: 'Universal — Mandatory for all pre-packaged commodities (Rule 11/12 compliant units)',
-        is_applicable: true,
-        inspector_notes: 'Upload packaging image to perform statutory extraction.',
-        reviewer_override: false,
-      },
-      {
-        id: 'dec-4',
-        rule_citation: 'Rule 6(1)(d)',
-        declaration_name: 'Month & Year of Manufacture / Pre-packing / Import',
-        extracted_value: 'Awaiting packaging evidence upload…',
-        result: 'INCOMPLETE',
-        applicability: 'Universal — Mandatory for all pre-packaged commodities',
-        is_applicable: true,
-        inspector_notes: 'Upload packaging image to perform statutory extraction.',
-        reviewer_override: false,
-      },
-      {
-        id: 'dec-5',
-        rule_citation: 'Rule 6(1)(e)',
-        declaration_name: 'Maximum Retail Price (MRP inclusive of all taxes)',
-        extracted_value: 'Awaiting packaging evidence upload…',
-        result: 'INCOMPLETE',
-        applicability: 'Universal — Mandatory for all retail pre-packaged commodities',
-        is_applicable: true,
-        inspector_notes: 'Upload packaging image to perform statutory extraction.',
-        reviewer_override: false,
-      },
-      {
-        id: 'dec-6',
-        rule_citation: 'Rule 6(1)(f)',
-        declaration_name: 'Consumer Care Contact Details (Name, Tel, Email)',
-        extracted_value: 'Awaiting packaging evidence upload…',
-        result: 'INCOMPLETE',
-        applicability: 'Universal — Mandatory for all pre-packaged commodities',
-        is_applicable: true,
-        inspector_notes: 'Upload packaging image to perform statutory extraction.',
-        reviewer_override: false,
-      },
-    ];
-  }
+// Statutory declaration rules under Legal Metrology (Packaged Commodities) Rules, 2011
+// Universal Core Checks (Rule 6(1)(a)-(f)) and Conditional Check (Rule 6(1)(da))
 
-  return [
-    {
-      id: 'dec-1',
-      rule_citation: 'Rule 6(1)(a)',
-      declaration_name: 'Name & Address of Manufacturer / Packer / Importer',
-      extracted_value: 'Apex Consumer Goods Ltd., Plot 42, Industrial Area Phase II, Bengaluru 560058',
-      result: 'PASS',
-      applicability: 'Universal — Mandatory for all pre-packaged commodities',
+interface BuildDeclarationsContext {
+  inspection: InspectionCase | null;
+  complianceSummary: ComplianceEvaluationSummary | null;
+  structuredDeclarations: StructuredDeclarationResult | null;
+  verificationState: VerificationState | null;
+  reviewerDecisions: ReviewerDecision[];
+  primaryEvidenceId?: string;
+}
+
+const UNIVERSAL_RULE_DEFINITIONS = [
+  {
+    id: 'dec-1',
+    domain: 'manufacturer_identity',
+    rule_citation: 'Rule 6(1)(a)',
+    declaration_name: 'Name & Address of Manufacturer / Packer / Importer',
+    applicability: 'Universal — Mandatory for all pre-packaged commodities',
+    defaultBox: { x: 14, y: 18, width: 72, height: 11 },
+  },
+  {
+    id: 'dec-2',
+    domain: 'commodity_name',
+    rule_citation: 'Rule 6(1)(b)',
+    declaration_name: 'Generic or Common Name of Commodity',
+    applicability: 'Universal — Mandatory for all pre-packaged commodities',
+    defaultBox: { x: 20, y: 32, width: 60, height: 8 },
+  },
+  {
+    id: 'dec-3',
+    domain: 'net_quantity',
+    rule_citation: 'Rule 6(1)(c)',
+    declaration_name: 'Net Quantity in Standard Units of Weight / Measure',
+    applicability: 'Universal — Mandatory for all pre-packaged commodities (Rule 11/12 compliant units)',
+    defaultBox: { x: 24, y: 44, width: 52, height: 7 },
+  },
+  {
+    id: 'dec-4',
+    domain: 'manufacture_packing_date',
+    rule_citation: 'Rule 6(1)(d)',
+    declaration_name: 'Month & Year of Manufacture / Pre-packing / Import',
+    applicability: 'Universal — Mandatory for all pre-packaged commodities',
+    defaultBox: { x: 28, y: 54, width: 44, height: 6 },
+  },
+  {
+    id: 'dec-5',
+    domain: 'mrp',
+    rule_citation: 'Rule 6(1)(e)',
+    declaration_name: 'Maximum Retail Price (MRP inclusive of all taxes)',
+    applicability: 'Universal — Mandatory for all retail pre-packaged commodities',
+    defaultBox: { x: 22, y: 63, width: 56, height: 8 },
+  },
+  {
+    id: 'dec-6',
+    domain: 'consumer_care',
+    rule_citation: 'Rule 6(1)(f)',
+    declaration_name: 'Consumer Care Contact Details (Name, Tel, Email)',
+    applicability: 'Universal — Mandatory for all pre-packaged commodities',
+    defaultBox: { x: 16, y: 74, width: 68, height: 9 },
+  },
+];
+
+const buildUniversalDeclarations = (
+  ctx: BuildDeclarationsContext
+): ExtractedDeclarationItem[] => {
+  const { inspection, complianceSummary, structuredDeclarations, verificationState, reviewerDecisions, primaryEvidenceId } = ctx;
+  const hasEvidence = Boolean(primaryEvidenceId || (inspection?.evidence_assets && inspection.evidence_assets.length > 0));
+
+  return UNIVERSAL_RULE_DEFINITIONS.map((def) => {
+    // 1. Check for compliance finding
+    const finding = complianceSummary?.findings?.find(
+      (f) => f.requirement_name === def.domain || f.rule_citation?.includes(def.rule_citation)
+    );
+
+    // 2. Check for structured declaration field
+    const decField = structuredDeclarations?.declarations
+      ? (structuredDeclarations.declarations as any)[def.domain]
+      : null;
+
+    // 3. Check for reviewer decision override
+    const reviewerDec = reviewerDecisions?.find(
+      (r) => r.requirement_name === def.domain
+    );
+
+    // 4. Check for inspector verification correction
+    const correction = verificationState?.corrections?.find(
+      (c) => c.field_name === def.domain || c.rule_citation?.includes(def.rule_citation)
+    );
+
+    let extractedValue = 'NOT RECORDED';
+    let result: ComplianceResult = 'INCOMPLETE';
+    let inspectorNotes: string | undefined;
+    let evidenceId: string | undefined = finding?.evidence_id || structuredDeclarations?.evidence_id || primaryEvidenceId;
+    let boundingBox = hasEvidence ? def.defaultBox : undefined;
+
+    if (finding) {
+      result = finding.result;
+      inspectorNotes = finding.reason;
+      evidenceId = finding.evidence_id || primaryEvidenceId;
+
+      if (finding.metadata_payload?.raw_text) {
+        extractedValue = finding.metadata_payload.raw_text;
+      } else if (finding.metadata_payload?.extracted_value) {
+        extractedValue = String(finding.metadata_payload.extracted_value);
+      } else if (def.domain === 'manufacturer_identity' && finding.metadata_payload?.name) {
+        extractedValue = `${finding.metadata_payload.name}${finding.metadata_payload.address ? ', ' + finding.metadata_payload.address : ''}`;
+      } else if (def.domain === 'commodity_name' && finding.metadata_payload?.name) {
+        extractedValue = finding.metadata_payload.name;
+      } else if (def.domain === 'net_quantity' && finding.metadata_payload?.quantity_value) {
+        extractedValue = `${finding.metadata_payload.quantity_value} ${finding.metadata_payload.unit || ''}`.trim();
+      } else if (def.domain === 'manufacture_packing_date' && (finding.metadata_payload?.raw_date_string || (finding.metadata_payload?.month && finding.metadata_payload?.year))) {
+        extractedValue = finding.metadata_payload.raw_date_string || `${String(finding.metadata_payload.month).padStart(2, '0')}/${finding.metadata_payload.year}`;
+      } else if (def.domain === 'mrp' && finding.metadata_payload?.amount) {
+        extractedValue = `₹${finding.metadata_payload.amount}${finding.metadata_payload.includes_all_taxes_stated ? ' (Incl. of all taxes)' : ''}`;
+      } else if (def.domain === 'consumer_care' && finding.metadata_payload?.raw_text) {
+        extractedValue = finding.metadata_payload.raw_text;
+      } else if (finding.result === 'POTENTIAL_NON_COMPLIANCE') {
+        extractedValue = 'NOT OBSERVED';
+      } else if (finding.result === 'PASS') {
+        extractedValue = 'Observed Compliant';
+      } else if (finding.result === 'INCOMPLETE') {
+        extractedValue = hasEvidence ? 'Evidence contains insufficient readable OCR tokens' : 'Awaiting packaging evidence upload…';
+      }
+    } else if (decField) {
+      evidenceId = structuredDeclarations?.evidence_id || primaryEvidenceId;
+      if (decField.status === 'OBSERVED') {
+        result = 'PASS';
+      } else if (decField.status === 'CONFLICTING' || decField.status === 'AMBIGUOUS') {
+        result = 'REQUIRES_REVIEW';
+      } else if (decField.status === 'NOT_OBSERVED') {
+        result = 'POTENTIAL_NON_COMPLIANCE';
+      } else {
+        result = 'INCOMPLETE';
+      }
+
+      if (decField.raw_text) {
+        extractedValue = decField.raw_text;
+      } else if (def.domain === 'manufacturer_identity' && decField.name) {
+        extractedValue = `${decField.name}${decField.address ? ', ' + decField.address : ''}`;
+      } else if (def.domain === 'commodity_name' && decField.name) {
+        extractedValue = decField.name;
+      } else if (def.domain === 'net_quantity' && decField.quantity_value) {
+        extractedValue = `${decField.quantity_value} ${decField.unit || ''}`.trim();
+      } else if (def.domain === 'manufacture_packing_date' && (decField.raw_date_string || (decField.month && decField.year))) {
+        extractedValue = decField.raw_date_string || `${String(decField.month).padStart(2, '0')}/${decField.year}`;
+      } else if (def.domain === 'mrp' && decField.amount) {
+        extractedValue = `₹${decField.amount}`;
+      } else if (def.domain === 'consumer_care' && (decField.phone || decField.email || decField.website)) {
+        extractedValue = [decField.phone, decField.email, decField.website].filter(Boolean).join(' • ');
+      } else if (decField.status === 'NOT_OBSERVED') {
+        extractedValue = 'NOT OBSERVED';
+      } else {
+        extractedValue = 'NOT RECORDED';
+      }
+      inspectorNotes = `Extracted via semantic perception (${structuredDeclarations?.model_name || 'Gemini'}) — Pending deterministic compliance evaluation.`;
+    } else {
+      extractedValue = hasEvidence
+        ? 'Evidence registered — Awaiting compliance evaluation'
+        : 'Awaiting packaging evidence upload…';
+      result = 'INCOMPLETE';
+      inspectorNotes = hasEvidence
+        ? 'Evidence uploaded. Run OCR, Semantic Extraction, or Deterministic Rule Engine to evaluate.'
+        : 'Upload packaging image to perform statutory extraction.';
+    }
+
+    const item: ExtractedDeclarationItem = {
+      id: def.id,
+      rule_citation: def.rule_citation,
+      declaration_name: def.declaration_name,
+      extracted_value: extractedValue,
+      result: reviewerDec ? reviewerDec.adjudicated_result : result,
+      applicability: def.applicability,
       is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 14, y: 18, width: 72, height: 11 },
-      verified_value: 'Apex Consumer Goods Ltd., Plot 42, Industrial Area Phase II, Bengaluru 560058',
-      inspector_notes: 'Full manufacturer postal address verified against factory registration.',
-      reviewer_override: false,
-    },
-    {
-      id: 'dec-2',
-      rule_citation: 'Rule 6(1)(b)',
-      declaration_name: 'Generic or Common Name of Commodity',
-      extracted_value: 'Refined Sunflower Cooking Oil',
-      result: 'PASS',
-      applicability: 'Universal — Mandatory for all pre-packaged commodities',
-      is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 20, y: 32, width: 60, height: 8 },
-      verified_value: 'Refined Sunflower Cooking Oil',
-      inspector_notes: 'Standard generic nomenclature used on principal display panel.',
-      reviewer_override: false,
-    },
-    {
-      id: 'dec-3',
-      rule_citation: 'Rule 6(1)(c)',
-      declaration_name: 'Net Quantity in Standard Units of Weight / Measure',
-      extracted_value: '1 L (910 g at 30°C)',
-      result: 'PASS',
-      applicability: 'Universal — Mandatory for all pre-packaged commodities (Rule 11/12 compliant units)',
-      is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 24, y: 44, width: 52, height: 7 },
-      verified_value: '1 L',
-      inspector_notes: 'Unit symbol complies with Second Schedule; font height exceeds minimum 4mm.',
-      reviewer_override: false,
-    },
-    {
-      id: 'dec-4',
-      rule_citation: 'Rule 6(1)(d)',
-      declaration_name: 'Month & Year of Manufacture / Pre-packing / Import',
-      extracted_value: 'PKD 08/2026',
-      result: 'PASS',
-      applicability: 'Universal — Mandatory for all pre-packaged commodities',
-      is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 28, y: 54, width: 44, height: 6 },
-      verified_value: '08/2026',
-      inspector_notes: 'Legible month and year format.',
-      reviewer_override: false,
-    },
-    {
-      id: 'dec-5',
-      rule_citation: 'Rule 6(1)(e)',
-      declaration_name: 'Maximum Retail Price (MRP inclusive of all taxes)',
-      extracted_value: 'MRP Rs 185.00 (Incl. of all taxes)',
-      result: 'POTENTIAL_NON_COMPLIANCE',
-      applicability: 'Universal — Mandatory for all retail pre-packaged commodities',
-      is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 22, y: 63, width: 56, height: 8 },
-      verified_value: 'MRP Rs 185.00 (Incl. of all taxes)',
-      inspector_notes: 'Currency symbol formatting requires inspection for mandatory Indian Rupee symbol adherence.',
-      reviewer_override: false,
-    },
-    {
-      id: 'dec-6',
-      rule_citation: 'Rule 6(1)(f)',
-      declaration_name: 'Consumer Care Contact Details (Name, Tel, Email)',
-      extracted_value: 'Consumer Support: apexcare@apexconsumer.in | Toll-Free: 1800-425-0199',
-      result: 'PASS',
-      applicability: 'Universal — Mandatory for all pre-packaged commodities',
-      is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 16, y: 74, width: 68, height: 9 },
-      verified_value: 'apexcare@apexconsumer.in | 1800-425-0199',
-      inspector_notes: 'Designated helpline and electronic mail address functional.',
-      reviewer_override: false,
-    },
-  ];
+      evidence_id: evidenceId,
+      bounding_box: boundingBox,
+      verified_value: correction ? String(correction.corrected_value) : undefined,
+      inspector_notes: correction ? correction.correction_reason : inspectorNotes,
+      reviewer_override: Boolean(reviewerDec),
+      reviewer_justification: reviewerDec?.rationale,
+    };
+
+    return item;
+  });
 };
 
 // Country of Origin under Rule 6(1)(da) (inserted via G.S.R. 629(E) in 2017)
 // Strictly applicability-driven: applies ONLY to imported commodities.
 const buildConditionalCOO = (
-  originStatus: OriginStatus,
-  primaryEvidenceId?: string
+  ctx: BuildDeclarationsContext
 ): ExtractedDeclarationItem => {
-  if (originStatus === 'IMPORTED') {
-    return {
-      id: 'dec-coo',
-      rule_citation: 'Rule 6(1)(da)',
-      declaration_name: 'Country of Origin or Manufacture (Imported Commodities)',
-      extracted_value: 'Country of Origin: Vietnam',
-      result: 'PASS',
-      applicability: 'Applicable — Mandatory for imported products under Rule 6(1)(da) (G.S.R. 629(E))',
-      is_applicable: true,
-      evidence_id: primaryEvidenceId,
-      bounding_box: { x: 30, y: 85, width: 40, height: 6 },
-      verified_value: 'Vietnam',
-      inspector_notes: 'Country of origin explicitly declared on principal display panel for imported commodity.',
-      reviewer_override: false,
-    };
-  }
+  const { inspection, complianceSummary, structuredDeclarations, verificationState, reviewerDecisions, primaryEvidenceId } = ctx;
+  const originStatus = inspection?.origin_status || 'UNKNOWN';
+  const hasEvidence = Boolean(primaryEvidenceId || (inspection?.evidence_assets && inspection.evidence_assets.length > 0));
+
+  const reviewerDec = reviewerDecisions?.find(
+    (r) => r.requirement_name === 'country_of_origin'
+  );
+
+  const correction = verificationState?.corrections?.find(
+    (c) => c.field_name === 'country_of_origin' || c.rule_citation?.includes('Rule 6(1)(da)')
+  );
 
   if (originStatus === 'DOMESTIC') {
     return {
@@ -264,14 +282,82 @@ const buildConditionalCOO = (
       rule_citation: 'Rule 6(1)(da)',
       declaration_name: 'Country of Origin or Manufacture (Imported Commodities)',
       extracted_value: 'Statutory Exemption: Domestic Commodity (No physical label COO mandate)',
-      result: 'NOT_APPLICABLE',
+      result: reviewerDec ? reviewerDec.adjudicated_result : 'NOT_APPLICABLE',
       applicability: 'Not Applicable — Domestic commodities have no statutory COO mandate on physical labels under LMPC',
       is_applicable: false,
       evidence_id: undefined,
       bounding_box: undefined,
-      verified_value: undefined,
-      inspector_notes: 'Statutory exemption confirmed: Manufactured and packed domestically in India.',
-      reviewer_override: false,
+      verified_value: correction ? String(correction.corrected_value) : undefined,
+      inspector_notes: correction ? correction.correction_reason : 'Statutory exemption confirmed: Manufactured and packed domestically in India.',
+      reviewer_override: Boolean(reviewerDec),
+      reviewer_justification: reviewerDec?.rationale,
+    };
+  }
+
+  if (originStatus === 'IMPORTED') {
+    const finding = complianceSummary?.findings?.find(
+      (f) => f.requirement_name === 'country_of_origin' || f.rule_citation?.includes('Rule 6(1)(da)')
+    );
+
+    const decField = structuredDeclarations?.declarations?.country_of_origin;
+
+    let extractedValue = 'NOT RECORDED';
+    let result: ComplianceResult = 'INCOMPLETE';
+    let inspectorNotes: string | undefined;
+    let evidenceId: string | undefined = finding?.evidence_id || structuredDeclarations?.evidence_id || primaryEvidenceId;
+
+    if (finding) {
+      result = finding.result;
+      inspectorNotes = finding.reason;
+      evidenceId = finding.evidence_id || primaryEvidenceId;
+      if (finding.metadata_payload?.raw_text) {
+        extractedValue = finding.metadata_payload.raw_text;
+      } else if (finding.metadata_payload?.country_name) {
+        extractedValue = `Country of Origin: ${finding.metadata_payload.country_name}`;
+      } else if (finding.result === 'PASS') {
+        extractedValue = 'Observed Compliant';
+      } else if (finding.result === 'POTENTIAL_NON_COMPLIANCE') {
+        extractedValue = 'NOT OBSERVED';
+      } else {
+        extractedValue = finding.reason || 'NOT RECORDED';
+      }
+    } else if (decField) {
+      evidenceId = structuredDeclarations?.evidence_id || primaryEvidenceId;
+      if (decField.status === 'OBSERVED') {
+        result = 'PASS';
+        extractedValue = decField.country_name ? `Country of Origin: ${decField.country_name}` : (decField.raw_text || 'Observed');
+      } else if (decField.status === 'NOT_OBSERVED') {
+        result = 'POTENTIAL_NON_COMPLIANCE';
+        extractedValue = 'NOT OBSERVED';
+      } else {
+        result = 'REQUIRES_REVIEW';
+        extractedValue = decField.raw_text || 'Requires Review';
+      }
+      inspectorNotes = `Extracted via semantic perception (${structuredDeclarations?.model_name || 'Gemini'}) — Pending deterministic compliance evaluation.`;
+    } else {
+      extractedValue = hasEvidence
+        ? 'Evidence registered — Awaiting compliance evaluation'
+        : 'Awaiting packaging evidence upload…';
+      result = 'INCOMPLETE';
+      inspectorNotes = hasEvidence
+        ? 'Evidence uploaded for imported commodity. Run Compliance Evaluation to verify Country of Origin.'
+        : 'Upload packaging image to verify Country of Origin under Rule 6(1)(da).';
+    }
+
+    return {
+      id: 'dec-coo',
+      rule_citation: 'Rule 6(1)(da)',
+      declaration_name: 'Country of Origin or Manufacture (Imported Commodities)',
+      extracted_value: extractedValue,
+      result: reviewerDec ? reviewerDec.adjudicated_result : result,
+      applicability: 'Applicable — Mandatory for imported products under Rule 6(1)(da) (G.S.R. 629(E))',
+      is_applicable: true,
+      evidence_id: evidenceId,
+      bounding_box: hasEvidence ? { x: 30, y: 85, width: 40, height: 6 } : undefined,
+      verified_value: correction ? String(correction.corrected_value) : undefined,
+      inspector_notes: correction ? correction.correction_reason : inspectorNotes,
+      reviewer_override: Boolean(reviewerDec),
+      reviewer_justification: reviewerDec?.rationale,
     };
   }
 
@@ -281,14 +367,15 @@ const buildConditionalCOO = (
     rule_citation: 'Rule 6(1)(da)',
     declaration_name: 'Country of Origin or Manufacture (Imported Commodities)',
     extracted_value: 'Origin indeterminate — Cannot evaluate Rule 6(1)(da) applicability',
-    result: 'REQUIRES_REVIEW',
+    result: reviewerDec ? reviewerDec.adjudicated_result : 'REQUIRES_REVIEW',
     applicability: 'Indeterminate — Rule 6(1)(da) applicability requires established origin status (Imported vs Domestic)',
     is_applicable: false,
     evidence_id: undefined,
     bounding_box: undefined,
-    verified_value: undefined,
-    inspector_notes: 'Action Required: Inspecting officer must establish package origin to resolve Rule 6(1)(da) applicability.',
-    reviewer_override: false,
+    verified_value: correction ? String(correction.corrected_value) : undefined,
+    inspector_notes: correction ? correction.correction_reason : 'Action Required: Inspecting officer must establish package origin to resolve Rule 6(1)(da) applicability.',
+    reviewer_override: Boolean(reviewerDec),
+    reviewer_justification: reviewerDec?.rationale,
   };
 };
 
@@ -397,9 +484,8 @@ export const InspectionWorkspacePage: React.FC = () => {
   // Active evidence asset for canvas viewport
   const [activeAssetId, setActiveAssetId] = useState<string | null>(null);
 
-  // Declarations state: 6 universal checks + 1 conditional COO check
-  const [universalDeclarations, setUniversalDeclarations] = useState<ExtractedDeclarationItem[]>([]);
-  const [cooDeclaration, setCooDeclaration] = useState<ExtractedDeclarationItem | null>(null);
+  // Inline adjudication overrides keyed by declaration id (persists reviewer determinations between renders)
+  const [declarationOverrides, setDeclarationOverrides] = useState<Record<string, Partial<ExtractedDeclarationItem>>>({});
   const [selectedDeclarationId, setSelectedDeclarationId] = useState<string | null>(null);
   const [expandedDeclarationId, setExpandedDeclarationId] = useState<string | null>(null);
 
@@ -675,12 +761,7 @@ export const InspectionWorkspacePage: React.FC = () => {
         setActiveAssetId(assets[0].id);
       }
 
-      // Initialize the Six Core Universal Declarations
-      const primaryAsset = assets[0];
-      setUniversalDeclarations(buildUniversalDeclarations(primaryAsset?.id));
-
-      // Initialize the Applicability-Driven Conditional Rule 6(1)(da) Country of Origin
-      setCooDeclaration(buildConditionalCOO(data.origin_status, primaryAsset?.id));
+      // Declarations are now derived reactively from live backend state — no initialization needed.
 
       // Build initial audit events log
       const initialAuditLogs: AuditEventItem[] = [
@@ -757,11 +838,42 @@ export const InspectionWorkspacePage: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [adjudicationTarget, showDocketDetails, expandedDeclarationId]);
 
-  // Combined list of all current declarations (6 core + 1 conditional COO)
+  // Active asset object (must be defined before declarationContext which depends on it)
+  const activeAsset = useMemo(() => {
+    if (!inspection || !activeAssetId) return null;
+    const assets = inspection.evidence_assets || [];
+    return assets.find((a) => a.id === activeAssetId) || assets[0] || null;
+  }, [inspection, activeAssetId]);
+
+  // Reactively derive all declarations from live backend state + inline adjudication overrides.
+  // Priority chain (highest wins): inline adjudicationOverride > reviewerDecisions > complianceSummary findings > structuredDeclarations > empty/pending
+  const declarationContext = useMemo<BuildDeclarationsContext>(() => ({
+    inspection,
+    complianceSummary,
+    structuredDeclarations,
+    verificationState,
+    reviewerDecisions,
+    primaryEvidenceId: activeAsset?.id,
+  }), [inspection, complianceSummary, structuredDeclarations, verificationState, reviewerDecisions, activeAsset?.id]);
+
+  const universalDeclarations = useMemo(
+    () => buildUniversalDeclarations(declarationContext),
+    [declarationContext]
+  );
+
+  const cooDeclaration = useMemo(
+    () => buildConditionalCOO(declarationContext),
+    [declarationContext]
+  );
+
+  // Apply inline adjudication patches on top of computed declarations
   const allDeclarations = useMemo(() => {
-    if (!cooDeclaration) return universalDeclarations;
-    return [...universalDeclarations, cooDeclaration];
-  }, [universalDeclarations, cooDeclaration]);
+    const base: ExtractedDeclarationItem[] = [...universalDeclarations, cooDeclaration];
+    if (Object.keys(declarationOverrides).length === 0) return base;
+    return base.map((d) =>
+      declarationOverrides[d.id] ? { ...d, ...declarationOverrides[d.id] } : d
+    );
+  }, [universalDeclarations, cooDeclaration, declarationOverrides]);
 
   // Consolidated findings summary dynamically derived from live declarations
   const findingsSummary = useMemo(() => {
@@ -801,13 +913,6 @@ export const InspectionWorkspacePage: React.FC = () => {
     });
     return counts;
   }, [allDeclarations]);
-
-  // Active asset object
-  const activeAsset = useMemo(() => {
-    if (!inspection || !activeAssetId) return null;
-    const assets = inspection.evidence_assets || [];
-    return assets.find((a) => a.id === activeAssetId) || assets[0] || null;
-  }, [inspection, activeAssetId]);
 
   // Fetch or sync Image Quality Assessment, OCR Result, and Declarations when active asset changes
   useEffect(() => {
@@ -923,8 +1028,7 @@ export const InspectionWorkspacePage: React.FC = () => {
           };
         });
         setActiveAssetId(newAsset.id);
-        setUniversalDeclarations(buildUniversalDeclarations(newAsset.id));
-        setCooDeclaration(buildConditionalCOO(inspection.origin_status, newAsset.id));
+        // Declarations are derived reactively from live backend state — updated automatically when evidence is added.
 
         // Record audit event
         const newAuditItem: AuditEventItem = {
@@ -1000,8 +1104,7 @@ export const InspectionWorkspacePage: React.FC = () => {
       setInspection(updated);
       setIsEditingContext(false);
 
-      // Re-evaluate Country of Origin applicability dynamically based on updated origin_status
-      setCooDeclaration(buildConditionalCOO(updated.origin_status, activeAsset?.id));
+      // Country of Origin applicability is derived reactively from updated inspection.origin_status — no manual refresh needed.
 
       // Record audit event
       const auditItem: AuditEventItem = {
@@ -1042,32 +1145,15 @@ export const InspectionWorkspacePage: React.FC = () => {
       return;
     }
 
-    if (adjudicationTarget.id === 'dec-coo') {
-      setCooDeclaration((prev) =>
-        prev
-          ? {
-              ...prev,
-              result: overrideNewResult,
-              reviewer_override: true,
-              reviewer_justification: overrideJustification.trim(),
-            }
-          : null
-      );
-    } else {
-      setUniversalDeclarations((prev) =>
-        prev.map((item) => {
-          if (item.id === adjudicationTarget.id) {
-            return {
-              ...item,
-              result: overrideNewResult,
-              reviewer_override: true,
-              reviewer_justification: overrideJustification.trim(),
-            };
-          }
-          return item;
-        })
-      );
-    }
+    // Persist the reviewer's inline override as a patch — merged into the computed declaration on next render
+    setDeclarationOverrides((prev) => ({
+      ...prev,
+      [adjudicationTarget.id]: {
+        result: overrideNewResult,
+        reviewer_override: true,
+        reviewer_justification: overrideJustification.trim(),
+      },
+    }));
 
     // Record formal audit event
     const auditItem: AuditEventItem = {

@@ -371,7 +371,10 @@ class DOCXReportService:
 
             img_path = ev_img.file_path if ev_img.file_path and os.path.exists(ev_img.file_path) else None
             if not img_path:
-                for candidate_dir in [os.path.join("Test_Images", "Peanut_Butter"), os.path.join("Test_Images", "Juice")]:
+                for candidate_dir in [
+                    os.path.join("tests", "fixtures", "images", "packaged_products", "Peanut_Butter"),
+                    os.path.join("tests", "fixtures", "images", "packaged_products", "Juice"),
+                ]:
                     cand = os.path.join(candidate_dir, ev_img.original_filename)
                     if os.path.exists(cand):
                         img_path = cand
