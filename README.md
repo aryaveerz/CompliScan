@@ -78,18 +78,18 @@ CompliScan LM verifies all 7 mandatory declaration domains under **Rule 6(1)** o
 
 ```mermaid
 graph TD
-    A[Package Photos] --> B[Quality Screening Gate]
-    B -->|Pass| C[PaddleOCR Text Detection]
-    B -->|Fail| D[Quality Warning / Resubmit Prompt]
-    C --> E{Extraction Engine}
-    E -->|Online| F[Gemini 3.6 Flash Structuring]
-    E -->|Offline| G[Regex Heuristic Parser]
-    F --> H[Multi-Image Evidence Synthesizer]
+    A["Package Photos"] --> B["Quality Screening Gate"]
+    B -->|Pass| C["PaddleOCR Text Detection"]
+    B -->|Fail| D["Quality Warning / Resubmit Prompt"]
+    C --> E{"Extraction Engine"}
+    E -->|Online| F["Gemini 3.6 Flash Structuring"]
+    E -->|Offline| G["Regex Heuristic Parser"]
+    F --> H["Multi-Image Evidence Synthesizer"]
     G --> H
-    H --> I[Rule 6(1) Deterministic Compliance Engine]
-    I --> J[Inspector Workspace & Review Panel]
-    J --> K[Officer Sign-Off & Case Finalization]
-    K --> L[Export PDF / DOCX Inspection Reports]
+    H --> I["Rule 6(1) Deterministic Compliance Engine"]
+    I --> J["Inspector Workspace & Review Panel"]
+    J --> K["Officer Sign-Off & Case Finalization"]
+    K --> L["Export PDF / DOCX Inspection Reports"]
 ```
 
 ---
