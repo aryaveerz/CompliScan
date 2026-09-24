@@ -17,11 +17,20 @@ if "postgresql" in settings.DATABASE_URL or "postgres" in settings.DATABASE_URL:
     async_connect_args["prepared_statement_cache_size"] = 0
 
 # Async Engine (for FastAPI routes)
+# pool_pre_ping: validates connection before use — catches dead/stale connections
+#   immediately and transparently reconnects instead of returning a 500.
+# pool_recycle: recycle connections every 300 s (5 min), well under Supabase's
+#   ~10 min idle timeout, so we never hand out a connection the server has closed.
+# pool_size / max_overflow: bound the number of open connections to Supabase.
 async_engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     future=True,
     connect_args=async_connect_args,
+    pool_pre_ping=True,
+    pool_recycle=300,
+    pool_size=5,
+    max_overflow=10,
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -37,6 +46,8 @@ sync_engine = create_engine(
     settings.SYNC_DATABASE_URL,
     echo=False,
     future=True,
+    pool_pre_ping=True,
+    pool_recycle=300,
 )
 
 SyncSessionLocal = sessionmaker(

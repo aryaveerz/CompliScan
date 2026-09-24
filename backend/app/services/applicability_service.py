@@ -126,32 +126,53 @@ class ApplicabilityService:
 
         persisted_records: List[ApplicabilityResult] = []
 
-        for p in payloads:
-            req_name = p["requirement_name"]
-            if req_name in existing_rows:
-                record = existing_rows[req_name]
-                record.status = p["status"]
-                record.basis = p["basis"]
-                record.rule_citation = p["rule_citation"]
-                record.context_used = p["context_used"]
-                record.rule_set_id = p["rule_set_id"]
-                record.rule_set_version = p["rule_set_version"]
-            else:
-                record = ApplicabilityResult(
-                    inspection_id=inspection_id,
-                    requirement_name=req_name,
-                    status=p["status"],
-                    basis=p["basis"],
-                    rule_citation=p["rule_citation"],
-                    context_used=p["context_used"],
-                    rule_set_id=p["rule_set_id"],
-                    rule_set_version=p["rule_set_version"],
-                    evaluation_version=p["evaluation_version"],
-                )
-                db.add(record)
-            persisted_records.append(record)
-
-        await db.flush()
+        try:
+            async with db.begin_nested():
+                for p in payloads:
+                    req_name = p["requirement_name"]
+                    if req_name in existing_rows:
+                        record = existing_rows[req_name]
+                        record.status = p["status"]
+                        record.basis = p["basis"]
+                        record.rule_citation = p["rule_citation"]
+                        record.context_used = p["context_used"]
+                        record.rule_set_id = p["rule_set_id"]
+                        record.rule_set_version = p["rule_set_version"]
+                    else:
+                        record = ApplicabilityResult(
+                            inspection_id=inspection_id,
+                            requirement_name=req_name,
+                            status=p["status"],
+                            basis=p["basis"],
+                            rule_citation=p["rule_citation"],
+                            context_used=p["context_used"],
+                            rule_set_id=p["rule_set_id"],
+                            rule_set_version=p["rule_set_version"],
+                            evaluation_version=p["evaluation_version"],
+                        )
+                        db.add(record)
+                    persisted_records.append(record)
+                await db.flush()
+        except Exception:
+            # Re-fetch after rollback of savepoint if concurrent request inserted rows
+            stmt_existing = select(ApplicabilityResult).where(
+                ApplicabilityResult.inspection_id == inspection_id,
+                ApplicabilityResult.evaluation_version == EVALUATION_VERSION,
+            )
+            existing_rows = {row.requirement_name: row for row in (await db.execute(stmt_existing)).scalars().all()}
+            persisted_records = []
+            for p in payloads:
+                req_name = p["requirement_name"]
+                if req_name in existing_rows:
+                    record = existing_rows[req_name]
+                    record.status = p["status"]
+                    record.basis = p["basis"]
+                    record.rule_citation = p["rule_citation"]
+                    record.context_used = p["context_used"]
+                    record.rule_set_id = p["rule_set_id"]
+                    record.rule_set_version = p["rule_set_version"]
+                    persisted_records.append(record)
+            await db.flush()
 
         # Emit audit event
         audit = AuditEvent(

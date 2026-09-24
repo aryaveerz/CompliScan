@@ -137,6 +137,16 @@ async def get_inspection_findings(
 
     # 2. Fetch findings
     findings = await ComplianceEvaluationService.get_inspection_findings(db, inspection.id)
+    if not findings:
+        try:
+            findings = await ComplianceEvaluationService.evaluate_inspection_compliance(
+                db=db,
+                inspection_id=inspection.id,
+                actor_id=current_user.id,
+            )
+            await db.commit()
+        except Exception:
+            pass
 
     summary_counts: dict = {}
     for f in findings:

@@ -166,8 +166,11 @@ const buildUniversalDeclarations = (
     let extractedValue = 'NOT RECORDED';
     let result: ComplianceResult = 'INCOMPLETE';
     let inspectorNotes: string | undefined;
-    let evidenceId: string | undefined = finding?.evidence_id || structuredDeclarations?.evidence_id || primaryEvidenceId;
-    let boundingBox = hasEvidence ? def.defaultBox : undefined;
+    let evidenceId: string | undefined = structuredDeclarations?.evidence_id || finding?.evidence_id || primaryEvidenceId;
+    
+    // Only display default vector overlay bounding box if field was actually observed on this active asset
+    const isObservedOnAsset = decField?.status === 'OBSERVED' || (finding && (finding.result === 'PASS' || finding.result === 'REQUIRES_REVIEW') && finding.metadata_payload?.raw_text);
+    let boundingBox = isObservedOnAsset ? def.defaultBox : undefined;
 
     if (finding) {
       result = finding.result;
@@ -353,7 +356,7 @@ const buildConditionalCOO = (
       applicability: 'Applicable — Mandatory for imported products under Rule 6(1)(da) (G.S.R. 629(E))',
       is_applicable: true,
       evidence_id: evidenceId,
-      bounding_box: hasEvidence ? { x: 30, y: 85, width: 40, height: 6 } : undefined,
+      bounding_box: (decField?.status === 'OBSERVED' || (finding && finding.result === 'PASS' && finding.metadata_payload?.country_name)) ? { x: 30, y: 85, width: 40, height: 6 } : undefined,
       verified_value: correction ? String(correction.corrected_value) : undefined,
       inspector_notes: correction ? correction.correction_reason : inspectorNotes,
       reviewer_override: Boolean(reviewerDec),

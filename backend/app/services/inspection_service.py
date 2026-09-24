@@ -98,7 +98,11 @@ class InspectionService:
             .options(
                 selectinload(InspectionCase.created_by),
                 selectinload(InspectionCase.reviewer),
-                selectinload(InspectionCase.evidence_assets),
+                selectinload(InspectionCase.evidence_assets).options(
+                    selectinload(EvidenceAsset.structured_declarations),
+                    selectinload(EvidenceAsset.quality_assessment),
+                    selectinload(EvidenceAsset.ocr_result),
+                ),
                 selectinload(InspectionCase.final_audit_record),
             )
         )
@@ -125,7 +129,11 @@ class InspectionService:
             .options(
                 selectinload(InspectionCase.created_by),
                 selectinload(InspectionCase.reviewer),
-                selectinload(InspectionCase.evidence_assets),
+                selectinload(InspectionCase.evidence_assets).options(
+                    selectinload(EvidenceAsset.structured_declarations),
+                    selectinload(EvidenceAsset.quality_assessment),
+                    selectinload(EvidenceAsset.ocr_result),
+                ),
                 selectinload(InspectionCase.final_audit_record),
             )
             .order_by(desc(InspectionCase.created_at))
@@ -152,7 +160,11 @@ class InspectionService:
             .options(
                 selectinload(InspectionCase.created_by),
                 selectinload(InspectionCase.reviewer),
-                selectinload(InspectionCase.evidence_assets),
+                selectinload(InspectionCase.evidence_assets).options(
+                    selectinload(EvidenceAsset.structured_declarations),
+                    selectinload(EvidenceAsset.quality_assessment),
+                    selectinload(EvidenceAsset.ocr_result),
+                ),
             )
         )
         result = await db.execute(stmt)

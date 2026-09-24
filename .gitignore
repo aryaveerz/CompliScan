@@ -34,7 +34,7 @@ pnpm-debug.log*
 backend/uploads/
 storage/
 uploads/
-scratch/runs/
+scratch/
 archive/databases/
 archive/validation_runs/
 

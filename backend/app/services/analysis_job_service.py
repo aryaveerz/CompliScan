@@ -285,8 +285,8 @@ class AnalysisJobService:
             },
         )
 
-        # Auto-enqueue PERCEPTION job if quality is USABLE
-        if assessment.quality_status == ImageQualityStatus.USABLE.value:
+        # Auto-enqueue PERCEPTION job if quality is USABLE or NEEDS_REVIEW (only UNUSABLE blocks downstream perception)
+        if assessment.quality_status != ImageQualityStatus.UNUSABLE.value:
             await cls.enqueue_job(
                 db=db,
                 inspection_id=job.inspection_id,
@@ -303,7 +303,7 @@ class AnalysisJobService:
     ) -> None:
         """
         Execute PaddleOCR PP-OCRv4 perception pipeline for an evidence asset.
-        Gated by ImageQualityAssessment suitability screening.
+        Gated by ImageQualityAssessment suitability screening (only UNUSABLE assets are blocked).
         """
         if not job.evidence_id:
             raise ValueError(f"Job {job.id} missing required evidence_id")
@@ -314,12 +314,12 @@ class AnalysisJobService:
         if not evidence:
             raise NotFoundError(f"Evidence asset {job.evidence_id} not found")
 
-        # 1. Image Quality Gating Check
+        # 1. Image Quality Gating Check (Only UNUSABLE blocks perception)
         stmt_qual = select(ImageQualityAssessment).where(ImageQualityAssessment.evidence_id == evidence.id)
         quality = (await db.execute(stmt_qual)).scalar_one_or_none()
 
-        if not quality or quality.quality_status != ImageQualityStatus.USABLE.value:
-            block_reason = quality.quality_status if quality else "QUALITY_ASSESSMENT_MISSING"
+        if quality and quality.quality_status in [ImageQualityStatus.NEEDS_REVIEW.value, ImageQualityStatus.UNUSABLE.value]:
+            block_reason = quality.quality_status
             ocr_record = await OCRService.persist_blocked_result(
                 db=db,
                 evidence=evidence,
@@ -471,6 +471,15 @@ class AnalysisJobService:
                 "prompt_version": decl_record.prompt_version,
                 "extraction_version": decl_record.extraction_version,
             },
+        )
+
+        # 6. Auto-enqueue deterministic compliance evaluation job
+        await cls.enqueue_job(
+            db=db,
+            inspection_id=job.inspection_id,
+            job_type=JobType.EVALUATION,
+            evidence_id=evidence.id,
+            priority=job.priority,
         )
 
     @classmethod
