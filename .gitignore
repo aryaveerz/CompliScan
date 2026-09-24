@@ -35,8 +35,10 @@ backend/uploads/
 storage/
 uploads/
 scratch/
-archive/databases/
-archive/validation_runs/
+qa_screenshots/
+archive/
+temp/
+*.log
 
 # IDE & Editor
 .vscode/
@@ -53,6 +55,8 @@ Thumbs.db
 htmlcov/
 .tox/
 .nox/
+temp_pytest/
+backend/temp_pytest/
 
 # Build artifacts
 build/
@@ -70,10 +74,17 @@ wheels/
 .installed.cfg
 *.egg
 
-# Local AI/agent tooling
+# Local AI / Agent / Scratch Tooling & Artifacts
 .agent/
 .impeccable/
-
-# Pytest temp folders
-temp_pytest/
-backend/temp_pytest/
+.system_generated/
+implementation_plan.md
+walkthrough.md
+verification_report.md
+*_audit.md
+docs/archive/
+docs/historical/
+docs/remediation/
+docs/final_validation/
+docs/forensic_validation/
+docs/architecture/
