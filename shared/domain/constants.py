@@ -32,7 +32,7 @@ QUALITY_MIN_HEIGHT: int = 600
 QUALITY_MIN_PIXELS: int = 400_000
 
 # Sharpness / Blur parameter (Laplacian variance on grayscale image)
-QUALITY_BLUR_THRESHOLD: float = 100.0
+QUALITY_BLUR_THRESHOLD: float = 20.0
 
 # Exposure parameters (Mean pixel luminance on 0-255 scale)
 QUALITY_MIN_BRIGHTNESS: float = 25.0

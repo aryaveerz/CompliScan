@@ -318,7 +318,7 @@ class AnalysisJobService:
         stmt_qual = select(ImageQualityAssessment).where(ImageQualityAssessment.evidence_id == evidence.id)
         quality = (await db.execute(stmt_qual)).scalar_one_or_none()
 
-        if quality and quality.quality_status in [ImageQualityStatus.NEEDS_REVIEW.value, ImageQualityStatus.UNUSABLE.value]:
+        if quality and quality.quality_status == ImageQualityStatus.UNUSABLE.value:
             block_reason = quality.quality_status
             ocr_record = await OCRService.persist_blocked_result(
                 db=db,

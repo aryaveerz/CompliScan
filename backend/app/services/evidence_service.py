@@ -253,9 +253,8 @@ class EvidenceService:
                 from backend.app.services.image_quality_service import ImageQualityService
                 content, _ = await EvidenceService.get_evidence_binary(db, evidence_id)
                 res = ImageQualityService.assess_image_bytes(
-                    image_bytes=content,
-                    filename=evidence.original_filename,
-                    content_type=evidence.mime_type,
+                    content=content,
+                    mime_type=evidence.mime_type or "image/jpeg",
                 )
                 assessment = await ImageQualityService.persist_assessment(db, evidence, res)
                 await db.commit()
@@ -395,6 +394,19 @@ class EvidenceService:
         stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == evidence_id)
         res_ocr = await db.execute(stmt_ocr)
         ocr_result = res_ocr.scalar_one_or_none()
+
+        # Run on-demand if: no result yet, OR result was blocked (stale blocked state from a prior incorrect quality gate)
+        if not ocr_result or ocr_result.processing_blocked:
+            try:
+                from backend.app.services.ocr_service import OCRService
+                content, _ = await EvidenceService.get_evidence_binary(db, evidence_id, current_user)
+                raw_res = OCRService.process_image_bytes(content=content, mime_type=evidence.mime_type or "image/jpeg")
+                ocr_result = await OCRService.persist_ocr_result(db, evidence, raw_res)
+                await db.commit()
+                return ocr_result
+            except Exception:
+                pass
+
         if not ocr_result:
             now = datetime.now(timezone.utc)
             return OCRResult(
