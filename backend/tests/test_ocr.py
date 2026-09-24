@@ -8,7 +8,7 @@ Comprehensive validation of:
 4. Idempotency: repeated OCR executions update in-place without duplicate rows
 5. Image Quality Gating:
    - USABLE -> OCR executed, tokens extracted
-   - NEEDS_REVIEW -> OCR blocked, processing_blocked=True, block_reason recorded
+   - NEEDS_REVIEW -> OCR executed (image is still processable despite quality flags)
    - UNUSABLE -> OCR blocked, processing_blocked=True, block_reason recorded
 6. Automated Pipeline: IMAGE_QUALITY (USABLE) -> auto-enqueue PERCEPTION -> worker execution -> OCRResult
 7. Evidence Immutability: SHA-256 and original binary bytes strictly unmodified
@@ -202,8 +202,10 @@ class TestOCRPersistenceAndGating:
             records = (await db.execute(stmt)).scalars().all()
             assert len(records) == 1
 
-    async def test_ocr_quality_gate_blocking_needs_review(self):
-        """Test 4: Quality NEEDS_REVIEW blocks OCR with processing_blocked=True and reason code."""
+    async def test_ocr_quality_gate_needs_review_passes_through(self):
+        """Test 4: Quality NEEDS_REVIEW does NOT block OCR — image is still processable.
+        Only UNUSABLE quality status should block downstream perception.
+        """
         async with AsyncSessionLocal() as db:
             inspector = User(
                 id=f"USR-{uuid.uuid4().hex[:8].upper()}",
@@ -224,29 +226,49 @@ class TestOCRPersistenceAndGating:
             db.add(inspection)
             await db.flush()
 
+            # Create synthetic image bytes so RapidOCR can actually process it
+            import io
+            from PIL import Image as PILImage
+            import numpy as np
+            buf = io.BytesIO()
+            # 800x600 grey image — clearly readable, just slightly blurry
+            img_arr = np.ones((600, 800, 3), dtype=np.uint8) * 128
+            PILImage.fromarray(img_arr).save(buf, format="JPEG")
+            img_bytes = buf.getvalue()
+
+            import hashlib
+            sha = hashlib.sha256(img_bytes).hexdigest()
+
+            # Store image to local storage so binary fetch works
+            import os
+            os.makedirs("backend/uploads", exist_ok=True)
+            storage_path = f"backend/uploads/test_gate_{uuid.uuid4().hex[:8]}.jpg"
+            with open(storage_path, "wb") as f:
+                f.write(img_bytes)
+
             asset = EvidenceAsset(
                 id=f"EV-{uuid.uuid4().hex[:8].upper()}",
                 inspection_id=inspection.id,
                 evidence_type=EvidenceType.PRIMARY.value,
-                original_filename="blurred.jpg",
+                original_filename="slightly_blurred.jpg",
                 mime_type="image/jpeg",
-                file_size_bytes=1024,
-                sha256_hash="blurredsha",
-                storage_path="dummy_blurred.jpg",
+                file_size_bytes=len(img_bytes),
+                sha256_hash=sha,
+                storage_path=storage_path,
                 uploaded_by_id=inspector.id,
             )
             db.add(asset)
             await db.flush()
 
-            # Create a NEEDS_REVIEW quality assessment
+            # Create a NEEDS_REVIEW quality assessment (slightly blurry but NOT unusable)
             quality = ImageQualityAssessment(
                 evidence_id=asset.id,
                 inspection_id=inspection.id,
                 quality_status=ImageQualityStatus.NEEDS_REVIEW.value,
                 assessment_version="v1.0",
-                width=1920,
-                height=1080,
-                total_pixels=1920 * 1080,
+                width=800,
+                height=600,
+                total_pixels=800 * 600,
                 mime_type="image/jpeg",
                 is_decoded=True,
                 sharpness_score=15.0,
@@ -264,7 +286,93 @@ class TestOCRPersistenceAndGating:
             )
             await db.commit()
 
-            # Execute job
+            # Execute job — NEEDS_REVIEW must NOT block, job must complete
+            claimed = await AnalysisJobService.claim_next_job(db, worker_id="test-worker")
+            assert claimed is not None
+            assert claimed.id == job.id
+
+            await AnalysisJobService.execute_job(db, claimed)
+            await db.commit()
+
+            # Job must COMPLETE (not stay PENDING/FAILED)
+            assert claimed.status == JobStatus.COMPLETED.value
+
+            # OCR result must NOT be blocked — NEEDS_REVIEW passes through
+            stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == asset.id)
+            ocr_record = (await db.execute(stmt_ocr)).scalar_one_or_none()
+            assert ocr_record is not None
+            assert ocr_record.processing_blocked is False, (
+                "NEEDS_REVIEW should NOT block OCR — only UNUSABLE should block downstream perception"
+            )
+
+            # Cleanup storage
+            try:
+                os.remove(storage_path)
+            except OSError:
+                pass
+
+    async def test_ocr_quality_gate_unusable_blocks(self):
+        """Test 4b: Quality UNUSABLE correctly blocks OCR with processing_blocked=True."""
+        async with AsyncSessionLocal() as db:
+            inspector = User(
+                id=f"USR-{uuid.uuid4().hex[:8].upper()}",
+                email=f"insp.unusable.{uuid.uuid4().hex[:6]}@compliscan.gov.in",
+                full_name="Inspector Unusable",
+                role=UserRole.INSPECTOR.value,
+                is_active=True,
+            )
+            db.add(inspector)
+            await db.flush()
+
+            inspection = InspectionCase(
+                id=f"INS-{uuid.uuid4().hex[:8].upper()}",
+                case_number=f"INS-2026-UNUSABLE-{uuid.uuid4().hex[:4].upper()}",
+                product_name="Unusable Gate Product",
+                created_by_id=inspector.id,
+            )
+            db.add(inspection)
+            await db.flush()
+
+            asset = EvidenceAsset(
+                id=f"EV-{uuid.uuid4().hex[:8].upper()}",
+                inspection_id=inspection.id,
+                evidence_type=EvidenceType.PRIMARY.value,
+                original_filename="corrupted.jpg",
+                mime_type="image/jpeg",
+                file_size_bytes=512,
+                sha256_hash="unusablesha256",
+                storage_path="dummy_unusable.jpg",
+                uploaded_by_id=inspector.id,
+            )
+            db.add(asset)
+            await db.flush()
+
+            # Create an UNUSABLE quality assessment (e.g., fully corrupt / wrong MIME)
+            quality = ImageQualityAssessment(
+                evidence_id=asset.id,
+                inspection_id=inspection.id,
+                quality_status=ImageQualityStatus.UNUSABLE.value,
+                assessment_version="v1.0",
+                width=0,
+                height=0,
+                total_pixels=0,
+                mime_type="image/jpeg",
+                is_decoded=False,
+                sharpness_score=0.0,
+                reason_codes=[QualityReasonCode.IMAGE_DECODE_FAILED.value],
+            )
+            db.add(quality)
+            await db.flush()
+
+            # Enqueue and execute OCR job
+            job = await AnalysisJobService.enqueue_job(
+                db=db,
+                inspection_id=inspection.id,
+                job_type=JobType.PERCEPTION,
+                evidence_id=asset.id,
+            )
+            await db.commit()
+
             claimed = await AnalysisJobService.claim_next_job(db, worker_id="test-worker")
             assert claimed is not None
             assert claimed.id == job.id
@@ -274,16 +382,15 @@ class TestOCRPersistenceAndGating:
 
             assert claimed.status == JobStatus.COMPLETED.value
 
-            # Check OCRResult is blocked
+            # OCR result MUST be blocked for UNUSABLE
             stmt_ocr = select(OCRResult).where(OCRResult.evidence_id == asset.id)
             ocr_record = (await db.execute(stmt_ocr)).scalar_one_or_none()
             assert ocr_record is not None
             assert ocr_record.processing_blocked is True
-            assert ocr_record.block_reason == ImageQualityStatus.NEEDS_REVIEW.value
+            assert ocr_record.block_reason == ImageQualityStatus.UNUSABLE.value
             assert ocr_record.total_tokens == 0
-            assert ocr_record.tokens == []
 
-            # Check Audit Event logged
+            # Audit event must record BLOCKED
             stmt_audit = select(AuditEvent).where(
                 AuditEvent.inspection_id == inspection.id,
                 AuditEvent.event_type == AuditEventType.OCR_PROCESSED.value,
