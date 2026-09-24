@@ -1,5 +1,5 @@
 # CompliScan LM 🔍
-AI-Powered Statutory Label Compliance Inspection System for Legal Metrology
+AI-assisted compliance inspection for packaged commodities
 
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
