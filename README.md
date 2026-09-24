@@ -7,7 +7,6 @@ AI-assisted compliance inspection for packaged commodities
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tests](https://img.shields.io/badge/Test%20Suite-151%20Passed-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 ---
 
@@ -215,12 +214,5 @@ CompliScan/
 ├── .env.example           # Clean environment template
 ├── .gitignore             # Production gitignore
 ├── alembic.ini            # Database migration configuration
-├── LICENSE                # MIT License
 └── README.md              # Project overview & documentation
 ```
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
