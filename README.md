@@ -197,22 +197,26 @@ All 151 unit and integration tests cover OCR extraction, rule evaluation, multi-
 
 ```
 CompliScan/
-├── backend/
-│   ├── app/
-│   │   ├── api/v1/          # REST API endpoints (auth, inspections, compliance, reports)
-│   │   ├── core/            # Config, security, error handlers
-│   │   ├── db/              # SQLAlchemy database models & sessions
-│   │   ├── schemas/         # Pydantic validation schemas
-│   │   └── services/        # OCR, extraction, compliance engine, PDF generator
-│   └── tests/               # Pytest test suite (151 tests)
-├── frontend/
-│   ├── src/
-│   │   ├── components/      # UI components & image bounding box viewer
-│   │   ├── pages/           # Inspection workspace, dashboard, review queue
-│   │   ├── services/        # API client modules
-│   │   └── types/           # TypeScript interfaces
-├── shared/                  # Common legal rule definitions & enums
-└── README.md
+├── backend/               # FastAPI async REST API & statutory evaluation engine
+│   ├── app/               # Core application modules, models & services
+│   ├── tests/             # Pytest test suite (151 tests)
+│   └── requirements.txt   # Python dependencies
+├── frontend/              # React 18 + TypeScript + Vite web application
+│   ├── public/            # Static assets
+│   ├── src/               # UI components, pages & state
+│   ├── package.json
+│   └── tsconfig.json
+├── shared/                # Canonical domain models, constants & enums
+├── scripts/               # Production seed & execution scripts
+├── alembic/               # Database migrations & schemas
+├── deployment/            # Deployment configuration templates
+├── docs/                  # Official documentation & legal references
+├── static/                # Official static assets
+├── .env.example           # Clean environment template
+├── .gitignore             # Production gitignore
+├── alembic.ini            # Database migration configuration
+├── LICENSE                # MIT License
+└── README.md              # Project overview & documentation
 ```
 
 ---
