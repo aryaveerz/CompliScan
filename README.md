@@ -22,6 +22,18 @@ Instead of manually reading package labels and verifying each statutory rule, Co
 
 ---
 
+## 🔑 Demo Access Credentials & Roles
+
+CompliScan LM implements Role-Based Access Control (RBAC) to support a strict two-stage inspection and adjudication workflow:
+
+| Role | Email | Password | Responsibilities & System Capabilities |
+|---|---|---|---|
+| **Field Inspector** | `inspector@compliscan.gov.in` | `Password@Insp1` | **Inspection & Extraction**: Creates inspection dockets, uploads packaging images, triggers OCR detection and AI structuring, verifies token bounding boxes, manually adjusts/corrects extracted declarations, and submits cases for review. |
+| **Senior Reviewing Officer** | `reviewer@compliscan.gov.in` | `Password@rev1` | **Adjudication & Sign-Off**: Accesses the Review Queue, audits automated Rule 6(1) compliance evaluations, adjudicates disputed/flagged findings, records official officer remarks, and signs off to finalize cases and generate PDF/DOCX reports. |
+
+
+---
+
 ## 🏛️ Statutory Rules Evaluated
 
 CompliScan LM verifies all 7 mandatory declaration domains under **Rule 6(1)** of the *Legal Metrology (Packaged Commodities) Rules, 2011*:
